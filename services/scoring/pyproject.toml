@@ -1,0 +1,57 @@
+[project]
+name = "linchpin-scoring"
+version = "0.1.0"
+description = "Linchpin ingestion, carry scoring, and validation"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "fastapi>=0.115,<0.120",
+  "uvicorn[standard]>=0.31,<0.40",
+  "httpx>=0.27,<0.29",
+  "pandas>=2.2,<3",
+  "numpy>=1.26,<3",
+  "scipy>=1.14,<2",
+  "statsmodels>=0.14,<0.16",
+  "psycopg[binary]>=3.2,<4",
+  "pydantic>=2.9,<3",
+  "pydantic-settings>=2.5,<3",
+  "python-dotenv>=1.0,<2",
+  "tenacity>=9.0,<10",
+  "beautifulsoup4>=4.12,<5",
+  "praw>=7.7,<8",
+  "pytrends>=4.9,<5",
+  "typer>=0.12,<0.20",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9", "ruff>=0.7,<0.15", "mypy>=1.11,<2", "respx>=0.21,<0.23"]
+
+[project.scripts]
+linchpin = "cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ingest", "metrics", "validation", "api"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+# typer declares CLI options as argument defaults; that is its documented API.
+"cli.py" = ["B008"]
+"api/main.py" = ["B008"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true

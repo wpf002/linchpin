@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/*
+ * Linchpin tokens. Dark is the default: analysts keep this open beside other
+ * terminals. Light overrides token values only; components never branch on theme.
+ * Brass is the single accent (actions, active state). The fragility scale runs
+ * cool to hot and never shares a hue with the accent.
+ */
+:root {
+  --bg: #0a0b0d;
+  --surface: #121417;
+  --surface-raised: #191c20;
+  --surface-hover: #1f2328;
+  --border: #24282e;
+  --border-strong: #353a42;
+  --text: #e8e6e1;
+  --text-muted: #a29f97;
+  --text-faint: #85827b;
+  --accent: #d08a2c;
+  --accent-strong: #e29b3c;
+  --accent-soft: rgb(208 138 44 / 0.14);
+  --accent-fg: #0a0b0d;
+  --focus: #e29b3c;
+
+  --frag-ensemble: #4fa58f;
+  --frag-balanced: #7d8fa1;
+  --frag-concentrated: #dd7a43;
+  --frag-load-bearing: #e0483a;
+
+  --pass: #4fa58f;
+  --fail: #e0483a;
+  --blocked: #a29f97;
+
+  --chart-line: #e8e6e1;
+  --chart-grid: #1d2025;
+  --chart-off-cycle: rgb(79 165 143 / 0.1);
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f2ed;
+    --surface: #fbfaf7;
+    --surface-raised: #ffffff;
+    --surface-hover: #efece5;
+    --border: #dcd8ce;
+    --border-strong: #c6c1b5;
+    --text: #16171a;
+    --text-muted: #57544e;
+    --text-faint: #6c6962;
+    --accent: #9a5f10;
+    --accent-strong: #84500b;
+    --accent-soft: rgb(154 95 16 / 0.1);
+    --accent-fg: #ffffff;
+    --focus: #9a5f10;
+
+    --frag-ensemble: #2c7a68;
+    --frag-balanced: #5b6d7f;
+    --frag-concentrated: #c05d22;
+    --frag-load-bearing: #b8291d;
+
+    --pass: #2c7a68;
+    --fail: #b8291d;
+    --blocked: #57544e;
+
+    --chart-line: #16171a;
+    --chart-grid: #e6e2d9;
+    --chart-off-cycle: rgb(44 122 104 / 0.09);
+
+    color-scheme: light;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-hover: var(--surface-hover);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-pass: var(--pass);
+  --color-fail: var(--fail);
+  --color-blocked: var(--blocked);
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Five sizes. Nothing else. */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-display: 40px;
+
+  --radius-ui: 6px;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+  * {
+    transition-duration: 0ms !important;
+  }
+}

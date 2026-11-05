@@ -1,0 +1,142 @@
+"""TVMaze: free, keyless episode air dates and cast. Used as the roster and
+release-calendar source of truth for TV, with TMDB as the cross-check."""
+
+from __future__ import annotations
+
+import logging
+from dataclasses import dataclass
+from datetime import date, datetime
+
+from ingest.http import ThrottledClient
+
+logger = logging.getLogger("linchpin.tvmaze")
+
+BASE = "https://api.tvmaze.com"
+MIN_INTERVAL_SECONDS = 0.55  # TVMaze allows ~20 calls / 10s; stay well under.
+# Long-running shows list hundreds of credited actors. Past the main cast the
+# entries are guests, and including them makes the HHI denominator meaningless.
+MAIN_CAST_CAP = 20
+
+
+@dataclass(frozen=True, slots=True)
+class TvMazeShow:
+    tvmaze_id: int
+    name: str
+    premiered: date | None
+    ended: date | None
+    status: str
+    genres: list[str]
+
+
+@dataclass(frozen=True, slots=True)
+class TvMazeCastEntry:
+    person_name: str
+    character_name: str
+    billing_order: int
+    is_main: bool
+
+
+def _client() -> ThrottledClient:
+    return ThrottledClient(
+        namespace="tvmaze",
+        min_interval_seconds=MIN_INTERVAL_SECONDS,
+        headers={
+            "User-Agent": "linchpin/0.1 (https://github.com/wpf002/linchpin)",
+            "Accept": "application/json",
+        },
+    )
+
+
+def search_show(name: str, *, client: ThrottledClient | None = None) -> TvMazeShow | None:
+    owned = client is None
+    active = client or _client()
+    try:
+        payload = active.get_json(f"{BASE}/singlesearch/shows", {"q": name})
+        if not payload or payload.get("__missing__"):
+            logger.info("TVMaze has no show matching %r", name)
+            return None
+        return TvMazeShow(
+            tvmaze_id=int(payload["id"]),
+            name=str(payload.get("name", name)),
+            premiered=_parse_date(payload.get("premiered")),
+            ended=_parse_date(payload.get("ended")),
+            status=str(payload.get("status", "Unknown")),
+            genres=[str(genre) for genre in payload.get("genres", [])],
+        )
+    finally:
+        if owned:
+            active.close()
+
+
+def fetch_cast(show_id: int, *, client: ThrottledClient | None = None) -> list[TvMazeCastEntry]:
+    owned = client is None
+    active = client or _client()
+    try:
+        payload = active.get_json(f"{BASE}/shows/{show_id}/cast")
+        if not payload or not isinstance(payload, list):
+            return []
+        entries: list[TvMazeCastEntry] = []
+        for order, entry in enumerate(payload):
+            person = entry.get("person") or {}
+            character = entry.get("character") or {}
+            person_name = person.get("name")
+            character_name = character.get("name")
+            if not person_name or not character_name:
+                continue
+            entries.append(
+                TvMazeCastEntry(
+                    person_name=str(person_name),
+                    character_name=str(character_name),
+                    billing_order=order + 1,
+                    is_main=order < MAIN_CAST_CAP,
+                )
+            )
+        return entries
+    finally:
+        if owned:
+            active.close()
+
+
+def fetch_episode_dates(show_id: int, *, client: ThrottledClient | None = None) -> list[date]:
+    owned = client is None
+    active = client or _client()
+    try:
+        payload = active.get_json(f"{BASE}/shows/{show_id}/episodes")
+        if not payload or not isinstance(payload, list):
+            return []
+        dates = [_parse_date(episode.get("airdate")) for episode in payload]
+        return sorted({day for day in dates if day is not None})
+    finally:
+        if owned:
+            active.close()
+
+
+def fetch_season_premieres(
+    show_id: int, *, client: ThrottledClient | None = None
+) -> list[tuple[int, date]]:
+    owned = client is None
+    active = client or _client()
+    try:
+        payload = active.get_json(f"{BASE}/shows/{show_id}/seasons")
+        if not payload or not isinstance(payload, list):
+            return []
+        seasons: list[tuple[int, date]] = []
+        for season in payload:
+            premiere = _parse_date(season.get("premiereDate"))
+            number = season.get("number")
+            if premiere is None or number is None:
+                continue
+            seasons.append((int(number), premiere))
+        return sorted(seasons)
+    finally:
+        if owned:
+            active.close()
+
+
+def _parse_date(value: object) -> date | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        return datetime.strptime(value[:10], "%Y-%m-%d").date()
+    except ValueError:
+        return None

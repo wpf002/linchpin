@@ -1,0 +1,293 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Medium {
+  TV
+  FILM
+  COMIC
+  ANIMATION
+  SPORTS
+}
+
+enum FranchiseStatus {
+  ACTIVE
+  ENDED
+  CANCELLED
+  HIATUS
+  ANNOUNCED
+}
+
+enum CharacterStatus {
+  ACTIVE
+  DEPARTED
+  DECEASED
+  RECAST
+  UNKNOWN
+}
+
+enum RoleType {
+  ACTOR
+  WRITER
+  DIRECTOR
+  SHOWRUNNER
+  ARTIST
+  CREATOR
+  ATHLETE
+}
+
+enum SignalSource {
+  WIKI
+  AO3
+  TRENDS
+  REDDIT
+  FANDOM
+}
+
+enum ExitType {
+  CHARACTER_DEATH
+  ACTOR_DEPARTURE
+  RECAST
+  SHOWRUNNER_EXIT
+  CREATIVE_TEAM_CHANGE
+}
+
+enum GateOutcome {
+  PASS
+  FAIL
+  BLOCKED
+}
+
+model Franchise {
+  id             String          @id @default(uuid())
+  canonicalName  String
+  aliases        String[]
+  tmdbId         Int?
+  wikiTitle      String?
+  fandomWiki     String?
+  primarySubs    String[]
+  // Added beyond ROADMAP section 7: the control-set matcher matches on genre,
+  // and there was nowhere to store it.
+  genres         String[]
+  medium         Medium
+  firstRelease   DateTime?
+  status         FranchiseStatus
+  rosterComplete Float           @default(0)
+  characters     Character[]
+  releases       Release[]
+  exitEvents     ExitEvent[]
+  fragility      FragilityScore[]
+  personLinks    PersonLink[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([canonicalName, medium])
+  @@index([medium, status])
+  @@index([rosterComplete])
+}
+
+model Release {
+  id          String    @id @default(uuid())
+  franchiseId String
+  franchise   Franchise @relation(fields: [franchiseId], references: [id], onDelete: Cascade)
+  title       String
+  seasonNo    Int?
+  episodeNo   Int?
+  issueNo     Int?
+  releasedOn  DateTime
+  tmdbId      Int?
+
+  @@index([franchiseId, releasedOn])
+}
+
+model Character {
+  id            String            @id @default(uuid())
+  franchiseId   String
+  franchise     Franchise         @relation(fields: [franchiseId], references: [id], onDelete: Cascade)
+  canonicalName String
+  aliases       String[]
+  wikiTitle     String?
+  fandomPage    String?
+  ao3Tag        String?
+  tmdbCharId    Int?
+  firstSeenAt   DateTime?
+  lastSeenAt    DateTime?
+  status        CharacterStatus   @default(ACTIVE)
+  portrayedBy   PersonLink[]
+  signals       AttentionSignal[]
+  carryScores   CarryScore[]
+  exitEvents    ExitEvent[]
+
+  @@unique([franchiseId, canonicalName])
+  @@index([franchiseId])
+}
+
+model Person {
+  id            String       @id @default(uuid())
+  canonicalName String
+  aliases       String[]
+  tmdbPersonId  Int?
+  roleTypes     RoleType[]
+  links         PersonLink[]
+  exitEvents    ExitEvent[]
+
+  @@index([canonicalName])
+}
+
+model PersonLink {
+  id           String     @id @default(uuid())
+  personId     String
+  person       Person     @relation(fields: [personId], references: [id], onDelete: Cascade)
+  characterId  String?
+  character    Character? @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  franchiseId  String
+  franchise    Franchise  @relation(fields: [franchiseId], references: [id], onDelete: Cascade)
+  roleType     RoleType
+  billingOrder Int?
+  creditShare  Float?
+  startDate    DateTime?
+  endDate      DateTime?
+  confidence   Float      @default(1.0)
+
+  @@index([franchiseId, roleType])
+  @@index([characterId])
+}
+
+/// Raw signals are immutable. Derived shares are recomputed; rawValue is never overwritten.
+model AttentionSignal {
+  id          String       @id @default(uuid())
+  characterId String
+  character   Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  source      SignalSource
+  measuredOn  DateTime     @db.Date
+  rawValue    Float
+  isOffCycle  Boolean      @default(false)
+  confidence  Float        @default(1.0)
+
+  @@unique([characterId, source, measuredOn])
+  @@index([measuredOn])
+  @@index([characterId, source, measuredOn])
+}
+
+model CarryScore {
+  id               String    @id @default(uuid())
+  characterId      String
+  character        Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  windowStart      DateTime  @db.Date
+  windowEnd        DateTime  @db.Date
+  modelVersion     String
+  wikiShare        Float
+  fanworkShare     Float?
+  searchShare      Float?
+  discourseShare   Float?
+  carryScore       Float
+  offCycleCarry    Float?
+  durabilityRatio  Float?
+  substitutability Float?
+  confidence       Float     @default(1.0)
+  observationCount Int       @default(0)
+
+  @@unique([characterId, windowStart, modelVersion])
+  @@index([modelVersion, carryScore])
+}
+
+model FragilityScore {
+  id             String    @id @default(uuid())
+  franchiseId    String
+  franchise      Franchise @relation(fields: [franchiseId], references: [id], onDelete: Cascade)
+  scoredOn       DateTime  @db.Date
+  modelVersion   String
+  hhi            Float
+  top1Share      Float
+  top3Share      Float
+  fragility      Float
+  rosterComplete Float
+
+  @@unique([franchiseId, scoredOn, modelVersion])
+  @@index([modelVersion, fragility])
+}
+
+model ExitEvent {
+  id            String       @id @default(uuid())
+  franchiseId   String
+  franchise     Franchise    @relation(fields: [franchiseId], references: [id], onDelete: Cascade)
+  characterId   String?
+  character     Character?   @relation(fields: [characterId], references: [id], onDelete: SetNull)
+  personId      String?
+  person        Person?      @relation(fields: [personId], references: [id], onDelete: SetNull)
+  exitType      ExitType
+  eventDate     DateTime     @db.Date
+  announcedDate DateTime?    @db.Date
+  sourceUrl     String
+  verified      Boolean      @default(false)
+  notes         String?
+  studyResults  EventStudy[]
+  controlSets   ControlSet[]
+
+  @@unique([franchiseId, characterId, exitType, eventDate])
+  @@index([eventDate, verified])
+}
+
+model ControlSet {
+  id           String       @id @default(uuid())
+  exitEventId  String
+  exitEvent    ExitEvent    @relation(fields: [exitEventId], references: [id], onDelete: Cascade)
+  franchiseIds String[]
+  matchedOn    String[]
+  createdAt    DateTime     @default(now())
+  studies      EventStudy[]
+
+  @@index([exitEventId])
+}
+
+model EventStudy {
+  id            String     @id @default(uuid())
+  exitEventId   String
+  exitEvent     ExitEvent  @relation(fields: [exitEventId], references: [id], onDelete: Cascade)
+  controlSetId  String
+  controlSet    ControlSet @relation(fields: [controlSetId], references: [id], onDelete: Cascade)
+  preMean       Float
+  postMean      Float
+  controlPre    Float
+  controlPost   Float
+  didEstimate   Float
+  stdError      Float
+  preCarryScore Float
+  baselineRank  Int?
+  /// Announced exits leak into the pre-window and are analysed as a separate stratum.
+  announced     Boolean    @default(false)
+  split         String     @default("test")
+  modelVersion  String
+  runAt         DateTime   @default(now())
+
+  @@unique([exitEventId, modelVersion])
+  @@index([modelVersion])
+}
+
+/// Aggregate result of one frozen validation run. Written once, never edited.
+/// Added beyond ROADMAP section 7: EventStudy holds per-event rows, but the
+/// gate decision and its confidence intervals had nowhere to live.
+model ValidationRun {
+  id                  String      @id @default(uuid())
+  modelVersion        String
+  runAt               DateTime    @default(now())
+  eventCount          Int
+  verifiedEventCount  Int
+  rankIC              Float?
+  rankICLower         Float?
+  rankICUpper         Float?
+  baselineRankIC      Float?
+  baselineLower       Float?
+  baselineUpper       Float?
+  medianRosterComplete Float?
+  gate                GateOutcome
+  failures            Json
+  notes               String?
+
+  @@index([modelVersion, runAt])
+}

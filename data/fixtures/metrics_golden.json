@@ -1,0 +1,79 @@
+{
+  "comment": "Hand-computed expectations. Consumed by both the TypeScript and Python metric test suites so the two implementations cannot drift.",
+  "toShares": [
+    { "raw": [50, 30, 20], "shares": [0.5, 0.3, 0.2] },
+    { "raw": [25, 25, 25, 25], "shares": [0.25, 0.25, 0.25, 0.25] },
+    { "raw": [100, 0, 0], "shares": [1.0, 0.0, 0.0] },
+    { "raw": [0, 0, 0], "shares": [0.0, 0.0, 0.0] }
+  ],
+  "hhi": [
+    { "carryScores": [0.5, 0.3, 0.2], "hhi": 0.38, "top1Share": 0.5, "top3Share": 1.0 },
+    { "carryScores": [0.25, 0.25, 0.25, 0.25], "hhi": 0.25, "top1Share": 0.25, "top3Share": 0.75 },
+    { "carryScores": [1.0, 0.0, 0.0], "hhi": 1.0, "top1Share": 1.0, "top3Share": 1.0 }
+  ],
+  "carryScore": [
+    {
+      "label": "wiki only, missing signals renormalise",
+      "shares": { "wikiShare": 0.4, "fanworkShare": null, "searchShare": null, "discourseShare": null },
+      "carryScore": 0.4
+    },
+    {
+      "label": "all four signals at default weights",
+      "shares": { "wikiShare": 0.4, "fanworkShare": 0.3, "searchShare": 0.2, "discourseShare": 0.1 },
+      "carryScore": 0.275
+    },
+    {
+      "label": "wiki plus fanwork only",
+      "shares": { "wikiShare": 0.4, "fanworkShare": 0.2, "searchShare": null, "discourseShare": null },
+      "carryScore": 0.31666666666666665
+    }
+  ],
+  "fragility": [
+    {
+      "label": "all three terms present",
+      "input": { "hhi": 0.4, "top1Share": 0.5, "substitutability": 0.3 },
+      "population": {
+        "hhi": { "mean": 0.3, "stdDev": 0.1 },
+        "top1Share": { "mean": 0.4, "stdDev": 0.1 },
+        "substitutability": { "mean": 0.5, "stdDev": 0.2 }
+      },
+      "fragility": 1.0
+    },
+    {
+      "label": "substitutability missing, weights renormalise to same scale",
+      "input": { "hhi": 0.4, "top1Share": 0.5, "substitutability": null },
+      "population": {
+        "hhi": { "mean": 0.3, "stdDev": 0.1 },
+        "top1Share": { "mean": 0.4, "stdDev": 0.1 },
+        "substitutability": { "mean": 0.5, "stdDev": 0.2 }
+      },
+      "fragility": 1.0
+    },
+    {
+      "label": "zero-variance population yields zero",
+      "input": { "hhi": 0.4, "top1Share": 0.5, "substitutability": 0.3 },
+      "population": {
+        "hhi": { "mean": 0.4, "stdDev": 0.0 },
+        "top1Share": { "mean": 0.5, "stdDev": 0.0 },
+        "substitutability": { "mean": 0.3, "stdDev": 0.0 }
+      },
+      "fragility": 0.0
+    }
+  ],
+  "simulateRemoval": [
+    {
+      "carryScores": [0.5, 0.3, 0.2],
+      "removeIndex": 0,
+      "hhi": 0.52,
+      "top1Share": 0.6,
+      "remaining": [0.6, 0.4]
+    },
+    {
+      "carryScores": [0.25, 0.25, 0.25, 0.25],
+      "removeIndex": 2,
+      "hhi": 0.3333333333333333,
+      "top1Share": 0.3333333333333333,
+      "remaining": [0.3333333333333333, 0.3333333333333333, 0.3333333333333333]
+    }
+  ]
+}

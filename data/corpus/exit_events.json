@@ -1,0 +1,992 @@
+{
+  "comment": "Hand-verified exits. 'character' is matched against the TVMaze cast name after normalisation; 'aliases' cover the cases where TVMaze spells it differently. eventDate is the air date of the departure, announcedDate the date the exit became public knowledge where that preceded it. Every row carries a sourceUrl; verified=true means a human read that page.",
+  "events": [
+    {
+      "franchise": "Game of Thrones",
+      "character": "Eddard Stark",
+      "aliases": [
+        "Ned Stark"
+      ],
+      "person": "Sean Bean",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-06-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Baelor",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Robb Stark",
+      "person": "Richard Madden",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-06-02",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Rains_of_Castamere",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Tywin Lannister",
+      "person": "Charles Dance",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-06-15",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Children_(Game_of_Thrones)",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Joffrey Baratheon",
+      "person": "Jack Gleeson",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-04-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Lion_and_the_Rose",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Hodor",
+      "person": "Kristian Nairn",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-05-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Door_(Game_of_Thrones)",
+      "verified": true
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Gustavo Fring",
+      "aliases": [
+        "Gus Fring"
+      ],
+      "person": "Giancarlo Esposito",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-10-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Face_Off_(Breaking_Bad)",
+      "verified": true
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Mike Ehrmantraut",
+      "person": "Jonathan Banks",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-09-02",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Say_My_Name_(Breaking_Bad)",
+      "verified": true
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Hank Schrader",
+      "person": "Dean Norris",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-09-15",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ozymandias_(Breaking_Bad)",
+      "verified": true
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Chuck McGill",
+      "aliases": [
+        "Charles McGill"
+      ],
+      "person": "Michael McKean",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-06-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lantern_(Better_Call_Saul)",
+      "verified": true
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Howard Hamlin",
+      "person": "Patrick Fabian",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-05-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Plan_and_Execution",
+      "verified": true
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Nacho Varga",
+      "aliases": [
+        "Ignacio Varga"
+      ],
+      "person": "Michael Mando",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-04-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rock_and_Hard_Place",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Shane Walsh",
+      "person": "Jon Bernthal",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-11-27",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Better_Angels_(The_Walking_Dead)",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Hershel Greene",
+      "person": "Scott Wilson",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-12-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Too_Far_Gone_(The_Walking_Dead)",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Glenn Rhee",
+      "person": "Steven Yeun",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-10-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Day_Will_Come_When_You_Won%27t_Be",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Carl Grimes",
+      "person": "Chandler Riggs",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2018-02-25",
+      "announcedDate": "2017-12-10",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Honor_(The_Walking_Dead)",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Rick Grimes",
+      "person": "Andrew Lincoln",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-11-04",
+      "announcedDate": "2018-05-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/What_Comes_After_(The_Walking_Dead)",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Michonne",
+      "person": "Danai Gurira",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2020-03-22",
+      "announcedDate": "2019-10-05",
+      "sourceUrl": "https://en.wikipedia.org/wiki/What_We_Become",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "George O'Malley",
+      "person": "T. R. Knight",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2009-05-14",
+      "announcedDate": "2009-06-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Now_or_Never_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Mark Sloan",
+      "person": "Eric Dane",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-10-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Remember_the_Time_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Lexie Grey",
+      "person": "Chyler Leigh",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Flight_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Cristina Yang",
+      "person": "Sandra Oh",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2014-05-15",
+      "announcedDate": "2013-08-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fear_(of_the_Unknown)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Derek Shepherd",
+      "person": "Patrick Dempsey",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2015-04-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/How_to_Save_a_Life_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Alex Karev",
+      "person": "Justin Chambers",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2020-03-05",
+      "announcedDate": "2020-01-10",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Leave_a_Light_On_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "The Office",
+      "character": "Michael Scott",
+      "person": "Steve Carell",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2011-04-28",
+      "announcedDate": "2010-06-28",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Goodbye,_Michael",
+      "verified": true
+    },
+    {
+      "franchise": "House",
+      "character": "Lisa Cuddy",
+      "person": "Lisa Edelstein",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2011-05-23",
+      "announcedDate": "2011-05-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Moving_On_(House)",
+      "verified": true
+    },
+    {
+      "franchise": "House",
+      "character": "Lawrence Kutner",
+      "person": "Kal Penn",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-04-06",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Simple_Explanation",
+      "verified": true
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Bobby Singer",
+      "person": "Jim Beaver",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-11-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Death%27s_Door_(Supernatural)",
+      "verified": true
+    },
+    {
+      "franchise": "Stranger Things",
+      "character": "Bob Newby",
+      "person": "Sean Astin",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-10-27",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Stranger_Things_season_2",
+      "verified": true
+    },
+    {
+      "franchise": "Stranger Things",
+      "character": "Billy Hargrove",
+      "person": "Dacre Montgomery",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-07-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Stranger_Things_season_3",
+      "verified": true
+    },
+    {
+      "franchise": "Stranger Things",
+      "character": "Eddie Munson",
+      "person": "Joseph Quinn",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-07-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Stranger_Things_season_4",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Doctor",
+      "aliases": [
+        "Tenth Doctor",
+        "Eleventh Doctor"
+      ],
+      "person": "David Tennant",
+      "exitType": "RECAST",
+      "eventDate": "2010-01-01",
+      "announcedDate": "2008-10-29",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_End_of_Time_(Doctor_Who)",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Doctor",
+      "aliases": [
+        "Eleventh Doctor",
+        "Twelfth Doctor"
+      ],
+      "person": "Matt Smith",
+      "exitType": "RECAST",
+      "eventDate": "2013-12-25",
+      "announcedDate": "2013-06-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Time_of_the_Doctor",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Doctor",
+      "aliases": [
+        "Twelfth Doctor",
+        "Thirteenth Doctor"
+      ],
+      "person": "Peter Capaldi",
+      "exitType": "RECAST",
+      "eventDate": "2017-12-25",
+      "announcedDate": "2017-01-30",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Twice_Upon_a_Time_(Doctor_Who)",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "Amy Pond",
+      "person": "Karen Gillan",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2012-09-29",
+      "announcedDate": "2012-03-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Angels_Take_Manhattan",
+      "verified": true
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Oz",
+      "aliases": [
+        "Daniel Osbourne"
+      ],
+      "person": "Seth Green",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1999-12-14",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wild_at_Heart_(Buffy_the_Vampire_Slayer)",
+      "verified": true
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Tara Maclay",
+      "person": "Amber Benson",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2002-05-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Seeing_Red_(Buffy_the_Vampire_Slayer)",
+      "verified": true
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Angel",
+      "person": "David Boreanaz",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1999-05-19",
+      "announcedDate": "1998-11-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Graduation_Day_(Buffy_the_Vampire_Slayer)",
+      "verified": true
+    },
+    {
+      "franchise": "Star Trek: The Next Generation",
+      "character": "Tasha Yar",
+      "aliases": [
+        "Natasha Yar"
+      ],
+      "person": "Denise Crosby",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1988-04-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Skin_of_Evil",
+      "verified": true
+    },
+    {
+      "franchise": "Star Trek: The Next Generation",
+      "character": "Wesley Crusher",
+      "person": "Wil Wheaton",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1990-11-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Final_Mission",
+      "verified": true
+    },
+    {
+      "franchise": "The X-Files",
+      "character": "Fox Mulder",
+      "person": "David Duchovny",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2001-05-20",
+      "announcedDate": "2000-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Existence_(The_X-Files)",
+      "verified": true
+    },
+    {
+      "franchise": "ER",
+      "character": "Doug Ross",
+      "person": "George Clooney",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1999-02-18",
+      "announcedDate": "1998-01-14",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Storm_(ER)",
+      "verified": true
+    },
+    {
+      "franchise": "ER",
+      "character": "Carol Hathaway",
+      "person": "Julianna Margulies",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2000-05-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Such_Sweet_Sorrow_(ER)",
+      "verified": true
+    },
+    {
+      "franchise": "ER",
+      "character": "Mark Greene",
+      "person": "Anthony Edwards",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2002-05-09",
+      "announcedDate": "2001-08-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/On_the_Beach_(ER)",
+      "verified": true
+    },
+    {
+      "franchise": "Scrubs",
+      "character": "J.D.",
+      "aliases": [
+        "John Dorian",
+        "John 'J.D.' Dorian"
+      ],
+      "person": "Zach Braff",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2009-05-06",
+      "announcedDate": "2009-03-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/My_Finale",
+      "verified": true
+    },
+    {
+      "franchise": "Parks and Recreation",
+      "character": "Mark Brendanawicz",
+      "person": "Paul Schneider",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2010-05-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Freddy_Spaghetti",
+      "verified": true
+    },
+    {
+      "franchise": "Parks and Recreation",
+      "character": "Ann Perkins",
+      "person": "Rashida Jones",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2014-01-30",
+      "announcedDate": "2013-09-05",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ann_and_Chris",
+      "verified": true
+    },
+    {
+      "franchise": "Community",
+      "character": "Pierce Hawthorne",
+      "person": "Chevy Chase",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2013-04-11",
+      "announcedDate": "2012-11-21",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Community_season_4",
+      "verified": true
+    },
+    {
+      "franchise": "Community",
+      "character": "Troy Barnes",
+      "person": "Donald Glover",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2014-01-30",
+      "announcedDate": "2013-08-21",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Geothermal_Escapism",
+      "verified": true
+    },
+    {
+      "franchise": "Two and a Half Men",
+      "character": "Charlie Harper",
+      "person": "Charlie Sheen",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2011-09-19",
+      "announcedDate": "2011-03-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Nice_to_Meet_You,_Walden_Schmidt",
+      "verified": true
+    },
+    {
+      "franchise": "The Simpsons",
+      "character": "Maude Flanders",
+      "person": "Maggie Roswell",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2000-02-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Alone_Again,_Natura-Diddily",
+      "verified": true
+    },
+    {
+      "franchise": "Lost",
+      "character": "Boone Carlyle",
+      "person": "Ian Somerhalder",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2005-04-06",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Do_No_Harm_(Lost)",
+      "verified": true
+    },
+    {
+      "franchise": "Lost",
+      "character": "Charlie Pace",
+      "person": "Dominic Monaghan",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-05-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Through_the_Looking_Glass_(Lost)",
+      "verified": true
+    },
+    {
+      "franchise": "Lost",
+      "character": "Juliet Burke",
+      "person": "Elizabeth Mitchell",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2010-02-02",
+      "sourceUrl": "https://en.wikipedia.org/wiki/LA_X",
+      "verified": true
+    },
+    {
+      "franchise": "Dexter",
+      "character": "Rita Morgan",
+      "aliases": [
+        "Rita Bennett"
+      ],
+      "person": "Julie Benz",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-12-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Getaway_(Dexter)",
+      "verified": true
+    },
+    {
+      "franchise": "Dexter",
+      "character": "Debra Morgan",
+      "person": "Jennifer Carpenter",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-09-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Remember_the_Monsters%3F",
+      "verified": true
+    },
+    {
+      "franchise": "Shameless",
+      "character": "Fiona Gallagher",
+      "person": "Emmy Rossum",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2019-01-20",
+      "announcedDate": "2018-08-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Shameless_(American_TV_series)",
+      "verified": true
+    },
+    {
+      "franchise": "Suits",
+      "character": "Mike Ross",
+      "person": "Patrick J. Adams",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-04-25",
+      "announcedDate": "2017-11-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Suits_(American_TV_series)",
+      "verified": true
+    },
+    {
+      "franchise": "Suits",
+      "character": "Rachel Zane",
+      "person": "Meghan Markle",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-04-25",
+      "announcedDate": "2017-11-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Suits_(American_TV_series)",
+      "verified": true
+    },
+    {
+      "franchise": "Succession",
+      "character": "Logan Roy",
+      "person": "Brian Cox",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2023-04-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Connor%27s_Wedding",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Queen Elizabeth II",
+      "aliases": [
+        "Elizabeth II"
+      ],
+      "person": "Claire Foy",
+      "exitType": "RECAST",
+      "eventDate": "2019-11-17",
+      "announcedDate": "2017-10-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_3",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Queen Elizabeth II",
+      "aliases": [
+        "Elizabeth II"
+      ],
+      "person": "Olivia Colman",
+      "exitType": "RECAST",
+      "eventDate": "2022-11-09",
+      "announcedDate": "2021-01-28",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_5",
+      "verified": true
+    },
+    {
+      "franchise": "Downton Abbey",
+      "character": "Sybil Branson",
+      "aliases": [
+        "Lady Sybil Crawley",
+        "Sybil Crawley"
+      ],
+      "person": "Jessica Brown Findlay",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-11-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Downton_Abbey_series_3",
+      "verified": true
+    },
+    {
+      "franchise": "Downton Abbey",
+      "character": "Matthew Crawley",
+      "person": "Dan Stevens",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-12-25",
+      "announcedDate": "2012-11-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Downton_Abbey_series_3",
+      "verified": true
+    },
+    {
+      "franchise": "Mad Men",
+      "character": "Lane Pryce",
+      "person": "Jared Harris",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-06-03",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Commissions_and_Fees",
+      "verified": true
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Opie Winston",
+      "person": "Ryan Hurst",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-09-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Laying_Pipe",
+      "verified": true
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Clay Morrow",
+      "person": "Ron Perlman",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-11-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sons_of_Anarchy_season_6",
+      "verified": true
+    },
+    {
+      "franchise": "The Wire",
+      "character": "Stringer Bell",
+      "aliases": [
+        "Russell 'Stringer' Bell"
+      ],
+      "person": "Idris Elba",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2004-12-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Middle_Ground_(The_Wire)",
+      "verified": true
+    },
+    {
+      "franchise": "The Wire",
+      "character": "Omar Little",
+      "person": "Michael K. Williams",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2008-02-24",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Clarifications",
+      "verified": true
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Adriana La Cerva",
+      "person": "Drea de Matteo",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2004-05-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Long_Term_Parking",
+      "verified": true
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Christopher Moltisanti",
+      "person": "Michael Imperioli",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-05-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Kennedy_and_Heidi",
+      "verified": true
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Jimmy Darmody",
+      "aliases": [
+        "James Darmody"
+      ],
+      "person": "Michael Pitt",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-12-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/To_the_Lost",
+      "verified": true
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Richard Harrow",
+      "person": "Jack Huston",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-11-24",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Farewell_Daddy_Blues",
+      "verified": true
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Polly Gray",
+      "aliases": [
+        "Elizabeth 'Polly' Gray",
+        "Aunt Polly"
+      ],
+      "person": "Helen McCrory",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2022-02-27",
+      "announcedDate": "2021-04-16",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Peaky_Blinders_series_6",
+      "verified": true
+    },
+    {
+      "franchise": "Marvel Comics",
+      "character": "Captain America",
+      "person": "Ed Brubaker",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-03-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Death_of_Captain_America",
+      "verified": true
+    },
+    {
+      "franchise": "Marvel Comics",
+      "character": "Wolverine",
+      "person": "Charles Soule",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-09-03",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Death_of_Wolverine",
+      "verified": true
+    },
+    {
+      "franchise": "Marvel Comics",
+      "character": "Spider-Man",
+      "person": "Dan Slott",
+      "exitType": "RECAST",
+      "eventDate": "2012-12-26",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Superior_Spider-Man",
+      "verified": true
+    },
+    {
+      "franchise": "DC Comics",
+      "character": "Superman",
+      "person": "Dan Jurgens",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "1992-11-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Death_of_Superman",
+      "verified": true
+    },
+    {
+      "franchise": "DC Comics",
+      "character": "Robin",
+      "aliases": [
+        "Tim Drake",
+        "Damian Wayne"
+      ],
+      "person": "Grant Morrison",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-02-27",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Batman_Incorporated",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Olenna Tyrell",
+      "person": "Diana Rigg",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-08-06",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Queen%27s_Justice",
+      "verified": true
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Petyr Baelish",
+      "aliases": [
+        "Littlefinger",
+        "Petyr 'Littlefinger' Baelish"
+      ],
+      "person": "Aidan Gillen",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-08-27",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Dragon_and_the_Wolf",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Abraham Ford",
+      "person": "Michael Cudlitz",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-10-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Day_Will_Come_When_You_Won%27t_Be",
+      "verified": true
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Sasha Williams",
+      "person": "Sonequa Martin-Green",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-04-02",
+      "announcedDate": "2016-11-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_First_Day_of_the_Rest_of_Your_Life",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "April Kepner",
+      "person": "Sarah Drew",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-05-17",
+      "announcedDate": "2018-03-08",
+      "sourceUrl": "https://en.wikipedia.org/wiki/All_of_Me_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Arizona Robbins",
+      "person": "Jessica Capshaw",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-05-17",
+      "announcedDate": "2018-03-08",
+      "sourceUrl": "https://en.wikipedia.org/wiki/All_of_Me_(Grey%27s_Anatomy)",
+      "verified": true
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Crowley",
+      "person": "Mark Sheppard",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-05-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/All_Along_the_Watchtower_(Supernatural)",
+      "verified": true
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Castiel",
+      "person": "Misha Collins",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2020-11-05",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Despair_(Supernatural)",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "Bill Potts",
+      "person": "Pearl Mackie",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2017-07-01",
+      "announcedDate": "2017-04-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Doctor_Falls",
+      "verified": true
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Doctor",
+      "aliases": [
+        "Thirteenth Doctor",
+        "Fourteenth Doctor"
+      ],
+      "person": "Jodie Whittaker",
+      "exitType": "RECAST",
+      "eventDate": "2022-10-23",
+      "announcedDate": "2021-07-29",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Power_of_the_Doctor",
+      "verified": true
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Grace Shelby",
+      "aliases": [
+        "Grace Burgess"
+      ],
+      "person": "Annabelle Wallis",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-05-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Peaky_Blinders_series_3",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Princess Margaret",
+      "aliases": [
+        "Margaret"
+      ],
+      "person": "Vanessa Kirby",
+      "exitType": "RECAST",
+      "eventDate": "2019-11-17",
+      "announcedDate": "2018-01-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_3",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Prince Philip",
+      "aliases": [
+        "Philip",
+        "Prince Philip, Duke of Edinburgh"
+      ],
+      "person": "Matt Smith",
+      "exitType": "RECAST",
+      "eventDate": "2019-11-17",
+      "announcedDate": "2018-01-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_3",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Princess Margaret",
+      "aliases": [
+        "Margaret"
+      ],
+      "person": "Helena Bonham Carter",
+      "exitType": "RECAST",
+      "eventDate": "2022-11-09",
+      "announcedDate": "2021-01-28",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_5",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Prince Charles",
+      "aliases": [
+        "Charles",
+        "Charles, Prince of Wales"
+      ],
+      "person": "Josh O'Connor",
+      "exitType": "RECAST",
+      "eventDate": "2022-11-09",
+      "announcedDate": "2020-10-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_5",
+      "verified": true
+    },
+    {
+      "franchise": "The Crown",
+      "character": "Diana, Princess of Wales",
+      "aliases": [
+        "Princess Diana",
+        "Diana"
+      ],
+      "person": "Emma Corrin",
+      "exitType": "RECAST",
+      "eventDate": "2022-11-09",
+      "announcedDate": "2020-10-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Crown_season_5",
+      "verified": true
+    },
+    {
+      "franchise": "The Mandalorian",
+      "character": "Grogu",
+      "aliases": [
+        "The Child"
+      ],
+      "person": "Jon Favreau",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2020-12-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chapter_16:_The_Rescue",
+      "verified": true,
+      "notes": "Separation, not death: Grogu leaves the roster at the season 2 finale and is absent for the following season."
+    }
+  ]
+}
