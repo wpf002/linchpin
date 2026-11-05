@@ -76,6 +76,9 @@ class CorpusExitEvent(BaseModel):
     source_url: str = Field(alias="sourceUrl")
     verified: bool = False
     notes: str | None = None
+    #: Sentence from the source page that states the exit. Written by stage-exits
+    #: so a reviewer can check it without opening the page.
+    evidence: str | None = None
 
     @field_validator("source_url")
     @classmethod

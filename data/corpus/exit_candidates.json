@@ -1,0 +1,693 @@
+{
+  "comment": "Candidate exits for `python cli.py stage-exits`. Staging fetches the air date from TVMaze and a Wikipedia sentence stating the exit; staged events enter exit_events.json with verified=false until a person reads the source.",
+  "candidates": [
+    {
+      "franchise": "Game of Thrones",
+      "character": "Daenerys Targaryen",
+      "person": "Emilia Clarke",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 6,
+      "episodeTitle": "The Iron Throne"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Queen Cersei Lannister",
+      "person": "Lena Headey",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 5,
+      "episodeTitle": "The Bells"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Ser Jaime Lannister",
+      "person": "Nikolaj Coster-Waldau",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 5,
+      "episodeTitle": "The Bells"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Sandor Clegane",
+      "person": "Rory McCann",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 5,
+      "episodeTitle": "The Bells"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Lord Varys",
+      "person": "Conleth Hill",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 5,
+      "episodeTitle": "The Bells"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Missandei",
+      "person": "Nathalie Emmanuel",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 4,
+      "episodeTitle": "The Last of the Starks"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Theon Greyjoy",
+      "person": "Alfie Allen",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 3,
+      "episodeTitle": "The Long Night"
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Ser Jorah Mormont",
+      "person": "Iain Glen",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 3,
+      "episodeTitle": "The Long Night"
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Eduard \"Lalo\" Salamanca",
+      "person": "Tony Dalton",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 8,
+      "episodeTitle": "Point and Shoot"
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Kim Wexler",
+      "person": "Rhea Seehorn",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 9,
+      "episodeTitle": "Fun and Games"
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Walter White",
+      "person": "Bryan Cranston",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 16,
+      "episodeTitle": "Felina"
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Todd Alquist",
+      "person": "Jesse Plemons",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 16,
+      "episodeTitle": "Felina"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Tara Chambler",
+      "person": "Alanna Masterson",
+      "exitType": "CHARACTER_DEATH",
+      "season": 9,
+      "episode": 15,
+      "episodeTitle": "The Calm Before"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Enid",
+      "person": "Katelyn Nacon",
+      "exitType": "CHARACTER_DEATH",
+      "season": 9,
+      "episode": 15,
+      "episodeTitle": "The Calm Before"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Rosita Espinosa",
+      "person": "Christian Serratos",
+      "exitType": "CHARACTER_DEATH",
+      "season": 11,
+      "episode": 24,
+      "episodeTitle": "Rest in Peace"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Morgan Jones",
+      "person": "Lennie James",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 8,
+      "episode": 16,
+      "episodeTitle": "Wrath"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Maggie Greene",
+      "person": "Lauren Cohan",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 9,
+      "episode": 5,
+      "episodeTitle": "What Comes After"
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Beth Greene",
+      "person": "Emily Kinney",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 8,
+      "episodeTitle": "Coda"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Calliope \"Callie\" Torres",
+      "person": "Sara Ramirez",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 12,
+      "episode": 24,
+      "episodeTitle": "Family Affair"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Jackson Avery",
+      "person": "Jesse Williams",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Tradition"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Meredith Grey",
+      "person": "Ellen Pompeo",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 19,
+      "episode": 7,
+      "episodeTitle": "I'll Follow the Sun"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Isobel \"Izzie\" Stevens",
+      "person": "Katherine Heigl",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 12,
+      "episodeTitle": "I Like You So Much Better When You're Naked"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Teddy Altman",
+      "person": "Kim Raver",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 8,
+      "episode": 24,
+      "episodeTitle": "Flight"
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Lucifer",
+      "person": "Mark Pellegrino",
+      "exitType": "CHARACTER_DEATH",
+      "season": 13,
+      "episode": 23,
+      "episodeTitle": "Let the Good Times Roll"
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Dean Winchester",
+      "person": "Jensen Ackles",
+      "exitType": "CHARACTER_DEATH",
+      "season": 15,
+      "episode": 20,
+      "episodeTitle": "Carry On"
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Bela Talbot",
+      "person": "Lauren Cohan",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 15,
+      "episodeTitle": "Time Is on My Side"
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Ruby",
+      "person": "Genevieve Cortese",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 22,
+      "episodeTitle": "Lucifer Rising"
+    },
+    {
+      "franchise": "Stranger Things",
+      "character": "Dr. Martin Brenner",
+      "person": "Matthew Modine",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 7,
+      "episodeTitle": "The Massacre at Hawkins Lab"
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "John Shelby",
+      "person": "Joe Cole",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "The Noose"
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Michael Gray",
+      "person": "Finn Cole",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 6,
+      "episodeTitle": "Lock and Key"
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Major Chester Campbell",
+      "person": "Sam Neill",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 6,
+      "episodeTitle": "Episode 6"
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Fifteenth Doctor",
+      "person": "Ncuti Gatwa",
+      "exitType": "RECAST",
+      "episodeTitle": "The Reality War"
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Fourteenth Doctor",
+      "person": "David Tennant",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "The Giggle"
+    },
+    {
+      "franchise": "House",
+      "character": "Dr. Allison Cameron",
+      "person": "Jennifer Morrison",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Teamwork"
+    },
+    {
+      "franchise": "House",
+      "character": "Martha M. Masters",
+      "person": "Amber Tamblyn",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 7,
+      "episode": 19,
+      "episodeTitle": "Last Temptation"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Peter Benton",
+      "person": "Eriq La Salle",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 8,
+      "episode": 10,
+      "episodeTitle": "I'll Be Home for Christmas"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Robert Romano",
+      "person": "Paul McCrane",
+      "exitType": "CHARACTER_DEATH",
+      "season": 10,
+      "episode": 8,
+      "episodeTitle": "Freefall"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Susan Lewis",
+      "person": "Sherry Stringfield",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 3,
+      "episode": 8,
+      "episodeTitle": "Union Station"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. John Carter",
+      "person": "Noah Wyle",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 11,
+      "episode": 22,
+      "episodeTitle": "The Show Must Go On"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Gregory Pratt",
+      "person": "Mekhi Phifer",
+      "exitType": "CHARACTER_DEATH",
+      "season": 15,
+      "episode": 1,
+      "episodeTitle": "Life After Death"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Kerry Weaver",
+      "person": "Laura Innes",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "A House Divided"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Abby Lockhart",
+      "person": "Maura Tierney",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Haunted"
+    },
+    {
+      "franchise": "Parks and Recreation",
+      "character": "Chris Traeger",
+      "person": "Rob Lowe",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 13,
+      "episodeTitle": "Ann and Chris"
+    },
+    {
+      "franchise": "Community",
+      "character": "Shirley Bennett",
+      "person": "Yvette Nicole Brown",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 5,
+      "episode": 13,
+      "episodeTitle": "Basic Sandwich"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Shannon Rutherford",
+      "person": "Maggie Grace",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 6,
+      "episodeTitle": "Abandoned"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Charlotte Lewis",
+      "person": "Rebecca Mader",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 5,
+      "episodeTitle": "This Place Is Death"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Daniel Faraday",
+      "person": "Jeremy Davies",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 14,
+      "episodeTitle": "The Variable"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Sayid Jarrah",
+      "person": "Naveen Andrews",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 14,
+      "episodeTitle": "The Candidate"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Jin Soo Kwon",
+      "person": "Daniel Dae Kim",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 14,
+      "episodeTitle": "The Candidate"
+    },
+    {
+      "franchise": "Lost",
+      "character": "Sun Hwa Kwon",
+      "person": "Yunjin Kim",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 14,
+      "episodeTitle": "The Candidate"
+    },
+    {
+      "franchise": "Lost",
+      "character": "John Locke",
+      "person": "Terry O'Quinn",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 7,
+      "episodeTitle": "The Life and Death of Jeremy Bentham"
+    },
+    {
+      "franchise": "Dexter",
+      "character": "James Doakes",
+      "person": "Erik King",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 12,
+      "episodeTitle": "The British Invasion"
+    },
+    {
+      "franchise": "Dexter",
+      "character": "Maria LaGuerta",
+      "person": "Lauren Vélez",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 12,
+      "episodeTitle": "Surprise, Motherfucker!"
+    },
+    {
+      "franchise": "Mad Men",
+      "character": "Bertram Cooper",
+      "person": "Robert Morse",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 7,
+      "episodeTitle": "Waterloo"
+    },
+    {
+      "franchise": "Mad Men",
+      "character": "Salvatore Romano",
+      "person": "Bryan Batt",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 3,
+      "episode": 9,
+      "episodeTitle": "Wee Small Hours"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Kip 'Half-Sack' Epps",
+      "person": "Johnny Lewis",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 13,
+      "episodeTitle": "Na Trioblóidí"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Tara Knowles",
+      "person": "Maggie Siff",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 13,
+      "episodeTitle": "A Mother's Work"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Gemma Teller Morrow",
+      "person": "Katey Sagal",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 12,
+      "episodeTitle": "Red Rose"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Chief Wayne Unser",
+      "person": "Dayton Callie",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 12,
+      "episodeTitle": "Red Rose"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Jackson 'Jax' Teller",
+      "person": "Charlie Hunnam",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 13,
+      "episodeTitle": "Papa's Goods"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Jean Carlos 'Juice' Ortiz",
+      "person": "Theo Rossi",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 13,
+      "episodeTitle": "Papa's Goods"
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Robert 'Bobby' Munson",
+      "person": "Mark Boone Junior",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 10,
+      "episodeTitle": "Faith and Despondency"
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Bobby \"Bacala\" Baccalieri",
+      "person": "Steve Schirripa",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 20,
+      "episodeTitle": "The Blue Comet"
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Vito Spatafore",
+      "person": "Joseph R. Gannascoli",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 11,
+      "episodeTitle": "Cold Stones"
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Phil Leotardo",
+      "person": "Frank Vincent",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 21,
+      "episodeTitle": "Made in America"
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Johnny \"Sack\" Sacrimoni",
+      "person": "Vincent Curatola",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 14,
+      "episodeTitle": "Stage 5"
+    },
+    {
+      "franchise": "The Wire",
+      "character": "Preston \"Bodie\" Broadus",
+      "person": "J. D. Williams",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 13,
+      "episodeTitle": "Final Grades"
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Gyp Rosetti",
+      "person": "Bobby Cannavale",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 12,
+      "episodeTitle": "Margate Sands"
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Angela Darmody",
+      "person": "Aleksa Palladino",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 11,
+      "episodeTitle": "Under God's Power She Flourishes"
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Albert \"Chalky\" White",
+      "person": "Michael K. Williams",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 7,
+      "episodeTitle": "Friendless Child"
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Eddie Kessler",
+      "person": "Anthony Laciura",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "Marriage and Hunting"
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Enoch \"Nucky\" Thompson",
+      "person": "Steve Buscemi",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 8,
+      "episodeTitle": "Eldorado"
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Cordelia Chase",
+      "person": "Charisma Carpenter",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Graduation Day: Part II",
+      "season": 3,
+      "episode": 22
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Anya Jenkins",
+      "person": "Emma Caulfield",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 22,
+      "episodeTitle": "Chosen"
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Riley Finn",
+      "person": "Marc Blucas",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 5,
+      "episode": 10,
+      "episodeTitle": "Into the Woods"
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Buffy Summers",
+      "person": "Sarah Michelle Gellar",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 22,
+      "episodeTitle": "The Gift"
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Rupert Giles",
+      "person": "Anthony Head",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 8,
+      "episodeTitle": "Tabula Rasa"
+    },
+    {
+      "franchise": "Downton Abbey",
+      "character": "Sarah O'Brien",
+      "person": "Siobhan Finneran",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "Episode 1"
+    }
+  ]
+}

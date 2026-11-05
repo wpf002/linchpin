@@ -29,6 +29,14 @@ class TvMazeShow:
 
 
 @dataclass(frozen=True, slots=True)
+class TvMazeEpisode:
+    season: int
+    number: int | None
+    title: str
+    airdate: date
+
+
+@dataclass(frozen=True, slots=True)
 class TvMazeCastEntry:
     person_name: str
     character_name: str
@@ -36,7 +44,7 @@ class TvMazeCastEntry:
     is_main: bool
 
 
-def _client() -> ThrottledClient:
+def open_client() -> ThrottledClient:
     return ThrottledClient(
         namespace="tvmaze",
         min_interval_seconds=MIN_INTERVAL_SECONDS,
@@ -49,7 +57,7 @@ def _client() -> ThrottledClient:
 
 def search_show(name: str, *, client: ThrottledClient | None = None) -> TvMazeShow | None:
     owned = client is None
-    active = client or _client()
+    active = client or open_client()
     try:
         payload = active.get_json(f"{BASE}/singlesearch/shows", {"q": name})
         if not payload or payload.get("__missing__"):
@@ -70,7 +78,7 @@ def search_show(name: str, *, client: ThrottledClient | None = None) -> TvMazeSh
 
 def fetch_cast(show_id: int, *, client: ThrottledClient | None = None) -> list[TvMazeCastEntry]:
     owned = client is None
-    active = client or _client()
+    active = client or open_client()
     try:
         payload = active.get_json(f"{BASE}/shows/{show_id}/cast")
         if not payload or not isinstance(payload, list):
@@ -98,14 +106,41 @@ def fetch_cast(show_id: int, *, client: ThrottledClient | None = None) -> list[T
 
 
 def fetch_episode_dates(show_id: int, *, client: ThrottledClient | None = None) -> list[date]:
+    return sorted({episode.airdate for episode in fetch_episodes(show_id, client=client)})
+
+
+def fetch_episodes(
+    show_id: int, *, include_specials: bool = False, client: ThrottledClient | None = None
+) -> list[TvMazeEpisode]:
+    """Aired episodes. Specials carry no episode number.
+
+    The release calendar excludes specials, so the default keeps the request
+    (and its cache key) identical to what ingest has always fetched.
+    """
     owned = client is None
-    active = client or _client()
+    active = client or open_client()
     try:
-        payload = active.get_json(f"{BASE}/shows/{show_id}/episodes")
+        payload = active.get_json(
+            f"{BASE}/shows/{show_id}/episodes", {"specials": "1"} if include_specials else None
+        )
         if not payload or not isinstance(payload, list):
             return []
-        dates = [_parse_date(episode.get("airdate")) for episode in payload]
-        return sorted({day for day in dates if day is not None})
+        episodes: list[TvMazeEpisode] = []
+        for row in payload:
+            airdate = _parse_date(row.get("airdate"))
+            season = row.get("season")
+            if airdate is None or season is None:
+                continue
+            number = row.get("number")
+            episodes.append(
+                TvMazeEpisode(
+                    season=int(season),
+                    number=int(number) if number is not None else None,
+                    title=str(row.get("name") or ""),
+                    airdate=airdate,
+                )
+            )
+        return episodes
     finally:
         if owned:
             active.close()
@@ -115,7 +150,7 @@ def fetch_season_premieres(
     show_id: int, *, client: ThrottledClient | None = None
 ) -> list[tuple[int, date]]:
     owned = client is None
-    active = client or _client()
+    active = client or open_client()
     try:
         payload = active.get_json(f"{BASE}/shows/{show_id}/seasons")
         if not payload or not isinstance(payload, list):

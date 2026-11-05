@@ -89,6 +89,10 @@ def run_ingest(*, only: list[str] | None = None, skip_signals: bool = False) -> 
     report = IngestReport()
     franchises = [f for f in load_franchises() if only is None or f.canonical_name in only]
     events = load_exit_events()
+    # Every franchise needs every event window: a franchise serves as a control
+    # for other franchises' exits, and a control without pageviews in the
+    # treated window cannot produce a difference-in-differences estimate.
+    signal_ranges = _signal_ranges(list(events))
 
     wiki_client = ThrottledClient(
         namespace="wikipedia-summary",
@@ -103,7 +107,7 @@ def run_ingest(*, only: list[str] | None = None, skip_signals: bool = False) -> 
                 outcome = _ingest_franchise(
                     conn,
                     corpus_franchise,
-                    events=[e for e in events if e.franchise == corpus_franchise.canonical_name],
+                    signal_ranges=signal_ranges,
                     wiki_client=wiki_client,
                     skip_signals=skip_signals,
                     character_ids=character_ids,
@@ -132,7 +136,7 @@ def _ingest_franchise(
     conn: Connection,
     corpus_franchise: CorpusFranchise,
     *,
-    events: list[CorpusExitEvent],
+    signal_ranges: list[tuple[date, date]],
     wiki_client: ThrottledClient,
     skip_signals: bool,
     character_ids: dict[tuple[str, str], str],
@@ -159,7 +163,6 @@ def _ingest_franchise(
     outcome.roster_size = len(roster)
 
     release_dates = sorted(day for _, day in releases)
-    ranges = _signal_ranges(events)
 
     # One batched Action API query for the whole roster: ~2 requests instead of
     # one per candidate title.
@@ -220,7 +223,7 @@ def _ingest_franchise(
         outcome.resolved += 1
         if not skip_signals:
             outcome.signal_rows += _ingest_pageviews(
-                conn, character_id, wiki_title, ranges, release_dates
+                conn, character_id, wiki_title, signal_ranges, release_dates
             )
 
     repository.set_roster_complete(conn, franchise_id, outcome.roster_complete)

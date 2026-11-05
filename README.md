@@ -39,6 +39,7 @@ Run from `services/scoring`:
 .venv/bin/python cli.py ingest      # rosters, releases, pageviews, exit events
 .venv/bin/python cli.py score       # carry scores and fragility, keyed by MODEL_VERSION
 .venv/bin/python cli.py validate    # event study and kill criteria
+.venv/bin/python cli.py stage-exits # date and source data/corpus/exit_candidates.json; --write appends them unverified
 ```
 
 Ingest is cached under `data/cache`. A cold run takes roughly an hour because every source is throttled. Raw signal rows are append-only; scoring never rewrites them.

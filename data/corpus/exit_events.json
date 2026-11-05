@@ -987,6 +987,706 @@
       "sourceUrl": "https://en.wikipedia.org/wiki/Chapter_16:_The_Rescue",
       "verified": true,
       "notes": "Separation, not death: Grogu leaves the roster at the season 2 finale and is absent for the following season."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Daenerys Targaryen",
+      "person": "Emilia Clarke",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Iron_Throne_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "As Jon grieves, Drogon arrives and discovers that Daenerys has been murdered; an anguished Drogon ultimately melts the Iron Throne before carrying her body away to the east."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Queen Cersei Lannister",
+      "person": "Lena Headey",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "Hugh Montgomery of BBC Culture wrote that characters such as Tyrion, Jaime, Daenerys, and Cersei were \"definitively sacrificed to the show's scrambled plotting\", and that Game of Thrones was previously \"a show that intelligently delineated a senseless world\", but that it was now nonsense."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Ser Jaime Lannister",
+      "person": "Nikolaj Coster-Waldau",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "VanDerWerff stated that Cersei and Jaime's deaths were not given much thought by the writers and were instead simply something to check off a list."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Sandor Clegane",
+      "person": "Rory McCann",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "As Cersei and Qyburn attempt to escape, Sandor arrives and kills the Queensguard in order to fight his brother, Gregor."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Lord Varys",
+      "person": "Conleth Hill",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-12",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "Filming for Varys's death scene lasted seven months as rain kept postponing the shoot."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Missandei",
+      "person": "Nathalie Emmanuel",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-05-05",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Last_of_the_Starks",
+      "verified": false,
+      "evidence": "Cersei refuses and has Gregor Clegane behead Missandei, horrifying and enraging Grey Worm and Daenerys."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Theon Greyjoy",
+      "person": "Alfie Allen",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-04-28",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Long_Night_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "Feeling resolved, Theon charges the Night King, who easily kills him with his own spear."
+    },
+    {
+      "franchise": "Game of Thrones",
+      "character": "Ser Jorah Mormont",
+      "person": "Iain Glen",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-04-28",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Long_Night_%28Game_of_Thrones%29",
+      "verified": false,
+      "evidence": "Jorah, meanwhile, dies from his wounds in the arms of a sobbing Daenerys."
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Eduard \"Lalo\" Salamanca",
+      "person": "Tony Dalton",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-07-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Point_and_Shoot_%28Better_Call_Saul%29",
+      "verified": false,
+      "evidence": "He reaches the handgun he previously hid, then fires several shots at Lalo."
+    },
+    {
+      "franchise": "Better Call Saul",
+      "character": "Kim Wexler",
+      "person": "Rhea Seehorn",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2022-07-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fun_and_Games_%28Better_Call_Saul%29",
+      "verified": false,
+      "evidence": "Tobias said the transition from Kim's departure to Jimmy's new life was \"brilliant\": \"We don't need to fill in the steps that got Jimmy from here to there because Jimmy McGill moved out right along with Kim."
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Walter White",
+      "person": "Bryan Cranston",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-09-29",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Felina_%28Breaking_Bad%29",
+      "verified": false,
+      "evidence": "However, Emily Nussbaum, writing in the New Yorker, criticized the episode, claiming it so neatly wrapped up the series in Walt's favor that it seemed more like \"the dying fantasy on the part of Walter White, not something that was actually happening\"."
+    },
+    {
+      "franchise": "Breaking Bad",
+      "character": "Todd Alquist",
+      "person": "Jesse Plemons",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-09-29",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Felina_%28Breaking_Bad%29",
+      "verified": false,
+      "evidence": "Jesse strangles Todd with his shackles, then frees himself with Todd's keys."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Tara Chambler",
+      "person": "Alanna Masterson",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-03-24",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Calm_Before",
+      "verified": false,
+      "evidence": "Whereas in the comic, characters like Ezekiel and Rosita are among those beheaded and placed on the pikes, the show had long-time characters Tara, Enid, and Henry fall victim."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Enid",
+      "person": "Katelyn Nacon",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2019-03-24",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Calm_Before",
+      "verified": false,
+      "evidence": "In the case of Henry, this was necessary to cement storylines for Ezekiel, Carol, and Daryl going forward, but for Tara and Enid, Greg Nicotero noted that Tara was finally becoming more comfortable as a leader, while Enid was showing a budding romance with Alden, so that both deaths were considered tragic."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Rosita Espinosa",
+      "person": "Christian Serratos",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-11-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rosita_Espinosa",
+      "verified": false,
+      "evidence": "This also kills Rosita's unborn child."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Morgan Jones",
+      "person": "Lennie James",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-04-15",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wrath_%28The_Walking_Dead%29",
+      "verified": false,
+      "evidence": "This episode features the departure of Morgan Jones, portrayed by Lennie James, as the character was about to be incorporated into the show's companion series, Fear the Walking Dead, where he became a regular character starting with its fourth season, which premiered immediately after the episode's broadcast."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Maggie Greene",
+      "person": "Lauren Cohan",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-11-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/What_Comes_After_%28The_Walking_Dead%29",
+      "verified": false,
+      "evidence": "It was also the last appearance for Lauren Cohan (Maggie Greene) in the season, due to other acting commitments."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Beth Greene",
+      "person": "Emily Kinney",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-11-30",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Coda_%28The_Walking_Dead%29",
+      "verified": false,
+      "evidence": "The two get into a fight, resulting in O'Donnell's death when Beth pushes him down the elevator shaft."
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Calliope \"Callie\" Torres",
+      "person": "Sara Ramirez",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2016-05-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Family_Affair_%28Grey%27s_Anatomy%29",
+      "verified": false,
+      "evidence": "She explained that Callie's exit wasn't part of the original plan, stating, “This one was different because it wasn’t a big planned thing."
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Jackson Avery",
+      "person": "Jesse Williams",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2021-05-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Grey%27s_Anatomy_season_17",
+      "verified": false,
+      "evidence": "Jackson Avery, would be departing as a series regular following the fifteenth episode, \"Tradition\"."
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Meredith Grey",
+      "person": "Ellen Pompeo",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2023-02-23",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Meredith_Grey",
+      "verified": false,
+      "evidence": "at the time of Sandra Oh's exit wrote, \"In Grey's Anatomy's 10-year history, the doctor duo has been through a lot together: weddings, deaths, plane crashes, bomb threats, shooting, you name it, they've lived (and danced) through it."
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Isobel \"Izzie\" Stevens",
+      "person": "Katherine Heigl",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2010-01-21",
+      "sourceUrl": "https://en.wikipedia.org/wiki/I_Like_You_So_Much_Better_When_You%27re_Naked_%28Grey%27s_Anatomy%29",
+      "verified": false,
+      "evidence": "Heigl reflected: \"Even though there's a part of me that would like to go back and do the quick Izzie farewell, I also think that my last scene – where Meredith says to Izzie, 'Don't go, we're your family', and Izzie's response was, 'No you're not, you're just a bunch of people I worked with, and I can find that anywhere' – was kind of tragic and appropriate all at the same time."
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Teddy Altman",
+      "person": "Kim Raver",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2012-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Flight_%28Grey%27s_Anatomy%29",
+      "verified": false,
+      "evidence": "He noted that Lexie's death felt like a finale in itself and found Teddy Altman's departure the most significant moment at Seattle Grace."
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Lucifer",
+      "person": "Mark Pellegrino",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2018-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lilith_%28Supernatural%29",
+      "verified": false,
+      "evidence": "In the season finale \"Lucifer Rising\", Sam kills Lilith under the impression that her death will prevent the final seal from breaking, and in doing so inadvertently breaks the final seal, releasing Lucifer."
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Dean Winchester",
+      "person": "Jensen Ackles",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2020-11-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Carry_On_%28Supernatural%29",
+      "verified": false,
+      "evidence": "After saying goodbye, Dean dies in Sam's arms."
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Bela Talbot",
+      "person": "Lauren Cohan",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2008-05-08",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Supernatural_season_3",
+      "verified": false,
+      "evidence": "As Dean's deadline approaches, their efforts are further hindered by Bela Talbot (Lauren Cohan), a professional thief of occult items who is often at odds with the Winchesters."
+    },
+    {
+      "franchise": "Supernatural",
+      "character": "Ruby",
+      "person": "Genevieve Cortese",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-05-14",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ruby_%28Supernatural%29",
+      "verified": false,
+      "evidence": "In her debut, Cortese impressed Peterson \"even less than the old Ruby.\" While Peterson was accepting of the sexual relationship between Ruby and Sam, she felt the \"seduction came out of nowhere\" in \"I Know What You Did Last Summer.\" Contributing to this problem was Cortese's inability to \"pull it off,\" making the \"whole thing [feel] gratuitous and clumsy.\" Conversely, Peterson enjoyed the performa"
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "John Shelby",
+      "person": "Joe Cole",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-11-15",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Peaky_Blinders_%28TV_series%29",
+      "verified": false,
+      "evidence": "Donald Sumpter as Arthur Bigge (series 4), the King's Private Secretary, who deals with the case of the execution of Polly, Arthur, John and Michael."
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Michael Gray",
+      "person": "Finn Cole",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2022-04-03",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Alfie_Solomons",
+      "verified": false,
+      "evidence": "During a confrontation, Tommy's cousin Michael Gray (Finn Cole) kills Alfie's associate and talks Tommy out of killing him."
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "character": "Major Chester Campbell",
+      "person": "Sam Neill",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-11-06",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Peaky_Blinders_characters",
+      "verified": false,
+      "evidence": "Two years after Campbell's death, it is revealed that Churchill continues to strike deals with Tommy Shelby, a partnership that remains mutually beneficial."
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "The Fifteenth Doctor",
+      "person": "Ncuti Gatwa",
+      "exitType": "RECAST",
+      "eventDate": "2025-05-31",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fifteenth_Doctor",
+      "verified": false,
+      "evidence": "Usually, at the end of each incarnation's life, the Doctor regenerates; as a result, both their physical appearance and personality change."
+    },
+    {
+      "franchise": "House",
+      "character": "Dr. Allison Cameron",
+      "person": "Jennifer Morrison",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2009-11-16",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Allison_Cameron",
+      "verified": false,
+      "evidence": "In season 6, Cameron leaves PPTH and divorces Chase after finding out about the events that took place in the episode \"The Tyrant\"."
+    },
+    {
+      "franchise": "House",
+      "character": "Martha M. Masters",
+      "person": "Amber Tamblyn",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2011-04-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/House_%28TV_series%29",
+      "verified": false,
+      "evidence": "Cuddy and Masters depart before season eight; Foreman becomes the new Dean of Medicine, while Dr."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Peter Benton",
+      "person": "Eriq La Salle",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2001-12-13",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Cleo_Finch",
+      "verified": false,
+      "evidence": "After winning his custody battle over Reese, Peter also departed the ER to work at the same hospital as Cleo."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Robert Romano",
+      "person": "Paul McCrane",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2003-11-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Robert_Romano_%28ER%29",
+      "verified": false,
+      "evidence": "He evolves from being a surgical attending physician to chief of staff at Chicago's County General Hospital, with McCrane being promoted to series regular from the sixth season until Romano's death in the tenth season."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Susan Lewis",
+      "person": "Sherry Stringfield",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "1996-11-21",
+      "sourceUrl": "https://en.wikipedia.org/wiki/ER_season_3",
+      "verified": false,
+      "evidence": "Early in the season, Susan Lewis leaves for Phoenix to live with her sister and niece."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. John Carter",
+      "person": "Noah Wyle",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2005-05-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Show_Must_Go_On_%28ER%29",
+      "verified": false,
+      "evidence": "Carter then leaves with Dr."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Gregory Pratt",
+      "person": "Mekhi Phifer",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2008-09-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/ER_season_15",
+      "verified": false,
+      "evidence": "Despite Pratt's colleagues' efforts, he dies from his injuries."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Kerry Weaver",
+      "person": "Laura Innes",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2007-01-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/ER_season_13",
+      "verified": false,
+      "evidence": "Meanwhile, the show's longest-serving character Kerry Weaver departs when Kovač is forced to make budget cuts which threaten her job."
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Abby Lockhart",
+      "person": "Maura Tierney",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2008-10-30",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Abby_Lockhart",
+      "verified": false,
+      "evidence": "As Carter is phased out of the show and Weaver departs midway through Season 13, Abby and Luka Kovač are the senior figures on the show until their departure in October 2008."
+    },
+    {
+      "franchise": "Parks and Recreation",
+      "character": "Chris Traeger",
+      "person": "Rob Lowe",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2014-01-30",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Parks_and_Recreation_season_6",
+      "verified": false,
+      "evidence": "Their final episode was episode 13, \"Ann and Chris\"."
+    },
+    {
+      "franchise": "Community",
+      "character": "Shirley Bennett",
+      "person": "Yvette Nicole Brown",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2014-04-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Community_characters",
+      "verified": false,
+      "evidence": "In the season six premiere, Shirley leaves for Atlanta in order to care for her ailing father."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Shannon Rutherford",
+      "person": "Maggie Grace",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2005-11-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Abandoned_%28Lost%29",
+      "verified": false,
+      "evidence": "This episode marks main character Shannon Rutherford's death."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Charlotte Lewis",
+      "person": "Rebecca Mader",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-02-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/This_Place_Is_Death",
+      "verified": false,
+      "evidence": "IGN's Chris Carabott felt Charlotte's death could have been explored further, but as there was so much happening in the episode not enough time was made for her death."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Daniel Faraday",
+      "person": "Jeremy Davies",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-04-29",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Variable",
+      "verified": false,
+      "evidence": "As he dies, Daniel tells Eloise that he is her son, and comments that she (referring to her older self) knew he was going to die on the island and sent him anyway."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Sayid Jarrah",
+      "person": "Naveen Andrews",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2010-05-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Candidate_%28Lost%29",
+      "verified": false,
+      "evidence": "Jack, Sawyer, Kate, and Hurley regroup at a nearby beach, and mourn the deaths of Sayid, Sun and Jin."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Jin Soo Kwon",
+      "person": "Daniel Dae Kim",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2010-05-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Candidate_%28Lost%29",
+      "verified": false,
+      "evidence": "Jack, Sawyer, Kate, and Hurley regroup at a nearby beach, and mourn the deaths of Sayid, Sun and Jin."
+    },
+    {
+      "franchise": "Lost",
+      "character": "Sun Hwa Kwon",
+      "person": "Yunjin Kim",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2010-05-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Candidate_%28Lost%29",
+      "verified": false,
+      "evidence": "Jack, Sawyer, Kate, and Hurley regroup at a nearby beach, and mourn the deaths of Sayid, Sun and Jin."
+    },
+    {
+      "franchise": "Lost",
+      "character": "John Locke",
+      "person": "Terry O'Quinn",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-02-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Life_and_Death_of_Jeremy_Bentham",
+      "verified": false,
+      "evidence": "While visiting her grave, Abaddon is shot and killed; Locke gets into a car accident after he flees the scene in a panic."
+    },
+    {
+      "franchise": "Dexter",
+      "character": "James Doakes",
+      "person": "Erik King",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-12-16",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_British_Invasion_%28Dexter%29",
+      "verified": false,
+      "evidence": "She decides to help Dexter and kills Doakes by setting the cabin on fire."
+    },
+    {
+      "franchise": "Dexter",
+      "character": "Maria LaGuerta",
+      "person": "Lauren Vélez",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-12-16",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Surprise%2C_Motherfucker%21",
+      "verified": false,
+      "evidence": "Deb's murder of LaGuerta will surely have some huge emotional ramifications, but it didn't seem very climactic, nor did it justify some of the weaker points of the season."
+    },
+    {
+      "franchise": "Mad Men",
+      "character": "Bertram Cooper",
+      "person": "Robert Morse",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-05-25",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Mad_Men_characters",
+      "verified": false,
+      "evidence": "In Season 3, he is the only Sterling Cooper executive who is promoted by the firm's British owner as part of a short-lived company reorganization."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Kip 'Half-Sack' Epps",
+      "person": "Johnny Lewis",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2009-12-01",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Na_Triobl%C3%B3id%C3%AD",
+      "verified": false,
+      "evidence": "Jax arrives to find Sack dead, Tara tied up, and Abel missing."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Tara Knowles",
+      "person": "Maggie Siff",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2013-12-10",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Tara_Knowles",
+      "verified": false,
+      "evidence": "He sees Roosevelt's legs on the kitchen floor, draws his gun, and then enters the kitchen, where he finds both Roosevelt and Tara dead on the floor."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Gemma Teller Morrow",
+      "person": "Katey Sagal",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-12-02",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sons_of_Anarchy_season_7",
+      "verified": false,
+      "evidence": "Another member's death fuels the hate and lies created by Gemma and Juice, who are on the run and hiding from the club."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Jackson 'Jax' Teller",
+      "person": "Charlie Hunnam",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-12-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Papa%27s_Goods",
+      "verified": false,
+      "evidence": "Closing his eyes with a smile, and bracing himself for death, Jax collides with a semi-truck head on, dying in the exact same way and place as his father did before him."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Jean Carlos 'Juice' Ortiz",
+      "person": "Theo Rossi",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-12-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Sons_of_Anarchy_and_Mayans_M.C._characters",
+      "verified": false,
+      "evidence": "Miles is murdered by Juice to cover up what really happened with the stolen cocaine from the warehouse."
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "character": "Robert 'Bobby' Munson",
+      "person": "Mark Boone Junior",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-11-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Sons_of_Anarchy_and_Mayans_M.C._characters",
+      "verified": false,
+      "evidence": "In season 7, Bobby is murdered by August Marks during SAMCRO's conflict with the crime kingpin."
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Bobby \"Bacala\" Baccalieri",
+      "person": "Steve Schirripa",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-06-03",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Blue_Comet",
+      "verified": false,
+      "evidence": "Almost simultaneously, Bobby is killed in a model railway store and, leaving the Bada Bing together, Silvio and Patsy are intercepted by two Lupertazzi hit men."
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Vito Spatafore",
+      "person": "Joseph R. Gannascoli",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2006-05-21",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Cold_Stones",
+      "verified": false,
+      "evidence": "When Vito's murder is reported in the newspaper, Francesca and Vito, Jr."
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Phil Leotardo",
+      "person": "Frank Vincent",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-06-10",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Made_in_America_%28The_Sopranos%29",
+      "verified": false,
+      "evidence": "Phil Leotardo: Shot to death by Walden Belfiore."
+    },
+    {
+      "franchise": "The Sopranos",
+      "character": "Johnny \"Sack\" Sacrimoni",
+      "person": "Vincent Curatola",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2007-04-15",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Stage_5_%28The_Sopranos%29",
+      "verified": false,
+      "evidence": "John \"Johnny Sack\" Sacrimoni: Dies of lung cancer in prison."
+    },
+    {
+      "franchise": "The Wire",
+      "character": "Preston \"Bodie\" Broadus",
+      "person": "J. D. Williams",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2006-12-10",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Final_Grades",
+      "verified": false,
+      "evidence": "McNulty searches Poot at his corner and asks him who killed Bodie."
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Gyp Rosetti",
+      "person": "Bobby Cannavale",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2012-12-02",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Margate_Sands_%28Boardwalk_Empire%29",
+      "verified": false,
+      "evidence": "On Gyp's death, Terence Winter explained, \"the most satisfying resolution to looking at the season as its own book was that Gyp's gotta go, and in a way that's unexpected and powerful."
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Angela Darmody",
+      "person": "Aleksa Palladino",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2011-12-04",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Under_God%27s_Power_She_Flourishes",
+      "verified": false,
+      "evidence": "Jimmy, devastated by Angela's death, has not performed his duties, forcing his partners into re-arranging the shares."
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "character": "Enoch \"Nucky\" Thompson",
+      "person": "Steve Buscemi",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2014-10-26",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Eldorado_%28Boardwalk_Empire%29",
+      "verified": false,
+      "evidence": "Tommy shoots Nucky three times (once in the cheek, similar to how Nucky shot Jimmy) before being restrained by the police."
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Anya Jenkins",
+      "person": "Emma Caulfield",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2003-05-20",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chosen_%28Buffy_the_Vampire_Slayer%29",
+      "verified": false,
+      "evidence": "With the bus having stopped nearby, Andrew comforts Xander by telling him that Anya died saving his life."
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Riley Finn",
+      "person": "Marc Blucas",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2000-12-19",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Buffy_the_Vampire_Slayer_season_5",
+      "verified": false,
+      "evidence": "Riley leaves Buffy in the middle of the season after concluding that she does not love him, joining a military demon-hunting operation."
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "character": "Buffy Summers",
+      "person": "Sarah Michelle Gellar",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2001-05-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Gift_%28Buffy_the_Vampire_Slayer%29",
+      "verified": false,
+      "evidence": "Realizing that since Dawn has her blood and that her own death can stop the ritual, Buffy decides to sacrifice herself instead, and says goodbye to Dawn, urging her to be brave and live her own life."
+    },
+    {
+      "franchise": "Downton Abbey",
+      "character": "Sarah O'Brien",
+      "person": "Siobhan Finneran",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2013-09-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Downton_Abbey_characters",
+      "verified": false,
+      "evidence": "In series four, Barrow is as shocked as anyone when his old ally Miss O'Brien leaves Downton in the middle of the night."
     }
   ]
 }

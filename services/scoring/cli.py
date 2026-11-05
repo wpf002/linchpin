@@ -73,6 +73,27 @@ def validate(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
         typer.echo(f"  FAIL {failure.criterion}: {failure.detail}")
 
 
+@app.command("stage-exits")
+def stage_exits(
+    write: bool = typer.Option(False, "--write", help="Append staged events to the corpus."),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),
+) -> None:
+    """Date and source candidate exits; staged events are written unverified."""
+    from ingest.stage_exits import append_staged, existing_keys, load_candidates, stage
+
+    _configure_logging(verbose)
+    staged, rejected = stage(load_candidates(), existing=existing_keys())
+    for item in staged:
+        typer.echo(
+            f"  ok   {item.candidate.franchise} | {item.candidate.character} | {item.event_date}"
+        )
+    for item in rejected:
+        typer.echo(f"  drop {item.candidate.franchise} | {item.candidate.character}: {item.reason}")
+    typer.echo(f"staged={len(staged)} rejected={len(rejected)}")
+    if write:
+        typer.echo(f"appended={append_staged(staged)} (verified=false)")
+
+
 def _ic(result: object) -> str:
     coefficient = getattr(result, "coefficient", None)
     if coefficient is None:
