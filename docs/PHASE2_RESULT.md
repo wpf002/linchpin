@@ -6,17 +6,17 @@
 
 | Criterion | Required | Observed | Status |
 | --- | --- | --- | --- |
-| minExitEvents | ≥ 200 verified exits | 70 | Fail |
-| minRankIC | Carry rank IC ≥ 0.15 | Not computable (2 usable pairs) | Fail |
-| rankICInterval | Interval excludes zero | Not computable | Not Run |
-| beatsBaseline | Carry IC > billing-order IC | Not computable | Not Run |
+| minExitEvents | ≥ 200 verified exits | 70 matched to rosters | Fail |
+| minRankIC | Carry rank IC ≥ 0.15 | −0.429, n=23 pairs | Fail |
+| rankICInterval | Interval excludes zero | [−0.734, 0.046] | Fail |
+| beatsBaseline | Carry IC > billing-order IC | −0.429 vs −0.325 | Fail |
 | minRosterCompleteness | Median ≥ 0.70 | 0.75 | Pass |
 
 ## Why It Failed
 
-- **Too few exits.** The hand-verified corpus has 70 events. The gate needs 200.
-- **Too few usable studies.** 4 of 70 events produced a difference-in-differences estimate. The rest had no pageview coverage around the exit date (Wikimedia's per-article series starts July 2015) or no control set matching on medium, genre, roster size and franchise age.
-- **Rank IC needs pairs.** With 4 studies, only 2 within-franchise pairs survive. No interval can be formed.
+- **Too few verified exits.** The corpus holds 165 events: 95 verified, 70 staged by `stage-exits` and awaiting review. 140 match a roster character; 70 of those are verified.
+- **Carry ranks exits backwards.** 41 events produced a difference-in-differences estimate, giving 23 within-franchise pairs. Carry rank IC is −0.429 and billing order is −0.325. Both are negative and neither interval excludes zero.
+- **Run 1 (4 studies) was a pipeline bug.** Control franchises only fetched pageviews for their own event windows, so most controls had no observations. Fixed in `ingest/pipeline.py` with a regression test.
 
 ## Sanity Checks Against Roadmap Expectations
 
@@ -35,6 +35,7 @@ Fragility z-scores are computed over every franchise, including those suppressed
 
 ## What Would Move The Gate
 
-1. Extend the exit corpus past 200 verified events, weighted to post-2016 exits so pageview coverage exists.
-2. Wire a second attention source (AO3 or Reddit counts) so pre-2015 exits have signal.
-3. Re-run `validate` without touching weights.
+1. Review the 70 staged events (`verified: false`, each with an `evidence` sentence and `sourceUrl`) and flip the ones that hold.
+2. Extend the exit corpus past 200 verified events, weighted to post-2016 exits so pageview coverage exists. The current universe can't reach 200; this needs the Phase 2 universe expansion.
+3. Wire a second attention source (AO3 or Reddit counts) so pre-2015 exits have signal.
+4. Re-run `validate` without touching weights.
