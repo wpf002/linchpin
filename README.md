@@ -10,7 +10,7 @@ Character-level attention concentration and franchise fragility scoring, built o
 
 | Path | What |
 | --- | --- |
-| `apps/web` | Next.js 15 UI: screener, franchise workbench, character and creator leaderboards, signal audit, validation, global search, CSV export |
+| `apps/web` | Next.js 15 UI: poster wall and table of franchises, cast page with write-out simulation, character and creator pages, signal audit, validation, global search, CSV export |
 | `apps/api` | Fastify API over Postgres (port 4000) |
 | `packages/db` | Prisma schema and migrations |
 | `packages/shared` | Zod schemas and metric constants shared by API and web |
@@ -45,6 +45,7 @@ Run from `services/scoring`:
 .venv/bin/python cli.py language-test # English-only vs summed Wikipedia editions; writes docs/results/language_test.json
 .venv/bin/python cli.py stage-exits   # date and source data/corpus/exit_candidates.json; --write appends them unverified
 .venv/bin/python cli.py audit-titles  # re-check every stored Wikipedia link; --write clears the ones that fail
+.venv/bin/python cli.py ingest-images # poster and portrait URLs from TVmaze; ingest already runs this, use it to refresh
 ```
 
 `ingest --only "Name"` (repeatable) limits a run to named franchises. `--skip-signals` resolves rosters without fetching pageviews.
