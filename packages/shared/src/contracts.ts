@@ -42,7 +42,10 @@ export const characterRowSchema = z.object({
   carryScore: share,
   offCycleCarry: share.nullable(),
   durabilityRatio: z.number().nullable(),
+  /** Null when the character has no absence window. Never imputed. */
   substitutability: share.nullable(),
+  /** Why substitutability is null, when it is. */
+  substitutabilityFlag: z.string().nullable(),
   confidence: share,
   signals: signalBreakdownSchema,
 });
@@ -125,6 +128,47 @@ export const characterDetailSchema = characterRowSchema.extend({
 });
 export type CharacterDetail = z.infer<typeof characterDetailSchema>;
 
+export const rankIcSchema = z.object({
+  coefficient: z.number().nullable(),
+  lower: z.number().nullable(),
+  upper: z.number().nullable(),
+  pairs: z.number().int(),
+  reason: z.string().nullable(),
+});
+export type RankIc = z.infer<typeof rankIcSchema>;
+
+/** One slice of the exit corpus, reported next to the headline. */
+export const stratumSchema = z.object({
+  name: z.string(),
+  events: z.number().int(),
+  meanDid: z.number().nullable(),
+  stdError: z.number().nullable(),
+  rankIC: rankIcSchema,
+});
+export type Stratum = z.infer<typeof stratumSchema>;
+
+export const stratumComparisonSchema = z.object({
+  stratum: z.string(),
+  against: z.string(),
+  difference: z.number().nullable(),
+  zScore: z.number().nullable(),
+  /** Null when either side has too few events for a standard error. */
+  diverges: z.boolean().nullable(),
+});
+export type StratumComparison = z.infer<typeof stratumComparisonSchema>;
+
+/** Held-out comparison of the wiki + search blend against wiki alone. */
+export const blendResultSchema = z.object({
+  verdict: z.enum(["BLEND", "WIKI_ONLY", "INCONCLUSIVE"]),
+  wikiWeight: z.number().nullable(),
+  trainPairs: z.number().int(),
+  heldOutPairs: z.number().int(),
+  blendRankIC: rankIcSchema.nullable(),
+  wikiRankIC: rankIcSchema.nullable(),
+  reason: z.string().nullable(),
+});
+export type BlendResult = z.infer<typeof blendResultSchema>;
+
 export const validationReportSchema = z.object({
   modelVersion: z.string(),
   runAt: z.string().nullable(),
@@ -140,6 +184,9 @@ export const validationReportSchema = z.object({
   /** PASS, FAIL or BLOCKED. BLOCKED means the test was not run; preconditions unmet. */
   gate: z.enum(["PASS", "FAIL", "BLOCKED"]),
   failures: z.array(z.object({ criterion: z.string(), detail: z.string() })),
+  strata: z.array(stratumSchema),
+  comparisons: z.array(stratumComparisonSchema),
+  blend: blendResultSchema.nullable(),
 });
 export type ValidationReport = z.infer<typeof validationReportSchema>;
 
@@ -232,3 +279,60 @@ export const eventStudyRowSchema = z.object({
 });
 export type EventStudyRow = z.infer<typeof eventStudyRowSchema>;
 export const eventStudiesResponseSchema = z.array(eventStudyRowSchema);
+
+/**
+ * Read-only dataset for Vantage. One row per franchise and per scored character.
+ * Every score travels with its confidence fields; a suppressed score is null.
+ */
+export const vantageFranchiseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  medium: mediumSchema,
+  status: franchiseStatusSchema,
+  rosterSize: z.number().int(),
+  rosterComplete: share,
+  /** Null below the roster coverage floor. */
+  fragility: z.number().nullable(),
+  hhi: share.nullable(),
+  top1Share: share.nullable(),
+  top3Share: share.nullable(),
+  scoredOn: z.string().nullable(),
+});
+export type VantageFranchise = z.infer<typeof vantageFranchiseSchema>;
+
+export const vantageCharacterSchema = z.object({
+  id: z.string(),
+  franchiseId: z.string(),
+  name: z.string(),
+  status: characterStatusSchema,
+  carryScore: share,
+  confidence: share,
+  offCycleCarry: share.nullable(),
+  durabilityRatio: z.number().nullable(),
+  substitutability: share.nullable(),
+  substitutabilityFlag: z.string().nullable(),
+});
+export type VantageCharacter = z.infer<typeof vantageCharacterSchema>;
+
+export const vantageCreatorSchema = z.object({
+  personId: z.string(),
+  name: z.string(),
+  residual: z.number(),
+  projectCount: z.number().int(),
+  confidence: share,
+});
+export type VantageCreator = z.infer<typeof vantageCreatorSchema>;
+
+export const vantageSectorSchema = z.object({
+  sector: z.literal("entertainment_franchises"),
+  modelVersion: z.string(),
+  generatedAt: z.string(),
+  /** The validation gate for this model version. Consumers decide what a FAIL means for them. */
+  gate: z.enum(["PASS", "FAIL", "BLOCKED"]),
+  rankIC: z.number().nullable(),
+  signalBlend: z.enum(["BLEND", "WIKI_ONLY", "INCONCLUSIVE"]).nullable(),
+  franchises: z.array(vantageFranchiseSchema),
+  characters: z.array(vantageCharacterSchema),
+  creators: z.array(vantageCreatorSchema),
+});
+export type VantageSector = z.infer<typeof vantageSectorSchema>;

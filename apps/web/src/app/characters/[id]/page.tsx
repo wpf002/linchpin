@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { clsx } from "clsx";
 import Link from "next/link";
 import { EVENT_WINDOWS } from "@linchpin/shared";
 import { AttentionChart } from "@/components/attention-chart";
@@ -50,7 +51,12 @@ export default async function CharacterPage({ params }: Props) {
           </div>
         }
       />
-      <dl className="mb-12 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-3 lg:grid-cols-5">
+      <dl
+        className={clsx(
+          "mb-12 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-3",
+          character.substitutability === null ? "lg:grid-cols-4" : "lg:grid-cols-5",
+        )}
+      >
         <Stat
           label="Carry Score"
           value={formatPercent(character.carryScore)}
@@ -63,7 +69,13 @@ export default async function CharacterPage({ params }: Props) {
           value={formatNumber(character.durabilityRatio, 2)}
           hint="Off-cycle carry divided by on-cycle carry. Above 1 means attention holds between releases."
         />
-        <Stat label="Substitutability" value={formatPercent(character.substitutability)} hint="Share of franchise attention the rest of the roster held during this character's absences. 100% means fully absorbed." />
+        {character.substitutability === null ? null : (
+          <Stat
+            label="Substitutability"
+            value={formatPercent(character.substitutability)}
+            hint="Share of this character's attention the rest of the roster absorbed after their exit. 100% means fully absorbed."
+          />
+        )}
         <Stat label="Seen" value={formatDate(character.lastSeenAt)} detail={`From ${formatDate(character.firstSeenAt)}`} />
       </dl>
 

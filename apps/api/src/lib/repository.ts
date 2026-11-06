@@ -23,6 +23,7 @@ import { z } from "zod";
 import { toIsoDate, toIsoDateTime } from "./dates.js";
 import { applyDisplayFloor } from "./display.js";
 import { NotFoundError } from "./errors.js";
+import { parseBlend, parseStrata } from "./validation-run.js";
 
 /** Signal history returned with a character. A year of daily points. */
 const SERIES_DAYS = 365;
@@ -240,6 +241,7 @@ export async function listCharacters(franchiseId: string): Promise<CharacterRow[
         offCycleCarry: score?.offCycleCarry ?? null,
         durabilityRatio: score?.durabilityRatio ?? null,
         substitutability: score?.substitutability ?? null,
+        substitutabilityFlag: score?.substitutabilityFlag ?? null,
         confidence: score?.confidence ?? 0,
         signals: {
           wikiShare: score?.wikiShare ?? 0,
@@ -297,11 +299,14 @@ export async function getCharacter(id: string): Promise<CharacterDetail> {
     firstSeenAt: toIsoDate(character.firstSeenAt),
     lastSeenAt: toIsoDate(character.lastSeenAt),
     rankInFranchise: rank,
-    series: signals.map((signal) => ({
-      measuredOn: toIsoDate(signal.measuredOn) ?? "",
-      rawValue: signal.rawValue,
-      isOffCycle: signal.isOffCycle,
-    })),
+    // The chart plots pageviews. Search rows are in anchor units and stay out of it.
+    series: signals
+      .filter((signal) => signal.source === SIGNAL_SOURCE_BY_SHARE.wikiShare)
+      .map((signal) => ({
+        measuredOn: toIsoDate(signal.measuredOn) ?? "",
+        rawValue: signal.rawValue,
+        isOffCycle: signal.isOffCycle,
+      })),
     attribution: buildAttribution(row, observationsBySource),
   };
 }
@@ -351,6 +356,9 @@ export async function getValidationReport(): Promise<ValidationReport> {
       medianRosterComplete: null,
       gate: "BLOCKED",
       failures: [{ criterion: "run", detail: "No validation run has been recorded yet." }],
+      strata: [],
+      comparisons: [],
+      blend: null,
     };
   }
 
@@ -368,6 +376,8 @@ export async function getValidationReport(): Promise<ValidationReport> {
     medianRosterComplete: run.medianRosterComplete,
     gate: run.gate,
     failures: parseFailures(run.failures),
+    ...parseStrata(run.strata),
+    blend: parseBlend(run.blend),
   };
 }
 

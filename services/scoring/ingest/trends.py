@@ -19,6 +19,9 @@ logger = logging.getLogger("linchpin.trends")
 MAX_TERMS_PER_QUERY = 5
 BATCH_PAUSE_SECONDS = 8.0
 CACHE_NAMESPACE = "trends"
+#: (connect, read) seconds. pytrends defaults to a 5 second read, which a
+#: five-term historical query regularly exceeds.
+REQUEST_TIMEOUT_SECONDS = (10, 30)
 
 
 class TrendsUnavailable(RuntimeError):
@@ -88,7 +91,7 @@ class _Session:
             raise TrendsUnavailable("pytrends is not installed") from error
         try:
             if self._client is None:
-                self._client = TrendReq(hl="en-US", tz=0)
+                self._client = TrendReq(hl="en-US", tz=0, timeout=REQUEST_TIMEOUT_SECONDS)
             self._client.build_payload(batch, timeframe=timeframe, geo=geo)  # type: ignore[attr-defined]
             frame = self._client.interest_over_time()  # type: ignore[attr-defined]
         except Exception as error:  # pytrends raises bare exceptions on 429

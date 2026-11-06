@@ -3,11 +3,19 @@ import Link from "next/link";
 import type { ValidationResponse } from "@linchpin/shared";
 import { clsx } from "clsx";
 import { EventScatter } from "@/components/event-scatter";
-import { IntervalChart } from "@/components/interval-chart";
+import { IntervalChart, type IntervalRow } from "@/components/interval-chart";
 import { PageTitle } from "@/components/page-title";
 import { EmptyState, Panel } from "@/components/panel";
 import { fetchEventStudies, fetchValidation } from "@/lib/api";
-import { formatCount, formatDate, formatLogChange, formatNumber, formatPercent } from "@/lib/format";
+import {
+  formatCount,
+  formatDate,
+  formatLogChange,
+  formatNumber,
+  formatPercent,
+  formatSigned,
+  label,
+} from "@/lib/format";
 
 export const metadata: Metadata = { title: "Validation" };
 
@@ -82,6 +90,37 @@ function criteria(report: ValidationResponse): CriterionRow[] {
   ];
 }
 
+const BLEND_LABEL = { BLEND: "Blend Wins", WIKI_ONLY: "Wiki Only", INCONCLUSIVE: "Blend Not Tested" } as const;
+
+/** Held-out rows for the blend test. Empty until a run fits a weight. */
+function blendRows(report: ValidationResponse): IntervalRow[] {
+  const blend = report.blend;
+  if (!blend || blend.blendRankIC === null || blend.wikiRankIC === null) return [];
+  return [
+    {
+      label: "Blend Held-Out",
+      point: blend.blendRankIC.coefficient,
+      lower: blend.blendRankIC.lower,
+      upper: blend.blendRankIC.upper,
+      emphasis: false,
+    },
+    {
+      label: "Wiki Held-Out",
+      point: blend.wikiRankIC.coefficient,
+      lower: blend.wikiRankIC.lower,
+      upper: blend.wikiRankIC.upper,
+      emphasis: false,
+    },
+  ];
+}
+
+function divergence(report: ValidationResponse, stratum: string): string {
+  const comparison = report.comparisons.find((row) => row.stratum === stratum);
+  if (!comparison) return "Headline";
+  if (comparison.diverges === null) return "Too Few Events";
+  return comparison.diverges ? "Diverges" : "Consistent";
+}
+
 const STATUS_CLASS: Record<CriterionStatus, string> = {
   PASS: "text-pass",
   FAIL: "text-fail",
@@ -141,6 +180,7 @@ export default async function ValidationPage() {
           action={
             <span className="text-xs text-faint" title="Spearman correlation between pre-exit rank and realised decline, 95% bootstrap interval.">
               {formatCount(report.verifiedEventCount)} Events
+              {report.blend ? ` · ${BLEND_LABEL[report.blend.verdict]}` : ""}
             </span>
           }
         >
@@ -161,6 +201,7 @@ export default async function ValidationPage() {
                 upper: report.baselineUpper,
                 emphasis: false,
               },
+              ...blendRows(report),
             ]}
           />
         </Panel>
@@ -178,6 +219,45 @@ export default async function ValidationPage() {
       ) : null}
 
       <div className="mt-6 flex flex-col gap-6">
+        {report.strata.length > 0 ? (
+          <Panel
+            title="Strata"
+            action={
+              <span className="text-xs text-faint" title="Each slice of the exit corpus against the unannounced headline. Diverges means the mean estimates differ at 95%.">
+                Against Unannounced
+              </span>
+            }
+          >
+            <div className="-m-4 overflow-x-auto">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Stratum</th>
+                    <th className="px-4 py-3 text-right font-medium">Events</th>
+                    <th className="px-4 py-3 text-right font-medium">Mean Change</th>
+                    <th className="px-4 py-3 text-right font-medium">Std Error</th>
+                    <th className="px-4 py-3 text-right font-medium">Rank IC</th>
+                    <th className="px-4 py-3 text-right font-medium">Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.strata.map((row) => (
+                    <tr key={row.name} className="border-b border-line last:border-b-0">
+                      <td className="px-4 py-3 text-ink">{label(row.name)}</td>
+                      <td className="num px-4 py-3 text-right text-muted">{formatCount(row.events)}</td>
+                      <td className="num px-4 py-3 text-right text-ink">{formatLogChange(row.meanDid)}</td>
+                      <td className="num px-4 py-3 text-right text-muted">{formatNumber(row.stdError, 3)}</td>
+                      <td className="num px-4 py-3 text-right text-ink">{formatSigned(row.rankIC.coefficient, 3)}</td>
+                      <td className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-muted">
+                        {divergence(report, row.name)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
+        ) : null}
         <Panel
           title="Event Studies"
           action={

@@ -6,6 +6,7 @@ import { characterRoutes } from "./routes/characters.js";
 import { franchiseRoutes } from "./routes/franchises.js";
 import { healthRoutes } from "./routes/health.js";
 import { validationRoutes } from "./routes/validation.js";
+import { vantageRoutes } from "./routes/vantage.js";
 
 export interface AppOptions {
   webOrigin: string;
@@ -36,5 +37,6 @@ export async function buildApp(options: AppOptions): Promise<FastifyInstance> {
   await app.register(franchiseRoutes);
   await app.register(characterRoutes);
   await app.register(validationRoutes);
+  await app.register(vantageRoutes);
   return app;
 }
