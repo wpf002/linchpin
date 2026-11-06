@@ -16,16 +16,17 @@ import logging
 import re
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
+from typing import Literal
 
 from ingest.http import ThrottledClient
-from ingest.names import normalise
+from ingest.names import normalise, tokens
 
 logger = logging.getLogger(__name__)
 
 API_URL = "https://en.wikipedia.org/w/api.php"
 
-#: The Action API accepts 50 titles per query for anonymous clients.
-MAX_TITLES_PER_QUERY = 50
+#: The Action API returns intro extracts for at most 20 pages per query.
+MAX_TITLES_PER_QUERY = 20
 
 #: One query covers a whole franchise, so a slow, polite interval costs little.
 MIN_INTERVAL_SECONDS = 1.0
@@ -33,14 +34,11 @@ MIN_INTERVAL_SECONDS = 1.0
 #: Extract prefix length that is enough to classify an article.
 EXTRACT_CHARS = 600
 
-_FICTION_MARKERS = (
-    "fictional",
-    "character",
-    "protagonist",
-    "antagonist",
-    "superhero",
-    "supervillain",
-    "comic book",
+#: Whole words only. A substring test accepted a musician's biography because
+#: his music is "characterized" by something.
+_FICTION_PATTERN = re.compile(
+    r"\b(fictional|characters?|protagonists?|antagonists?|superhero(es|ines?)?|supervillains?"
+    r"|comic book)\b"
 )
 
 _REJECT_TITLE_PATTERNS = (
@@ -48,7 +46,38 @@ _REJECT_TITLE_PATTERNS = (
     re.compile(r"\(disambiguation\)$", re.IGNORECASE),
     re.compile(r"^(Season|Series) \d", re.IGNORECASE),
     re.compile(r"^Characters (of|in) ", re.IGNORECASE),
+    # An article about the work itself is never an article about one character.
+    re.compile(r"\([^)]*\b(TV|television|web|film|anime) series\)$", re.IGNORECASE),
+    re.compile(r"\((franchise|miniseries|film|season \d+)\)$", re.IGNORECASE),
 )
+
+_QUALIFIER = re.compile(r"\s*\(([^)]*)\)\s*$")
+
+#: TVMaze writes a character with two identities as "Henry Creel / Vecna".
+_ALIAS_SEPARATOR = re.compile(r"\s+/\s+")
+
+_LEADING_ARTICLES = frozenset({"the", "a", "an"})
+
+#: Credits use the short form ("Jimmy McGill"); article leads use the given name
+#: ("James Morgan McGill"). Only the forms the corpus has needed are listed.
+_SHORT_FORMS: dict[str, frozenset[str]] = {
+    "james": frozenset({"jim", "jimmy"}),
+    "anthony": frozenset({"tony"}),
+    "michael": frozenset({"mike"}),
+    "william": frozenset({"will", "bill", "billy"}),
+    "robert": frozenset({"bob", "bobby", "rob"}),
+    "richard": frozenset({"rick", "dick"}),
+    "thomas": frozenset({"tom", "tommy"}),
+    "joseph": frozenset({"joe"}),
+    "edward": frozenset({"ed", "eddie"}),
+    "daniel": frozenset({"dan", "danny"}),
+    "samuel": frozenset({"sam"}),
+    "katherine": frozenset({"kate", "katie"}),
+    "elizabeth": frozenset({"liz", "beth"}),
+}
+
+#: The subject of an article's opening sentence: everything before "is a ...".
+_LEAD_SUBJECT = re.compile(r"^(.{1,200}?)\b(?:is|was|are)\s+(?:a|an|the|one)\b", re.DOTALL)
 
 
 @dataclass(frozen=True, slots=True)
@@ -111,6 +140,41 @@ def resolve_roster(
     if unresolved:
         resolved.update(_resolve_by_search(unresolved, franchise_name, client, reasons))
     return resolved
+
+
+@dataclass(frozen=True, slots=True)
+class TitleClaim:
+    """A character-to-article link already stored, to be checked again."""
+
+    character_name: str
+    franchise_name: str
+    actor_name: str | None
+    title: str
+
+
+@dataclass(frozen=True, slots=True)
+class TitleVerdict:
+    #: "unchecked" means the lookup failed. It is never grounds to drop a link.
+    status: Literal["accepted", "rejected", "unchecked"]
+    reason: str
+
+
+def verify_titles(claims: Sequence[TitleClaim], client: ThrottledClient) -> list[TitleVerdict]:
+    """Re-run the acceptance checks on stored links. One verdict per claim, in order."""
+    pages = _fetch_pages([claim.title for claim in claims], client)
+    verdicts: list[TitleVerdict] = []
+    for claim in claims:
+        page = pages.get(normalise(claim.title))
+        if page is None:
+            verdicts.append(TitleVerdict("unchecked", "lookup returned nothing for this title"))
+            continue
+        if page.missing:
+            verdicts.append(TitleVerdict("rejected", "stored title has no article"))
+            continue
+        resolution = _accept(page, claim.character_name, claim.franchise_name, claim.actor_name)
+        status = "rejected" if resolution.title is None else "accepted"
+        verdicts.append(TitleVerdict(status, resolution.reason))
+    return verdicts
 
 
 def resolve_character_article(
@@ -222,17 +286,88 @@ def _accept(
     haystack = normalise(f"{page.description} {page.extract}")
     if not haystack:
         return Resolution(None, 0.0, "article has no summary text")
-    if not any(marker in haystack for marker in _FICTION_MARKERS):
+    if not _FICTION_PATTERN.search(haystack):
         return Resolution(None, 0.0, "article is not about a fictional character")
 
-    first_name = normalise(character_name).split(" ")[0]
-    if first_name and first_name not in normalise(f"{title} {haystack}"):
-        return Resolution(None, 0.0, "article does not mention the character name")
+    named = title_names_character(
+        title, character_name, franchise_name, context=haystack
+    ) or lead_names_character(page.extract, character_name)
+    if not named:
+        return Resolution(None, 0.0, f"article title does not name the character: {title}")
 
-    franchise_token = normalise(franchise_name).split(" ")[0]
-    if franchise_token and franchise_token in haystack:
+    if _mentions_franchise(f"{normalise(title)} {haystack}", franchise_name):
         return Resolution(title, 1.0, "accepted")
     return Resolution(title, 0.75, "accepted without a franchise mention")
+
+
+def title_names_character(
+    title: str, character_name: str, franchise_name: str, *, context: str = ""
+) -> bool:
+    """True when the article title is this character's name.
+
+    The search fallback returns the best article for "<character> <franchise>",
+    which for a minor character is the series article or a stranger who shares a
+    first name. Matching the title to the name, token for token, refuses both.
+    """
+    qualifier_match = _QUALIFIER.search(title)
+    qualifier = normalise(qualifier_match.group(1)) if qualifier_match else ""
+    base = _QUALIFIER.sub("", title)
+    evidence = f"{qualifier} {context}"
+    names = [character_name, *_ALIAS_SEPARATOR.split(character_name)]
+    return any(_base_names(base, name, qualifier, evidence, franchise_name) for name in names)
+
+
+def lead_names_character(extract: str, character_name: str) -> bool:
+    """True when the opening sentence's subject is this character under another name.
+
+    "James Morgan 'Jimmy' McGill, better known as Saul Goodman, is a fictional
+    character" names Jimmy McGill. "David Palmer is a fictional character" does
+    not name Sherry Palmer, however often the body mentions her.
+    """
+    lead = _LEAD_SUBJECT.match(extract.strip())
+    if lead is None:
+        return False
+    subject_tokens = set(tokens(lead.group(1)))
+    for given_name in tuple(subject_tokens):
+        subject_tokens |= _SHORT_FORMS.get(given_name, frozenset())
+    for name in (character_name, *_ALIAS_SEPARATOR.split(character_name)):
+        name_tokens = tokens(name)
+        if len(name_tokens) > 1 and name_tokens <= subject_tokens:
+            return True
+    return False
+
+
+def _base_names(base: str, name: str, qualifier: str, evidence: str, franchise_name: str) -> bool:
+    title_tokens, name_tokens = tokens(base), tokens(name)
+    if not title_tokens or not name_tokens:
+        return False
+    if title_tokens == name_tokens:
+        return True
+    if not (title_tokens <= name_tokens or name_tokens <= title_tokens):
+        return False
+    if len(title_tokens) > 1 and len(name_tokens) > 1:
+        return True
+    # One side is a single name ("Vecna" for "Henry Creel / Vecna"). A lone
+    # shared name is not enough, so the article must also be tied to this work.
+    return "character" in qualifier.split() or _mentions_franchise(evidence, franchise_name)
+
+
+def _mentions_franchise(normalised_text: str, franchise_name: str) -> bool:
+    padded = f" {normalised_text} "
+    return any(f" {phrase} " in padded for phrase in _franchise_phrases(franchise_name))
+
+
+def _franchise_phrases(franchise_name: str) -> list[str]:
+    """The franchise name and its pre-colon short form, without a leading article."""
+    phrases: list[str] = []
+    for form in (franchise_name, franchise_name.split(":")[0]):
+        words = normalise(form).split()
+        while words and words[0] in _LEADING_ARTICLES:
+            words = words[1:]
+        phrase = " ".join(words)
+        if phrase and phrase not in phrases:
+            phrases.append(phrase)
+    return phrases
 
 
 def _resolve_by_search(

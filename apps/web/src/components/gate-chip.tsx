@@ -17,7 +17,7 @@ export function GateChip({
 }) {
   if (gate === null) {
     return (
-      <span className="flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs text-muted">
+      <span className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs text-muted">
         <Dot color="var(--fail)" />
         API Offline
       </span>
@@ -28,11 +28,11 @@ export function GateChip({
     <Link
       href="/validation"
       title="Phase 2 kill-criteria result. Scores are unvalidated until the gate passes."
-      className="flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs text-ink transition-colors duration-150 hover:border-line-strong hover:bg-hover"
+      className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs text-ink transition-colors duration-150 hover:border-line-strong hover:bg-hover"
     >
       <Dot color={style.color} />
       {style.label}
-      {rankIC !== null ? <span className="num text-muted">IC {formatNumber(rankIC, 2)}</span> : null}
+      {rankIC !== null ? <span className="num hidden text-muted sm:inline">IC {formatNumber(rankIC, 2)}</span> : null}
     </Link>
   );
 }

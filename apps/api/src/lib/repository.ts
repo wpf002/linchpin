@@ -1,6 +1,7 @@
 import { prisma, Prisma } from "@linchpin/db";
 import {
   MODEL_VERSION,
+  ROSTER_COMPLETE_DISPLAY_FLOOR,
   SIGNAL_SOURCE_BY_SHARE,
   SIGNAL_WEIGHTS,
   hhi as computeHhi,
@@ -33,10 +34,19 @@ const MAX_ABSORBERS = 5;
 
 type SortKey = ScreenerQuery["sort"];
 
+/**
+ * A franchise below the coverage floor still has score rows, but its figures
+ * are withheld. Sorting on the gated value sends those rows last (NULLS LAST)
+ * instead of ranking them by a number nobody is shown.
+ */
+function gated(column: Prisma.Sql): Prisma.Sql {
+  return Prisma.sql`CASE WHEN f."rosterComplete" >= ${ROSTER_COMPLETE_DISPLAY_FLOOR} THEN ${column} END`;
+}
+
 const SORT_COLUMNS: Record<SortKey, Prisma.Sql> = {
-  fragility: Prisma.sql`fs.fragility`,
-  hhi: Prisma.sql`fs.hhi`,
-  top1Share: Prisma.sql`fs."top1Share"`,
+  fragility: gated(Prisma.sql`fs.fragility`),
+  hhi: gated(Prisma.sql`fs.hhi`),
+  top1Share: gated(Prisma.sql`fs."top1Share"`),
   rosterSize: Prisma.sql`roster.roster_size`,
   name: Prisma.sql`f."canonicalName"`,
 };

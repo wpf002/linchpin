@@ -156,6 +156,34 @@ def stage_exits(
         typer.echo(f"appended={append_staged(staged)} (verified=false)")
 
 
+@app.command("audit-titles")
+def audit_titles(
+    write: bool = typer.Option(False, "--write", help="Clear rejected links and their signals."),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),
+) -> None:
+    """Re-check stored Wikipedia links against the resolver's current rules."""
+    from ingest.title_audit import run_title_audit
+
+    _configure_logging(verbose)
+    report = run_title_audit(write=write)
+    for item in report.rejected:
+        claim = item.link.claim
+        typer.echo(
+            f"  drop {claim.franchise_name} | {claim.character_name} -> {claim.title}: "
+            f"{item.reason}"
+        )
+    typer.echo(
+        f"checked={report.checked} unchecked={report.unchecked} rejected={len(report.rejected)} "
+        f"franchises={len(report.franchises)}"
+    )
+    if write:
+        typer.echo(
+            f"cleared={len(report.rejected)} signal_rows_removed={report.signal_rows_removed}"
+        )
+        for name in report.franchises:
+            typer.echo(f"  reingest: {name}")
+
+
 def _ic(result: object) -> str:
     coefficient = getattr(result, "coefficient", None)
     if coefficient is None:

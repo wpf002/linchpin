@@ -1,19 +1,21 @@
 import Link from "next/link";
-import type { ScreenerQuery } from "@linchpin/shared";
 import { clsx } from "clsx";
 
+/** Column header that toggles a `sort` and `order` search param and resets paging. */
 export function SortHeader({
   column,
   label,
   current,
   params,
   align = "left",
+  hint,
 }: {
-  column: ScreenerQuery["sort"];
+  column: string;
   label: string;
-  current: Pick<ScreenerQuery, "sort" | "order">;
+  current: { sort: string; order: "asc" | "desc" };
   params: Record<string, string>;
   align?: "left" | "right";
+  hint?: string;
 }) {
   const active = current.sort === column;
   const nextOrder = active && current.order === "desc" ? "asc" : "desc";
@@ -28,6 +30,7 @@ export function SortHeader({
       <Link
         href={`?${query.toString()}`}
         scroll={false}
+        title={hint}
         className={clsx(
           "inline-flex items-center gap-1 transition-colors duration-150",
           active ? "text-ink" : "text-muted hover:text-ink",

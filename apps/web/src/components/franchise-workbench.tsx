@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { exitSimulationSchema, type CharacterRow, type ExitSimulation } from "@linchpin/shared";
 import { clsx } from "clsx";
 import { formatLogChange, formatNumber, formatPercent, formatSigned } from "@/lib/format";
+
+/** Floor for the bar scale so an all-zero roster does not divide by zero. */
+const MIN_BAR_SCALE = 0.0001;
 
 type SimulationState =
   | { kind: "idle" }
@@ -22,9 +25,19 @@ export function FranchiseWorkbench({
   scored: boolean;
 }) {
   const [state, setState] = useState<SimulationState>({ kind: "idle" });
-  const maxCarry = Math.max(...characters.map((character) => character.carryScore), 0.0001);
+  // Confidence 0 means no usable signal: the character is named but never given a number.
+  const measured = characters.filter((character) => character.confidence > 0);
+  const unmeasured = characters.filter((character) => character.confidence === 0);
+  const maxCarry = Math.max(...measured.map((character) => character.carryScore), MIN_BAR_SCALE);
+  const leadId = measured[0]?.id ?? null;
   const selectedId =
     state.kind === "loading" ? state.characterId : state.kind === "ready" ? state.simulation.characterId : null;
+
+  // The simulator opens on the lead's exit so the panel is never blank on a scored franchise.
+  useEffect(() => {
+    if (scored && leadId) void simulate(leadId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- runs once per franchise
+  }, [franchiseId, scored, leadId]);
 
   async function simulate(characterId: string) {
     setState({ kind: "loading", characterId });
@@ -43,10 +56,10 @@ export function FranchiseWorkbench({
       <section className="rounded-[var(--radius-ui)] border border-line bg-surface">
         <header className="flex items-center justify-between border-b border-line px-4 py-3">
           <h2 className="text-sm font-medium text-ink">Carry Distribution</h2>
-          <span className="text-xs text-faint">{characters.length} Characters</span>
+          <span className="text-xs text-faint">{measured.length} Measured</span>
         </header>
         <ol className="divide-y divide-line">
-          {characters.map((character, index) => (
+          {measured.map((character, index) => (
             <li
               key={character.id}
               className={clsx(
@@ -89,6 +102,25 @@ export function FranchiseWorkbench({
             </li>
           ))}
         </ol>
+        {unmeasured.length > 0 ? (
+          <div className="border-t border-line px-4 py-3">
+            <h3
+              className="mb-2 text-xs uppercase tracking-wide text-faint"
+              title="No attention signal on record. These characters carry no score."
+            >
+              {unmeasured.length} Unmeasured
+            </h3>
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              {unmeasured.map((character) => (
+                <li key={character.id}>
+                  <Link href={`/characters/${character.id}`} className="text-muted hover:text-ink">
+                    {character.canonicalName}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </section>
       <ExitSimulator state={state} characters={characters} />
     </div>
@@ -111,7 +143,7 @@ function ExitSimulator({ state, characters }: { state: SimulationState; characte
       </header>
       <div className="p-4">
         {state.kind === "idle" ? (
-          <p className="py-8 text-center text-sm text-muted">Pick a character to remove.</p>
+          <p className="py-8 text-center text-sm text-muted">Pick a Character</p>
         ) : null}
         {state.kind === "loading" ? (
           <div className="flex flex-col gap-3 py-4" aria-busy="true">

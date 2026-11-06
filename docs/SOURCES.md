@@ -3,7 +3,7 @@
 | Source | Used For | Status | Access | Limits Honoured |
 | --- | --- | --- | --- | --- |
 | Wikimedia Pageviews | Daily per-character attention (`WIKI`) | Wired into ingest | REST, no key, `WIKIMEDIA_USER_AGENT` required | Throttled client, cached, Retry-After honoured |
-| Wikipedia Action API | Resolving characters to articles | Wired into ingest | No key | 50 titles per query, 1 request/second |
+| Wikipedia Action API | Resolving characters to articles | Wired into ingest | No key | 20 titles per query (the API returns intro extracts for at most 20 pages), 1 request/second |
 | TVmaze | Casts, episode and season dates | Wired into ingest | No key | Throttled, cached |
 | TMDB | Cast, credits, air dates | Module present, untested. `TMDB_API_KEY` is empty | `TMDB_API_KEY` | Attribution required by TMDB terms |
 | Google Trends | Pre-window interest per exit event (`TRENDS`) | Wired into `ingest-search`. 9 of 28 windows stored as of 2026-11-06 | pytrends, no key | 5 terms per query, 8 seconds between batches, anchor term pinned in every batch. Stops on the first refusal |

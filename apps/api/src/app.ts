@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import sensible from "@fastify/sensible";
 import { BadRequestError, NotFoundError } from "./lib/errors.js";
 import { characterRoutes } from "./routes/characters.js";
+import { directoryRoutes } from "./routes/directory.js";
 import { franchiseRoutes } from "./routes/franchises.js";
 import { healthRoutes } from "./routes/health.js";
 import { validationRoutes } from "./routes/validation.js";
@@ -36,6 +37,7 @@ export async function buildApp(options: AppOptions): Promise<FastifyInstance> {
   await app.register(healthRoutes);
   await app.register(franchiseRoutes);
   await app.register(characterRoutes);
+  await app.register(directoryRoutes);
   await app.register(validationRoutes);
   await app.register(vantageRoutes);
   return app;

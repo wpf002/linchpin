@@ -41,16 +41,19 @@ export default async function FranchisePage({ params }: Props) {
           </span>
         }
         title={franchise.canonicalName}
-        aside={<FragilityMeter value={franchise.fragility} />}
+        aside={
+          <span title="0.6 z(HHI) + 0.25 z(top-1 share) − 0.15 z(substitutability). Substitutability weight drops when unmeasured.">
+            <FragilityMeter value={franchise.fragility} />
+          </span>
+        }
       />
-      <dl className="mb-12 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-3 lg:grid-cols-6">
+      <dl className="mb-12 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-3 lg:grid-cols-5">
         <Stat
           label="Coverage"
           value={<CoverageBadge value={franchise.rosterComplete} />}
           detail={`${franchise.rosterSize} Characters`}
           hint="Share of the main cast linked to a verified article. Figures are withheld below 70%."
         />
-        <Stat label="Fragility" value={formatNumber(franchise.fragility, 2)} hint="0.6 z(HHI) + 0.25 z(top-1 share) − 0.15 z(substitutability). Substitutability weight drops when unmeasured." />
         <Stat label="HHI" value={formatNumber(franchise.hhi, 3)} hint="Sum of squared carry shares." />
         <Stat label="Top 1" value={formatPercent(franchise.top1Share)} />
         <Stat label="Top 3" value={formatPercent(franchise.top3Share)} />

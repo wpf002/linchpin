@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "linchpin-api",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/api && WEB_ORIGIN=http://localhost:3210 pnpm exec tsx --env-file=../../.env src/server.ts"
+      ],
+      "port": 4000
+    },
+    {
+      "name": "linchpin-web",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "API_URL=http://localhost:4000 pnpm --filter @linchpin/web exec next dev --port ${PORT:-3210}"
+      ],
+      "port": 3210
+    }
+  ]
+}

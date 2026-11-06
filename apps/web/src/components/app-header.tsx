@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MODEL_VERSION } from "@linchpin/shared";
 import { fetchValidation } from "@/lib/api";
 import { GateChip } from "./gate-chip";
+import { GlobalSearch } from "./global-search";
 import { NavLinks } from "./nav-links";
 
 async function loadGate() {
@@ -18,14 +19,15 @@ export async function AppHeader() {
   const gate = await loadGate();
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center gap-8 px-4 sm:px-8">
-        <Link href="/" className="group flex items-baseline gap-2" aria-label="Linchpin Home">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center gap-x-4 px-4 sm:px-8 md:gap-x-8">
+        <Link href="/" className="group flex h-16 items-center gap-2" aria-label="Linchpin Home">
           <PinMark />
           <span className="font-display text-lg leading-none tracking-tight text-ink">Linchpin</span>
         </Link>
-        <NavLinks />
-        <div className="ml-auto flex items-center gap-4">
-          <span className="hidden font-mono text-xs text-faint sm:inline">{MODEL_VERSION}</span>
+        <NavLinks className="order-last h-10 w-full md:order-none md:h-16 md:w-auto" />
+        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-4">
+          <GlobalSearch />
+          <span className="hidden font-mono text-xs text-faint lg:inline">{MODEL_VERSION}</span>
           <GateChip gate={gate?.gate ?? null} rankIC={gate?.rankIC ?? null} />
         </div>
       </div>

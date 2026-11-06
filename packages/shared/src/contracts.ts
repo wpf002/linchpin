@@ -336,3 +336,100 @@ export const vantageSectorSchema = z.object({
   creators: z.array(vantageCreatorSchema),
 });
 export type VantageSector = z.infer<typeof vantageSectorSchema>;
+
+export const roleTypeSchema = z.enum([
+  "ACTOR",
+  "WRITER",
+  "DIRECTOR",
+  "SHOWRUNNER",
+  "ARTIST",
+  "CREATOR",
+  "ATHLETE",
+]);
+
+/** Header search. Short queries match too much to be useful. */
+export const searchQuerySchema = z.object({
+  q: z.string().trim().min(2).max(80),
+});
+export type SearchQuery = z.infer<typeof searchQuerySchema>;
+
+export const searchResponseSchema = z.object({
+  franchises: z.array(
+    z.object({ id: z.string(), canonicalName: z.string(), medium: mediumSchema }),
+  ),
+  characters: z.array(
+    z.object({
+      id: z.string(),
+      canonicalName: z.string(),
+      franchiseId: z.string(),
+      franchiseName: z.string(),
+    }),
+  ),
+});
+export type SearchResponse = z.infer<typeof searchResponseSchema>;
+
+/**
+ * One measured character in a franchise above the roster coverage floor.
+ * Carry is a share of its own franchise, so the row always names the franchise
+ * and carries both confidence fields.
+ */
+export const leaderRowSchema = z.object({
+  id: z.string(),
+  canonicalName: z.string(),
+  status: characterStatusSchema,
+  portrayedBy: z.string().nullable(),
+  franchise: z.object({ id: z.string(), canonicalName: z.string() }),
+  rosterComplete: share,
+  carryScore: share,
+  confidence: share,
+  offCycleCarry: share.nullable(),
+  durabilityRatio: z.number().nullable(),
+});
+export type LeaderRow = z.infer<typeof leaderRowSchema>;
+
+export const leadersQuerySchema = z.object({
+  q: z.string().trim().max(120).optional(),
+  sort: z.enum(["carryScore", "offCycleCarry", "durabilityRatio"]).default("carryScore"),
+  order: z.enum(["asc", "desc"]).default("desc"),
+  limit: z.coerce.number().int().min(1).max(200).default(50),
+  cursor: z.coerce.number().int().min(0).default(0),
+});
+export type LeadersQuery = z.infer<typeof leadersQuerySchema>;
+
+export const leadersResponseSchema = z.object({
+  rows: z.array(leaderRowSchema),
+  nextCursor: z.number().int().nullable(),
+  total: z.number().int(),
+});
+export type LeadersResponse = z.infer<typeof leadersResponseSchema>;
+
+export const creatorRowSchema = z.object({
+  personId: z.string(),
+  name: z.string(),
+  roles: z.array(roleTypeSchema),
+  /** Distinct franchises this person is credited on. */
+  franchiseCount: z.number().int(),
+  /** Credits on a finished franchise or a departed character. An upper bound on scoreable projects. */
+  completedCount: z.number().int(),
+  franchises: z.array(z.object({ id: z.string(), canonicalName: z.string() })),
+  /** Null below the minimum project count. Suppressed, never imputed. */
+  score: z
+    .object({ residual: z.number(), projectCount: z.number().int(), confidence: share })
+    .nullable(),
+});
+export type CreatorRow = z.infer<typeof creatorRowSchema>;
+
+export const creatorsQuerySchema = z.object({
+  q: z.string().trim().max(120).optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(50),
+  cursor: z.coerce.number().int().min(0).default(0),
+});
+export type CreatorsQuery = z.infer<typeof creatorsQuerySchema>;
+
+export const creatorsResponseSchema = z.object({
+  rows: z.array(creatorRowSchema),
+  nextCursor: z.number().int().nullable(),
+  total: z.number().int(),
+  scoredTotal: z.number().int(),
+});
+export type CreatorsResponse = z.infer<typeof creatorsResponseSchema>;

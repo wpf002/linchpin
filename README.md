@@ -8,7 +8,7 @@ Character-level attention concentration and franchise fragility scoring, built o
 
 | Path | What |
 | --- | --- |
-| `apps/web` | Next.js 15 UI: screener, franchise workbench, character audit, validation |
+| `apps/web` | Next.js 15 UI: screener, franchise workbench, character and creator leaderboards, signal audit, validation, global search, CSV export |
 | `apps/api` | Fastify API over Postgres (port 4000) |
 | `packages/db` | Prisma schema and migrations |
 | `packages/shared` | Zod schemas and metric constants shared by API and web |
@@ -42,7 +42,10 @@ Run from `services/scoring`:
 .venv/bin/python cli.py validate      # event study, strata, blend test and kill criteria
 .venv/bin/python cli.py language-test # English-only vs summed Wikipedia editions; writes docs/results/language_test.json
 .venv/bin/python cli.py stage-exits   # date and source data/corpus/exit_candidates.json; --write appends them unverified
+.venv/bin/python cli.py audit-titles  # re-check every stored Wikipedia link; --write clears the ones that fail
 ```
+
+`ingest --only "Name"` (repeatable) limits a run to named franchises. `--skip-signals` resolves rosters without fetching pageviews.
 
 `ingest-search` stops at the first window Google Trends refuses. Fetched batches are cached, so the next run resumes there.
 
@@ -56,6 +59,22 @@ API_URL=http://localhost:4000 pnpm --filter @linchpin/web dev
 ```
 
 Web runs on port 3000. Pass `--port` to `next dev` if it's taken.
+
+## API
+
+| Route | Returns |
+| --- | --- |
+| `GET /franchises` | Screener rows. Filter by medium and status; sort by fragility, HHI, top-1 share, roster size or name; cursor paging |
+| `GET /franchises/:id` | Franchise detail, roster, releases, exit events |
+| `GET /franchises/:id/simulate/:characterId` | Concentration figures with one character removed |
+| `GET /characters` | Characters across all scored franchises, sorted by carry, off-cycle carry or durability |
+| `GET /characters/:id`, `GET /characters/:id/signals` | Character detail and its raw signal rows |
+| `GET /creators` | Creators with project counts. Residuals are null below 3 completed projects |
+| `GET /search?q=` | Franchises, characters and creators matching a name |
+| `GET /validation`, `GET /validation/studies` | Gate status, kill criteria, event-study rows |
+| `GET /vantage/sector` | The scored universe as one document |
+
+The web app's `/api/export` route streams the filtered screener as CSV. Suppressed figures export as empty cells.
 
 ## Vantage Dataset
 

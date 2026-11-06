@@ -16,6 +16,9 @@ from psycopg.rows import dict_row
 
 logger = logging.getLogger(__name__)
 
+#: Signal sources whose query is built from Character.wikiTitle.
+WIKI_TITLE_SOURCES = ("WIKI", "TRENDS")
+
 
 def now_utc() -> datetime:
     return datetime.now(tz=UTC)
@@ -117,6 +120,23 @@ def upsert_character(
     if row is None:
         raise RuntimeError(f"character upsert returned no row for {canonical_name!r}")
     return str(row["id"])
+
+
+def clear_wiki_link(conn: Connection, character_id: str) -> int:
+    """Drop a wrong article link and the signals read from that article.
+
+    The rows hold another subject's pageviews and search interest under this
+    character's id. They are removed, not edited: rawValue is never rewritten.
+    Returns the number of signal rows removed.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            'DELETE FROM "AttentionSignal" WHERE "characterId" = %s AND source = ANY(%s)',
+            (character_id, list(WIKI_TITLE_SOURCES)),
+        )
+        removed = cur.rowcount
+        cur.execute('UPDATE "Character" SET "wikiTitle" = NULL WHERE id = %s', (character_id,))
+    return removed
 
 
 def set_character_status(conn: Connection, character_id: str, status: str) -> None:

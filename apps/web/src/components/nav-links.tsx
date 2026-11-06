@@ -5,14 +5,16 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 
 const LINKS = [
-  { href: "/", label: "Screener", matches: (path: string) => path === "/" || path.startsWith("/franchises") || path.startsWith("/characters") },
+  { href: "/", label: "Screener", matches: (path: string) => path === "/" || path.startsWith("/franchises") },
+  { href: "/characters", label: "Characters", matches: (path: string) => path.startsWith("/characters") },
+  { href: "/creators", label: "Creators", matches: (path: string) => path.startsWith("/creators") },
   { href: "/validation", label: "Validation", matches: (path: string) => path.startsWith("/validation") },
 ] as const;
 
-export function NavLinks() {
+export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Primary" className="flex h-full items-stretch gap-6">
+    <nav aria-label="Primary" className={clsx("flex items-stretch gap-6 overflow-x-auto", className)}>
       {LINKS.map((link) => {
         const active = link.matches(pathname);
         return (
@@ -21,7 +23,7 @@ export function NavLinks() {
             href={link.href}
             aria-current={active ? "page" : undefined}
             className={clsx(
-              "relative flex items-center text-sm transition-colors duration-150",
+              "relative flex shrink-0 items-center text-sm transition-colors duration-150",
               active ? "text-ink" : "text-muted hover:text-ink",
             )}
           >

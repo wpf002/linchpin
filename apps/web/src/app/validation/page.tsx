@@ -166,7 +166,10 @@ export default async function ValidationPage() {
                     <td className="px-4 py-3 text-ink">{row.label}</td>
                     <td className="num px-4 py-3 text-right text-muted">{row.threshold}</td>
                     <td className="num px-4 py-3 text-right text-ink">{row.observed}</td>
-                    <td className={clsx("px-4 py-3 text-right text-xs font-medium uppercase tracking-wide", STATUS_CLASS[row.status])}>
+                    <td
+                      className={clsx("px-4 py-3 text-right text-xs font-medium uppercase tracking-wide", STATUS_CLASS[row.status])}
+                      title={report.failures.find((failure) => failure.criterion === row.key)?.detail}
+                    >
                       {row.status === "NOT RUN" ? "Not Run" : row.status === "PASS" ? "Pass" : "Fail"}
                     </td>
                   </tr>
@@ -206,17 +209,6 @@ export default async function ValidationPage() {
           />
         </Panel>
       </div>
-
-      {report.failures.length > 0 ? (
-        <ul className="mt-6 flex flex-col gap-2 rounded-[var(--radius-ui)] border border-line bg-surface p-4">
-          {report.failures.map((failure) => (
-            <li key={failure.criterion} className="flex flex-wrap gap-3 text-sm">
-              <span className="font-mono text-xs text-fail">{failure.criterion}</span>
-              <span className="text-muted">{failure.detail}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
 
       <div className="mt-6 flex flex-col gap-6">
         {report.strata.length > 0 ? (
