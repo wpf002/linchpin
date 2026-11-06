@@ -24,7 +24,7 @@ The analysis code was committed at `fdd26e2` before any `v0.2.0` number existed.
 | beatsBaseline | Rank IC > billing-order IC | −0.450 vs −0.370 | Fail |
 | minRosterCompleteness | Median ≥ 0.70 | 0.75 | Pass |
 
-Of 140 matched events, 41 produced an estimate. 70 had too few treated-franchise observations (mostly exits before pageview data starts in July 2015) and 29 had fewer than two comparable controls.
+Of 140 matched events, 41 produced an estimate. 70 had too few treated-franchise observations (mostly exits before pageview data starts in July 2015) and 29 had fewer than two comparable controls. 12 of the 41 had no wiki share for the character in the pre-window, which leaves 29 across the strata below.
 
 ## Strata
 

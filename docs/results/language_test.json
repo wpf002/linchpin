@@ -1,0 +1,222 @@
+{
+  "window_start": "2025-11-03",
+  "window_end": "2026-11-03",
+  "editions": [
+    "es",
+    "fr",
+    "de",
+    "ja",
+    "pt",
+    "ru",
+    "it"
+  ],
+  "floor": 0.9,
+  "franchises": [
+    {
+      "franchise": "Better Call Saul",
+      "characters": 7,
+      "rank_agreement": 0.9642857142857145,
+      "top_character_changes": true,
+      "other_language_fraction": 0.2669132881724538
+    },
+    {
+      "franchise": "Boardwalk Empire",
+      "characters": 9,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.0456846174038819
+    },
+    {
+      "franchise": "Breaking Bad",
+      "characters": 10,
+      "rank_agreement": 0.9757575757575757,
+      "top_character_changes": false,
+      "other_language_fraction": 0.2900711479186273
+    },
+    {
+      "franchise": "Buffy the Vampire Slayer",
+      "characters": 12,
+      "rank_agreement": 0.9860139860139862,
+      "top_character_changes": false,
+      "other_language_fraction": 0.20834307899018492
+    },
+    {
+      "franchise": "DC Comics",
+      "characters": 15,
+      "rank_agreement": 0.9785714285714284,
+      "top_character_changes": false,
+      "other_language_fraction": 0.3729341648143468
+    },
+    {
+      "franchise": "Dexter",
+      "characters": 9,
+      "rank_agreement": 0.9833333333333333,
+      "top_character_changes": false,
+      "other_language_fraction": 0.2472288161526372
+    },
+    {
+      "franchise": "Doctor Who",
+      "characters": 5,
+      "rank_agreement": 0.9999999999999999,
+      "top_character_changes": false,
+      "other_language_fraction": 0.13186253935709555
+    },
+    {
+      "franchise": "ER",
+      "characters": 18,
+      "rank_agreement": 0.9772727272727273,
+      "top_character_changes": false,
+      "other_language_fraction": 0.16879998203482968
+    },
+    {
+      "franchise": "Friends",
+      "characters": 6,
+      "rank_agreement": 0.8285714285714287,
+      "top_character_changes": false,
+      "other_language_fraction": 0.29021931378493776
+    },
+    {
+      "franchise": "Futurama",
+      "characters": 5,
+      "rank_agreement": 0.9999999999999999,
+      "top_character_changes": false,
+      "other_language_fraction": 0.252740139068365
+    },
+    {
+      "franchise": "Game of Thrones",
+      "characters": 17,
+      "rank_agreement": 0.9926470588235295,
+      "top_character_changes": false,
+      "other_language_fraction": 0.37795353694763373
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "characters": 18,
+      "rank_agreement": 0.9938080495356036,
+      "top_character_changes": false,
+      "other_language_fraction": 0.3472836308407447
+    },
+    {
+      "franchise": "House",
+      "characters": 11,
+      "rank_agreement": 0.99,
+      "top_character_changes": false,
+      "other_language_fraction": 0.4549224572800102
+    },
+    {
+      "franchise": "Lost",
+      "characters": 19,
+      "rank_agreement": 0.9859649122807018,
+      "top_character_changes": false,
+      "other_language_fraction": 0.3577594863434458
+    },
+    {
+      "franchise": "Mad Men",
+      "characters": 8,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.04509703783098182
+    },
+    {
+      "franchise": "Marvel Comics",
+      "characters": 15,
+      "rank_agreement": 0.9678571428571429,
+      "top_character_changes": false,
+      "other_language_fraction": 0.417690725384907
+    },
+    {
+      "franchise": "Parks and Recreation",
+      "characters": 11,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.0105316714059188
+    },
+    {
+      "franchise": "Peaky Blinders",
+      "characters": 6,
+      "rank_agreement": 0.9999999999999999,
+      "top_character_changes": false,
+      "other_language_fraction": 0.438472594225452
+    },
+    {
+      "franchise": "Sons of Anarchy",
+      "characters": 5,
+      "rank_agreement": 0.9999999999999999,
+      "top_character_changes": false,
+      "other_language_fraction": 0.07395531089839195
+    },
+    {
+      "franchise": "Stranger Things",
+      "characters": 15,
+      "rank_agreement": 0.9964221824686942,
+      "top_character_changes": false,
+      "other_language_fraction": 0.17549892957569715
+    },
+    {
+      "franchise": "Supernatural",
+      "characters": 6,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.1786061088964008
+    },
+    {
+      "franchise": "Ted Lasso",
+      "characters": 5,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.17579205417330293
+    },
+    {
+      "franchise": "The Big Bang Theory",
+      "characters": 6,
+      "rank_agreement": 0.942857142857143,
+      "top_character_changes": false,
+      "other_language_fraction": 0.3626306724801693
+    },
+    {
+      "franchise": "The Office",
+      "characters": 13,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.11331480651260446
+    },
+    {
+      "franchise": "The Simpsons",
+      "characters": 17,
+      "rank_agreement": 0.9950980392156863,
+      "top_character_changes": false,
+      "other_language_fraction": 0.2883034259425006
+    },
+    {
+      "franchise": "The Sopranos",
+      "characters": 12,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.1813905762003303
+    },
+    {
+      "franchise": "The Walking Dead",
+      "characters": 18,
+      "rank_agreement": 0.9896800825593396,
+      "top_character_changes": false,
+      "other_language_fraction": 0.3291955585976816
+    },
+    {
+      "franchise": "The Wire",
+      "characters": 13,
+      "rank_agreement": 1.0,
+      "top_character_changes": false,
+      "other_language_fraction": 0.011862194222146547
+    },
+    {
+      "franchise": "The X-Files",
+      "characters": 5,
+      "rank_agreement": 0.9999999999999999,
+      "top_character_changes": false,
+      "other_language_fraction": 0.2846164908438782
+    }
+  ],
+  "median_rank_agreement": 0.9950980392156863,
+  "top_character_changes": 1,
+  "decision": "ENGLISH_ONLY"
+}

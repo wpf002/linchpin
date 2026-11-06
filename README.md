@@ -77,4 +77,4 @@ cd services/scoring && .venv/bin/ruff check . && .venv/bin/ruff format --check .
 - Every number in the UI links to the signal rows behind it.
 - Out of scope: first-party streamer telemetry, revenue forecasting, recommendations, sentiment analysis.
 
-Sources and their terms: [docs/SOURCES.md](docs/SOURCES.md).
+Sources and their terms: [docs/SOURCES.md](docs/SOURCES.md). Decisions on the roadmap's open questions: [docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md).
