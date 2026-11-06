@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Final
 
-MODEL_VERSION: Final = "v0.2.0"
+MODEL_VERSION: Final = "v0.3.0"
 
 SIGNAL_WEIGHTS: Final[dict[str, float]] = {
     "wikiShare": 0.35,

@@ -9,9 +9,12 @@ from __future__ import annotations
 import pytest
 
 from ingest.resolve import (
+    REDIRECT_TARGET_CONFIDENCE,
+    REDIRECT_TITLE_CONFIDENCE,
     TitleClaim,
     _accept,
     _Page,
+    _parse_query,
     lead_names_character,
     title_names_character,
     verify_titles,
@@ -227,3 +230,104 @@ def test_superheroine_counts_as_fiction() -> None:
         missing=False,
     )
     assert _accept(page, "Nia Nal / Dreamer", "Supergirl", "Nicole Maines").title == "Nia Nal"
+
+
+KILLING_EVE_EXTRACT = (
+    "Killing Eve is a British spy thriller television series. It follows Eve Polastri, "
+    "an investigator tasked with capturing the assassin Villanelle."
+)
+
+
+def redirected(title: str, extract: str) -> _Page:
+    return _Page(title=title, description="", extract=extract, missing=False, via_redirect=True)
+
+
+def test_redirect_into_the_series_article_keeps_the_redirect_title() -> None:
+    verdict = _accept(
+        redirected("Killing Eve", KILLING_EVE_EXTRACT),
+        "Carolyn Martens",
+        "Killing Eve",
+        "Fiona Shaw",
+        asked_title="Carolyn Martens",
+    )
+    assert verdict.title == "Carolyn Martens"
+    assert verdict.confidence == REDIRECT_TITLE_CONFIDENCE
+
+
+def test_redirect_into_the_character_list_keeps_the_redirect_title() -> None:
+    verdict = _accept(
+        redirected(
+            "List of Grey's Anatomy characters",
+            "Grey's Anatomy is an American medical drama. This is a list of its characters.",
+        ),
+        "Dr. Levi Schmitt",
+        "Grey's Anatomy",
+        "Jake Borelli",
+        asked_title="Levi Schmitt",
+    )
+    assert verdict.title == "Levi Schmitt"
+
+
+def test_series_article_reached_without_a_redirect_is_still_rejected() -> None:
+    verdict = _accept(
+        page("Killing Eve", KILLING_EVE_EXTRACT),
+        "Carolyn Martens",
+        "Killing Eve",
+        "Fiona Shaw",
+        asked_title="Killing Eve",
+    )
+    assert verdict.title is None
+
+
+def test_redirect_into_another_franchise_is_rejected() -> None:
+    verdict = _accept(
+        redirected("List of Lost characters", "This is a list of characters in Lost."),
+        "Carolyn Martens",
+        "Killing Eve",
+        "Fiona Shaw",
+        asked_title="Carolyn Martens",
+    )
+    assert verdict.title is None
+
+
+def test_redirect_to_a_differently_spelled_character_article_is_accepted() -> None:
+    verdict = _accept(
+        redirected(
+            "Krusty the Clown",
+            "Herschel Krustofsky, better known as Krusty the Clown, is a recurring character "
+            "on the animated television series The Simpsons.",
+        ),
+        "Krusty the Klown",
+        "The Simpsons",
+        "Dan Castellaneta",
+        asked_title="Krusty the Klown",
+    )
+    assert verdict.title == "Krusty the Clown"
+    assert verdict.confidence == REDIRECT_TARGET_CONFIDENCE
+
+
+def test_redirect_to_a_character_of_another_work_is_rejected() -> None:
+    verdict = _accept(
+        redirected(
+            "Deathstroke",
+            "Deathstroke is a supervillain appearing in comic books published by DC Comics.",
+        ),
+        "Slade Wilson",
+        "Supergirl",
+        "Manu Bennett",
+        asked_title="Slade Wilson",
+    )
+    assert verdict.title is None
+
+
+def test_parse_query_marks_only_redirected_titles() -> None:
+    payload = {
+        "query": {
+            "normalized": [{"from": "killing_Eve", "to": "Killing Eve"}],
+            "redirects": [{"from": "Carolyn Martens", "to": "Killing Eve"}],
+            "pages": [{"title": "Killing Eve", "extract": KILLING_EVE_EXTRACT}],
+        }
+    }
+    pages = _parse_query(payload, ["Carolyn Martens", "killing_Eve"])
+    assert pages["carolyn martens"].via_redirect is True
+    assert pages["killing eve"].via_redirect is False

@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import re
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Literal
 
 from ingest.http import ThrottledClient
@@ -52,6 +52,18 @@ _REJECT_TITLE_PATTERNS = (
 )
 
 _QUALIFIER = re.compile(r"\s*\(([^)]*)\)\s*$")
+
+#: Normalised title of a franchise's character list. The subject is group 1 or 2.
+_CHARACTER_LIST = re.compile(r"^(?:list of (.+) characters|characters (?:of|in) (.+))$")
+
+#: A redirect that lands on a differently named character article. Wikipedia's
+#: own redirect is the evidence that the two names are one character.
+REDIRECT_TARGET_CONFIDENCE = 0.9
+
+#: A redirect that lands on the franchise's article or character list. The
+#: character has no article, so views are counted on the redirect title itself.
+#: Search engines send readers straight to the target, so these counts run low.
+REDIRECT_TITLE_CONFIDENCE = 0.5
 
 #: TVMaze writes a character with two identities as "Henry Creel / Vecna".
 _ALIAS_SEPARATOR = re.compile(r"\s+/\s+")
@@ -101,6 +113,8 @@ class _Page:
     description: str
     extract: str
     missing: bool
+    #: True when the title asked for was a redirect to this page.
+    via_redirect: bool = False
 
 
 def resolve_roster(
@@ -126,7 +140,13 @@ def resolve_roster(
         if page is None or page.missing:
             reasons.setdefault(candidate.character_name, "no article at any candidate title")
             continue
-        verdict = _accept(page, candidate.character_name, franchise_name, candidate.actor_name)
+        verdict = _accept(
+            page,
+            candidate.character_name,
+            franchise_name,
+            candidate.actor_name,
+            asked_title=candidate.title,
+        )
         if verdict.title is None:
             reasons[candidate.character_name] = verdict.reason
             continue
@@ -171,10 +191,54 @@ def verify_titles(claims: Sequence[TitleClaim], client: ThrottledClient) -> list
         if page.missing:
             verdicts.append(TitleVerdict("rejected", "stored title has no article"))
             continue
-        resolution = _accept(page, claim.character_name, claim.franchise_name, claim.actor_name)
+        resolution = _accept(
+            page,
+            claim.character_name,
+            claim.franchise_name,
+            claim.actor_name,
+            asked_title=claim.title,
+        )
         status = "rejected" if resolution.title is None else "accepted"
         verdicts.append(TitleVerdict(status, resolution.reason))
-    return verdicts
+    return _recheck_through_redirects(claims, verdicts, client)
+
+
+def _recheck_through_redirects(
+    claims: Sequence[TitleClaim], verdicts: list[TitleVerdict], client: ThrottledClient
+) -> list[TitleVerdict]:
+    """Accept a rejected link when the character's own name redirects to it.
+
+    "Krusty the Clown" stored for "Krusty the Klown" fails the title check on its
+    own. It passes when the title "Krusty the Klown" redirects to that article.
+    """
+    rejected = [i for i, verdict in enumerate(verdicts) if verdict.status == "rejected"]
+    if not rejected:
+        return verdicts
+    candidates = {
+        i: [t for t, _ in _candidate_titles(claims[i].character_name, claims[i].franchise_name)]
+        for i in rejected
+    }
+    pages = _fetch_pages([title for titles in candidates.values() for title in titles], client)
+    checked = list(verdicts)
+    for i, titles in candidates.items():
+        claim = claims[i]
+        for asked in titles:
+            page = pages.get(normalise(asked))
+            if page is None or page.missing or not page.via_redirect:
+                continue
+            if normalise(page.title) != normalise(claim.title):
+                continue
+            resolution = _accept(
+                page,
+                claim.character_name,
+                claim.franchise_name,
+                claim.actor_name,
+                asked_title=asked,
+            )
+            if resolution.title is not None:
+                checked[i] = TitleVerdict("accepted", resolution.reason)
+                break
+    return checked
 
 
 def resolve_character_article(
@@ -241,10 +305,15 @@ def _parse_query(payload: dict, requested: Sequence[str]) -> dict[str, _Page]:
     query = payload.get("query") or {}
     #: The API rewrites titles twice: normalisation, then redirect resolution.
     alias_of: dict[str, str] = {}
-    for mapping in (*query.get("normalized", []), *query.get("redirects", [])):
-        source, target = mapping.get("from"), mapping.get("to")
-        if isinstance(source, str) and isinstance(target, str):
+    redirect_sources: set[str] = set()
+    for kind in ("normalized", "redirects"):
+        for mapping in query.get(kind, []):
+            source, target = mapping.get("from"), mapping.get("to")
+            if not isinstance(source, str) or not isinstance(target, str):
+                continue
             alias_of[normalise(source)] = normalise(target)
+            if kind == "redirects" and normalise(source) != normalise(target):
+                redirect_sources.add(normalise(source))
 
     by_title: dict[str, _Page] = {}
     for page in query.get("pages", []):
@@ -263,18 +332,33 @@ def _parse_query(payload: dict, requested: Sequence[str]) -> dict[str, _Page]:
     for asked in requested:
         key = normalise(asked)
         target = key
+        redirected = False
         for _ in range(3):  # normalisation then redirect; three hops is slack.
+            redirected = redirected or target in redirect_sources
             target = alias_of.get(target, target)
         page = by_title.get(target)
         if page is not None:
-            resolved[key] = page
+            resolved[key] = replace(page, via_redirect=True) if redirected else page
     return resolved
 
 
 def _accept(
-    page: _Page, character_name: str, franchise_name: str, actor_name: str | None
+    page: _Page,
+    character_name: str,
+    franchise_name: str,
+    actor_name: str | None,
+    *,
+    asked_title: str | None = None,
 ) -> Resolution:
     title = page.title
+    #: The asked title is evidence only when Wikipedia redirected it to this page.
+    redirect_title = asked_title if page.via_redirect else None
+    if redirect_title is not None and _redirects_into_franchise(
+        redirect_title, title, character_name, franchise_name
+    ):
+        return Resolution(
+            redirect_title, REDIRECT_TITLE_CONFIDENCE, "accepted as a redirect into the franchise"
+        )
     for pattern in _REJECT_TITLE_PATTERNS:
         if pattern.search(title):
             return Resolution(None, 0.0, f"rejected title shape: {title}")
@@ -292,12 +376,46 @@ def _accept(
     named = title_names_character(
         title, character_name, franchise_name, context=haystack
     ) or lead_names_character(page.extract, character_name)
+    in_franchise = _mentions_franchise(f"{normalise(title)} {haystack}", franchise_name)
     if not named:
+        if (
+            redirect_title is not None
+            and in_franchise
+            and title_names_character(redirect_title, character_name, franchise_name)
+        ):
+            return Resolution(
+                title, REDIRECT_TARGET_CONFIDENCE, "accepted through a redirect from the name"
+            )
         return Resolution(None, 0.0, f"article title does not name the character: {title}")
 
-    if _mentions_franchise(f"{normalise(title)} {haystack}", franchise_name):
+    if in_franchise:
         return Resolution(title, 1.0, "accepted")
     return Resolution(title, 0.75, "accepted without a franchise mention")
+
+
+def _redirects_into_franchise(
+    redirect_title: str, target_title: str, character_name: str, franchise_name: str
+) -> bool:
+    """True when a title naming the character redirects to the franchise's own page."""
+    if not _is_franchise_page(target_title, franchise_name):
+        return False
+    return title_names_character(
+        redirect_title, character_name, franchise_name, context=normalise(target_title)
+    )
+
+
+def _is_franchise_page(title: str, franchise_name: str) -> bool:
+    """The franchise's article ("Killing Eve") or its character list."""
+    base = normalise(_QUALIFIER.sub("", title))
+    words = base.split()
+    while words and words[0] in _LEADING_ARTICLES:
+        words = words[1:]
+    if " ".join(words) in _franchise_phrases(franchise_name):
+        return True
+    listed = _CHARACTER_LIST.match(base)
+    if listed is None:
+        return False
+    return _mentions_franchise(listed.group(1) or listed.group(2), franchise_name)
 
 
 def title_names_character(
