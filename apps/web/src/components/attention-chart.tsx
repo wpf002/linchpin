@@ -118,7 +118,7 @@ export function AttentionChart({ series }: { series: Point[] }) {
         ) : null}
         <text x={width - PAD.right} y={14} textAnchor="end" fontSize={12} fill="var(--text-muted)" className="num">
           {hovered
-            ? `${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Off-Cycle" : ""}`
+            ? `${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Between Releases" : ""}`
             : `Peak ${formatCount(peak)} Views`}
         </text>
         <text x={PAD.left} y={HEIGHT - 6} fontSize={12} fill="var(--text-faint)">

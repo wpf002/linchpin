@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 
 const LINKS = [
-  { href: "/", label: "Screener", matches: (path: string) => path === "/" || path.startsWith("/franchises") },
+  { href: "/", label: "Franchises", matches: (path: string) => path === "/" || path.startsWith("/franchises") },
   { href: "/characters", label: "Characters", matches: (path: string) => path.startsWith("/characters") },
   { href: "/creators", label: "Creators", matches: (path: string) => path.startsWith("/creators") },
   { href: "/validation", label: "Validation", matches: (path: string) => path.startsWith("/validation") },

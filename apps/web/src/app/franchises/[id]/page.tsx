@@ -10,6 +10,7 @@ import { Stat } from "@/components/stat";
 import { fetchFranchise } from "@/lib/api";
 import { orNotFound } from "@/lib/load";
 import { formatDate, formatLogChange, formatNumber, formatPercent, formatYear, label } from "@/lib/format";
+import { COVERAGE_HINT } from "@/lib/fragility";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -32,7 +33,7 @@ export default async function FranchisePage({ params }: Props) {
         eyebrow={
           <span className="flex flex-wrap items-center gap-2">
             <Link href="/" className="hover:text-ink">
-              Screener
+              Franchises
             </Link>
             <span className="text-faint">/</span>
             <span>
@@ -42,7 +43,7 @@ export default async function FranchisePage({ params }: Props) {
         }
         title={franchise.canonicalName}
         aside={
-          <span title="0.6 z(HHI) + 0.25 z(top-1 share) − 0.15 z(substitutability). Substitutability weight drops when unmeasured.">
+          <span title="Higher means more of the attention sits with one character. Built from HHI, the lead's share and how much the cast absorbs an exit.">
             <FragilityMeter value={franchise.fragility} />
           </span>
         }
@@ -52,17 +53,17 @@ export default async function FranchisePage({ params }: Props) {
           label="Coverage"
           value={<CoverageBadge value={franchise.rosterComplete} />}
           detail={`${franchise.rosterSize} Characters`}
-          hint="Share of the main cast linked to a verified article. Figures are withheld below 70%."
+          hint={COVERAGE_HINT}
         />
-        <Stat label="HHI" value={formatNumber(franchise.hhi, 3)} hint="Sum of squared carry shares." />
+        <Stat label="HHI" value={formatNumber(franchise.hhi, 3)} hint="Sum of squared attention shares. 1.0 means one character has it all." />
         <Stat label="Top 1" value={formatPercent(franchise.top1Share)} />
         <Stat label="Top 3" value={formatPercent(franchise.top3Share)} />
         <Stat label="Scored" value={formatDate(franchise.scoredOn)} detail={franchise.modelVersion} />
       </dl>
 
       {franchise.characters.length === 0 ? (
-        <Panel title="Carry Distribution">
-          <EmptyState title="No Scored Characters" detail="Run the scoring job after ingest." />
+        <Panel title="Attention by Character">
+          <EmptyState title="No Scored Characters" />
         </Panel>
       ) : (
         <FranchiseWorkbench franchiseId={franchise.id} characters={franchise.characters} scored={scored} />
@@ -74,14 +75,14 @@ export default async function FranchisePage({ params }: Props) {
           action={<span className="text-xs text-faint">{franchise.releases.length} Releases</span>}
         >
           {franchise.releases.length + franchise.exitEvents.length === 0 ? (
-            <EmptyState title="No Release Calendar" />
+            <EmptyState title="No Releases" />
           ) : (
             <ReleaseTimeline releases={franchise.releases} exitEvents={franchise.exitEvents} />
           )}
         </Panel>
-        <Panel title="Exit Events" action={<span className="text-xs text-faint">{franchise.exitEvents.length}</span>}>
+        <Panel title="Cast Exits" action={<span className="text-xs text-faint">{franchise.exitEvents.length}</span>}>
           {franchise.exitEvents.length === 0 ? (
-            <EmptyState title="No Exit Events" />
+            <EmptyState title="No Cast Exits" />
           ) : (
             <div className="-m-4 overflow-x-auto">
               <table className="w-full min-w-[720px] text-sm">
@@ -90,8 +91,8 @@ export default async function FranchisePage({ params }: Props) {
                     <th className="px-4 py-3 font-medium">Date</th>
                     <th className="px-4 py-3 font-medium">Character</th>
                     <th className="px-4 py-3 font-medium">Type</th>
-                    <th className="px-4 py-3 text-right font-medium">Pre-Exit Carry</th>
-                    <th className="px-4 py-3 text-right font-medium">Attention Change</th>
+                    <th className="px-4 py-3 text-right font-medium">Share Before</th>
+                    <th className="px-4 py-3 text-right font-medium">Change After</th>
                     <th className="px-4 py-3 font-medium">Source</th>
                   </tr>
                 </thead>

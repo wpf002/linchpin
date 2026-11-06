@@ -6,14 +6,14 @@ const HEADER = [
   "Franchise",
   "Medium",
   "Status",
-  "Roster Size",
-  "Roster Coverage",
+  "Cast Size",
+  "Cast Coverage",
   "Lead",
   "Top 1 Share",
   "Top 3 Share",
   "HHI",
   "Fragility",
-  "Exit Events",
+  "Cast Exits",
   "Model Version",
 ];
 

@@ -35,7 +35,7 @@ export function IntervalChart({ rows, threshold }: { rows: IntervalRow[]; thresh
 
   return (
     <div ref={ref} className="w-full overflow-hidden contain-inline-size">
-      <svg width={width} height={height} role="img" aria-label="Rank IC with intervals">
+      <svg width={width} height={height} role="img" aria-label="Rank correlation with 95% ranges">
         {ticks.map((tick) => (
           <g key={tick}>
             <line x1={x(tick)} x2={x(tick)} y1={TOP} y2={axisY} stroke="var(--chart-grid)" />
@@ -47,7 +47,7 @@ export function IntervalChart({ rows, threshold }: { rows: IntervalRow[]; thresh
         <line x1={x(0)} x2={x(0)} y1={TOP} y2={axisY} stroke="var(--border-strong)" />
         <line x1={x(threshold)} x2={x(threshold)} y1={TOP} y2={axisY} stroke="var(--accent)" strokeDasharray="4 3" />
         <text x={x(threshold) + 6} y={12} fontSize={12} fill="var(--accent)" className="num">
-          Gate {formatNumber(threshold, 2)}
+          Needs {formatNumber(threshold, 2)}
         </text>
         {rows.map((row, index) => {
           const y = TOP + index * ROW_HEIGHT + ROW_HEIGHT / 2;
@@ -59,7 +59,7 @@ export function IntervalChart({ rows, threshold }: { rows: IntervalRow[]; thresh
               </text>
               {row.point === null ? (
                 <text x={x(0) + 8} y={y + 4} fontSize={12} fill="var(--text-faint)">
-                  Not Computed
+                  Not Run
                 </text>
               ) : (
                 <>

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { exitSimulationSchema, type CharacterRow, type ExitSimulation } from "@linchpin/shared";
 import { clsx } from "clsx";
 import { formatLogChange, formatNumber, formatPercent, formatSigned } from "@/lib/format";
+import { NO_SCORE_HINT } from "@/lib/fragility";
 
 /** Floor for the bar scale so an all-zero roster does not divide by zero. */
 const MIN_BAR_SCALE = 0.0001;
@@ -55,8 +56,8 @@ export function FranchiseWorkbench({
     <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(320px,2fr)]">
       <section className="rounded-[var(--radius-ui)] border border-line bg-surface">
         <header className="flex items-center justify-between border-b border-line px-4 py-3">
-          <h2 className="text-sm font-medium text-ink">Carry Distribution</h2>
-          <span className="text-xs text-faint">{measured.length} Measured</span>
+          <h2 className="text-sm font-medium text-ink">Attention by Character</h2>
+          <span className="text-xs text-faint">{measured.length} Scored</span>
         </header>
         <ol className="divide-y divide-line">
           {measured.map((character, index) => (
@@ -95,7 +96,7 @@ export function FranchiseWorkbench({
                 disabled={!scored || state.kind === "loading"}
                 onClick={() => simulate(character.id)}
                 className="rounded-[var(--radius-ui)] border border-line px-3 py-1.5 text-xs text-muted transition-colors duration-150 hover:border-accent hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
-                title={scored ? undefined : "Simulation needs roster coverage above the floor."}
+                title={scored ? undefined : NO_SCORE_HINT}
               >
                 Remove
               </button>
@@ -106,9 +107,9 @@ export function FranchiseWorkbench({
           <div className="border-t border-line px-4 py-3">
             <h3
               className="mb-2 text-xs uppercase tracking-wide text-faint"
-              title="No attention signal on record. These characters carry no score."
+              title="No Wikipedia page views on record, so no score."
             >
-              {unmeasured.length} Unmeasured
+              {unmeasured.length} With No Data
             </h3>
             <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
               {unmeasured.map((character) => (
@@ -172,8 +173,8 @@ function SimulationResult({ simulation }: { simulation: ExitSimulation }) {
         />
       </dl>
       <div className="flex flex-col gap-2">
-        <h3 className="text-xs uppercase tracking-wide text-faint" title="Attention share redistributed pro rata.">
-          Absorbers
+        <h3 className="text-xs uppercase tracking-wide text-faint" title="The leaving character's share, split among the rest in proportion.">
+          Who Gains
         </h3>
         <ul className="flex flex-col gap-1">
           {simulation.absorbers.map((absorber) => (
@@ -189,21 +190,21 @@ function SimulationResult({ simulation }: { simulation: ExitSimulation }) {
       <div className="flex flex-col gap-2 border-t border-line pt-4">
         <h3
           className="text-xs uppercase tracking-wide text-faint"
-          title="Mean and 95% range of realised attention change across unannounced exits with similar pre-exit carry."
+          title="Average change after past unannounced exits by characters with a similar share, with the 95% range."
         >
-          Projected Attention Change
+          Expected Change
         </h3>
         {decline ? (
           <>
             <p className="num text-lg text-ink">{formatLogChange(decline.pointEstimate)}</p>
             <DeclineInterval lower={decline.lower} point={decline.pointEstimate} upper={decline.upper} />
             <p className="text-xs text-faint">
-              {decline.comparableEvents} Comparable Exits · {decline.basis}
+              {decline.comparableEvents} Past Exits
             </p>
           </>
         ) : (
-          <p className="text-sm text-muted" title="Too few comparable unannounced exits in the event corpus.">
-            Insufficient Comparables
+          <p className="text-sm text-muted" title="Not enough past exits by characters with a similar share.">
+            Too Few Past Exits
           </p>
         )}
       </div>

@@ -11,10 +11,10 @@ export function SignalAudit({ characterId, attribution }: { characterId: string;
         <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
           <tr>
             <th className="px-4 py-3 font-medium">Source</th>
-            <th className="px-4 py-3 text-right font-medium" title="This character's share of franchise attention on this signal.">
+            <th className="px-4 py-3 text-right font-medium" title="Share of the franchise's attention from this source.">
               Share
             </th>
-            <th className="px-4 py-3 text-right font-medium" title="Weight after renormalising over measured signals.">
+            <th className="px-4 py-3 text-right font-medium" title="How much this source counts toward the score.">
               Weight
             </th>
             <th className="px-4 py-3 font-medium">Contribution</th>
@@ -28,7 +28,7 @@ export function SignalAudit({ characterId, attribution }: { characterId: string;
               <tr key={row.source} className="border-b border-line last:border-b-0">
                 <td className="px-4 py-3 text-ink">{label(row.source)}</td>
                 <td className="num px-4 py-3 text-right text-ink">
-                  {measured ? formatPercent(row.share) : <span className="text-faint">Not Measured</span>}
+                  {measured ? formatPercent(row.share) : <span className="text-faint">No Data</span>}
                 </td>
                 <td className="num px-4 py-3 text-right text-muted">{measured ? formatPercent(row.weight, 0) : "—"}</td>
                 <td className="px-4 py-3">

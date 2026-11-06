@@ -1,4 +1,18 @@
-import { FRAGILITY_BANDS, fragilityBand, type FragilityBandId } from "@linchpin/shared";
+import {
+  FRAGILITY_BANDS,
+  ROSTER_COMPLETE_DISPLAY_FLOOR,
+  fragilityBand,
+  type FragilityBandId,
+} from "@linchpin/shared";
+import { formatPercent } from "./format";
+
+const COVERAGE_FLOOR = formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0);
+
+/** Tooltip wherever a score is withheld for low cast coverage. */
+export const NO_SCORE_HINT = `Needs ${COVERAGE_FLOOR} of the cast on Wikipedia.`;
+
+/** Tooltip on the coverage figure itself. */
+export const COVERAGE_HINT = `Share of the cast with a Wikipedia page. Scores need ${COVERAGE_FLOOR}.`;
 
 /** CSS custom property per band, defined in globals.css. */
 export const BAND_TOKEN: Record<FragilityBandId, string> = {

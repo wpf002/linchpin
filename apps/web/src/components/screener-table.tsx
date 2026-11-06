@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ROSTER_COMPLETE_DISPLAY_FLOOR, type FranchiseRow, type ScreenerQuery } from "@linchpin/shared";
+import type { FranchiseRow, ScreenerQuery } from "@linchpin/shared";
 import { CoverageBadge } from "./coverage-badge";
 import { FragilityMeter } from "./fragility-meter";
 import { SortHeader } from "./sort-header";
 import { formatNumber, formatPercent, label } from "@/lib/format";
+import { NO_SCORE_HINT } from "@/lib/fragility";
 
 interface Scores {
   top1Share: number;
@@ -49,16 +50,16 @@ export function ScreenerTable({
         <thead className="border-b border-line text-left text-xs uppercase tracking-wide">
           <tr>
             <SortHeader column="name" label="Franchise" current={query} params={params} />
-            <SortHeader column="rosterSize" label="Roster" current={query} params={params} />
+            <SortHeader column="rosterSize" label="Cast" current={query} params={params} />
             <th scope="col" className="px-3 py-3 font-medium text-muted">
               Lead
             </th>
             <SortHeader
               column="top1Share"
-              label="Concentration"
+              label="Top 1 / Top 3"
               current={query}
               params={params}
-              hint="Carry share of the lead, then of the top three."
+              hint="Share of attention on the lead, then on the top three."
             />
             <SortHeader column="hhi" label="HHI" current={query} params={params} align="right" />
             <SortHeader column="fragility" label="Fragility" current={query} params={params} align="right" />
@@ -105,9 +106,9 @@ export function ScreenerTable({
                   <td
                     colSpan={4}
                     className="px-3 py-3 text-xs uppercase tracking-wide text-faint"
-                    title={`Scores are withheld until roster coverage reaches ${formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0)}.`}
+                    title={NO_SCORE_HINT}
                   >
-                    Suppressed
+                    No Score
                   </td>
                 )}
               </tr>

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { ROSTER_COMPLETE_DISPLAY_FLOOR, screenerQuerySchema } from "@linchpin/shared";
+import { screenerQuerySchema } from "@linchpin/shared";
 import { FragilityStrip } from "@/components/fragility-strip";
 import { PageTitle } from "@/components/page-title";
 import { Pager } from "@/components/pager";
@@ -7,7 +7,8 @@ import { EmptyState } from "@/components/panel";
 import { ScreenerFilters } from "@/components/screener-filters";
 import { ScreenerTable } from "@/components/screener-table";
 import { fetchAllFranchises, fetchScreener } from "@/lib/api";
-import { formatCount, formatPercent } from "@/lib/format";
+import { formatCount } from "@/lib/format";
+import { NO_SCORE_HINT } from "@/lib/fragility";
 import { flattenSearchParams, type RawSearchParams } from "@/lib/search-params";
 
 /** Paging params stay out of the export link: the CSV carries every matching row. */
@@ -32,17 +33,17 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
   return (
     <>
       <PageTitle
-        title="Franchise Fragility"
+        title="Franchises"
         aside={
           <dl className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
             <Count label="Franchises" value={universe.length} />
             <Count label="Scored" value={scored} />
             <Count
-              label="Suppressed"
+              label="No Score"
               value={universe.length - scored}
-              hint={`Roster coverage below ${formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0)}.`}
+              hint={NO_SCORE_HINT}
             />
-            <Count label="Exit Events" value={exits} />
+            <Count label="Cast Exits" value={exits} />
           </dl>
         }
       />
@@ -68,7 +69,7 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
       </div>
       {page.rows.length === 0 ? (
         <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" detail="No franchise matches these filters." />
+          <EmptyState title="No Matches" />
         </div>
       ) : (
         <ScreenerTable rows={page.rows} query={query} params={params} />

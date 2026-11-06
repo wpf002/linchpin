@@ -50,7 +50,7 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
       />
       {page.rows.length === 0 ? (
         <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" detail="No scored character matches this search." />
+          <EmptyState title="No Matches" />
         </div>
       ) : (
         <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
@@ -68,19 +68,19 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
                 </th>
                 <SortHeader
                   column="carryScore"
-                  label="Carry"
+                  label="Share"
                   current={query}
                   params={params}
                   align="right"
-                  hint="Share of the franchise's character attention."
+                  hint="Share of the franchise's attention."
                 />
                 <SortHeader
                   column="offCycleCarry"
-                  label="Off-Cycle"
+                  label="Between Releases"
                   current={query}
                   params={params}
                   align="right"
-                  hint="Carry on days away from any release."
+                  hint="Share on days with no release nearby."
                 />
                 <SortHeader
                   column="durabilityRatio"
@@ -88,7 +88,7 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
                   current={query}
                   params={params}
                   align="right"
-                  hint="Off-cycle attention relative to on-cycle attention."
+                  hint="Above 1 means interest holds between releases."
                 />
               </tr>
             </thead>

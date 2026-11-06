@@ -46,14 +46,14 @@ function criteria(report: ValidationResponse): CriterionRow[] {
   return [
     {
       key: "minExitEvents",
-      label: "Verified Exit Events",
+      label: "Verified Exits",
       threshold: `≥ ${formatCount(minExits)}`,
       observed: formatCount(report.verifiedEventCount),
       status: statusOf(report, "minExitEvents", report.runAt ? report.verifiedEventCount >= minExits : null),
     },
     {
       key: "minRosterCompleteness",
-      label: "Median Roster Coverage",
+      label: "Median Cast Coverage",
       threshold: `≥ ${formatPercent(minCoverage, 0)}`,
       observed: formatPercent(report.medianRosterComplete),
       status: statusOf(
@@ -64,15 +64,15 @@ function criteria(report: ValidationResponse): CriterionRow[] {
     },
     {
       key: "minRankIC",
-      label: "Carry Rank IC",
+      label: "Rank Correlation",
       threshold: `≥ ${formatNumber(minIC, 2)}`,
       observed: formatNumber(report.rankIC, 3),
       status: statusOf(report, "minRankIC", hasIC ? (report.rankIC ?? 0) >= minIC : null),
     },
     {
       key: "rankICInterval",
-      label: "IC Interval Excludes Zero",
-      threshold: "Lower > 0",
+      label: "Range Above Zero",
+      threshold: "Low End > 0",
       observed: formatNumber(report.rankICLower, 3),
       status: statusOf(report, "rankICInterval", report.rankICLower === null ? null : report.rankICLower > 0),
     },
@@ -90,7 +90,7 @@ function criteria(report: ValidationResponse): CriterionRow[] {
   ];
 }
 
-const BLEND_LABEL = { BLEND: "Blend Wins", WIKI_ONLY: "Wiki Only", INCONCLUSIVE: "Blend Not Tested" } as const;
+const BLEND_LABEL = { BLEND: "Blend Wins", WIKI_ONLY: "Wikipedia Only", INCONCLUSIVE: "Blend Not Tested" } as const;
 
 /** Held-out rows for the blend test. Empty until a run fits a weight. */
 function blendRows(report: ValidationResponse): IntervalRow[] {
@@ -98,14 +98,14 @@ function blendRows(report: ValidationResponse): IntervalRow[] {
   if (!blend || blend.blendRankIC === null || blend.wikiRankIC === null) return [];
   return [
     {
-      label: "Blend Held-Out",
+      label: "Blend, Test Set",
       point: blend.blendRankIC.coefficient,
       lower: blend.blendRankIC.lower,
       upper: blend.blendRankIC.upper,
       emphasis: false,
     },
     {
-      label: "Wiki Held-Out",
+      label: "Wikipedia, Test Set",
       point: blend.wikiRankIC.coefficient,
       lower: blend.wikiRankIC.lower,
       upper: blend.wikiRankIC.upper,
@@ -116,9 +116,9 @@ function blendRows(report: ValidationResponse): IntervalRow[] {
 
 function divergence(report: ValidationResponse, stratum: string): string {
   const comparison = report.comparisons.find((row) => row.stratum === stratum);
-  if (!comparison) return "Headline";
-  if (comparison.diverges === null) return "Too Few Events";
-  return comparison.diverges ? "Diverges" : "Consistent";
+  if (!comparison) return "Baseline";
+  if (comparison.diverges === null) return "Too Few Exits";
+  return comparison.diverges ? "Differs" : "Same";
 }
 
 const STATUS_CLASS: Record<CriterionStatus, string> = {
@@ -135,7 +135,7 @@ export default async function ValidationPage() {
   return (
     <>
       <PageTitle
-        eyebrow={`Phase 2 Gate · ${report.modelVersion} · ${report.runAt ? formatDate(report.runAt) : "Never Run"}`}
+        eyebrow={`Model ${report.modelVersion} · ${report.runAt ? formatDate(report.runAt) : "Never Run"}`}
         title="Validation"
         aside={
           <span
@@ -149,14 +149,14 @@ export default async function ValidationPage() {
       />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <Panel title="Kill Criteria" action={<span className="text-xs text-faint">Pre-Registered</span>}>
+        <Panel title="Pass Criteria" action={<span className="text-xs text-faint">Set Before the Run</span>}>
           <div className="-m-4 overflow-x-auto">
             <table className="w-full min-w-[480px] text-sm">
               <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Criterion</th>
-                  <th className="px-4 py-3 text-right font-medium">Threshold</th>
-                  <th className="px-4 py-3 text-right font-medium">Observed</th>
+                  <th className="px-4 py-3 font-medium">Test</th>
+                  <th className="px-4 py-3 text-right font-medium">Needed</th>
+                  <th className="px-4 py-3 text-right font-medium">Actual</th>
                   <th className="px-4 py-3 text-right font-medium">Status</th>
                 </tr>
               </thead>
@@ -179,10 +179,10 @@ export default async function ValidationPage() {
           </div>
         </Panel>
         <Panel
-          title="Rank IC"
+          title="Rank Correlation"
           action={
-            <span className="text-xs text-faint" title="Spearman correlation between pre-exit rank and realised decline, 95% bootstrap interval.">
-              {formatCount(report.verifiedEventCount)} Events
+            <span className="text-xs text-faint" title="How well the ranking before an exit matched the drop after it. Bars show the 95% range.">
+              {formatCount(report.verifiedEventCount)} Exits
               {report.blend ? ` · ${BLEND_LABEL[report.blend.verdict]}` : ""}
             </span>
           }
@@ -191,7 +191,7 @@ export default async function ValidationPage() {
             threshold={minIC}
             rows={[
               {
-                label: "Carry Score",
+                label: "Attention Share",
                 point: report.rankIC,
                 lower: report.rankICLower,
                 upper: report.rankICUpper,
@@ -213,9 +213,9 @@ export default async function ValidationPage() {
       <div className="mt-6 flex flex-col gap-6">
         {report.strata.length > 0 ? (
           <Panel
-            title="Strata"
+            title="Exit Types"
             action={
-              <span className="text-xs text-faint" title="Each slice of the exit corpus against the unannounced headline. Diverges means the mean estimates differ at 95%.">
+              <span className="text-xs text-faint" title="Each exit type compared with unannounced exits. Differs means the averages are apart at 95%.">
                 Against Unannounced
               </span>
             }
@@ -224,11 +224,11 @@ export default async function ValidationPage() {
               <table className="w-full min-w-[640px] text-sm">
                 <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Stratum</th>
+                    <th className="px-4 py-3 font-medium">Type</th>
                     <th className="px-4 py-3 text-right font-medium">Events</th>
-                    <th className="px-4 py-3 text-right font-medium">Mean Change</th>
+                    <th className="px-4 py-3 text-right font-medium">Avg Change</th>
                     <th className="px-4 py-3 text-right font-medium">Std Error</th>
-                    <th className="px-4 py-3 text-right font-medium">Rank IC</th>
+                    <th className="px-4 py-3 text-right font-medium">Correlation</th>
                     <th className="px-4 py-3 text-right font-medium">Result</th>
                   </tr>
                 </thead>
@@ -251,7 +251,7 @@ export default async function ValidationPage() {
           </Panel>
         ) : null}
         <Panel
-          title="Event Studies"
+          title="Exits Studied"
           action={
             <span className="flex items-center gap-4 text-xs text-faint">
               <span className="flex items-center gap-2">
@@ -263,10 +263,10 @@ export default async function ValidationPage() {
             </span>
           }
         >
-          {studies.length === 0 ? <EmptyState title="No Event Studies" /> : <EventScatter rows={studies} />}
+          {studies.length === 0 ? <EmptyState title="No Exits Studied" /> : <EventScatter rows={studies} />}
         </Panel>
         {studies.length > 0 ? (
-          <Panel title="Study Rows" action={<span className="text-xs text-faint">{formatCount(studies.length)}</span>}>
+          <Panel title="Exit List" action={<span className="text-xs text-faint">{formatCount(studies.length)}</span>}>
             <div className="-m-4 max-h-[480px] overflow-auto">
               <table className="w-full min-w-[720px] text-sm">
                 <thead className="sticky top-0 border-b border-line bg-surface text-left text-xs uppercase tracking-wide text-muted">
@@ -274,7 +274,7 @@ export default async function ValidationPage() {
                     <th className="px-4 py-3 font-medium">Date</th>
                     <th className="px-4 py-3 font-medium">Franchise</th>
                     <th className="px-4 py-3 font-medium">Character</th>
-                    <th className="px-4 py-3 text-right font-medium">Pre-Exit Carry</th>
+                    <th className="px-4 py-3 text-right font-medium">Share Before</th>
                     <th className="px-4 py-3 text-right font-medium">Billing Rank</th>
                     <th className="px-4 py-3 text-right font-medium">Change</th>
                     <th className="px-4 py-3 text-right font-medium">Std Error</th>

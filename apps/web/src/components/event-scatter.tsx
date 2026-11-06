@@ -24,7 +24,7 @@ function describe(row: Point): string {
   const parts = [
     row.characterName ?? "Unmatched",
     row.franchiseName,
-    `Carry ${formatPercent(row.preCarryScore)}`,
+    `Share ${formatPercent(row.preCarryScore)}`,
     formatLogChange(row.didEstimate),
   ];
   if (row.announced) parts.push("Announced");
@@ -51,7 +51,7 @@ export function EventScatter({ rows }: { rows: EventStudyRow[] }) {
 
   return (
     <div ref={ref} className="w-full overflow-hidden contain-inline-size">
-      <svg width={width} height={HEIGHT} role="img" aria-label="Pre-exit carry against attention change">
+      <svg width={width} height={HEIGHT} role="img" aria-label="Share before exit against change after exit">
         {yTicks.map((tick) => (
           <g key={tick}>
             <line x1={PAD.left} x2={width - PAD.right} y1={y(tick)} y2={y(tick)} stroke="var(--chart-grid)" />
@@ -67,10 +67,10 @@ export function EventScatter({ rows }: { rows: EventStudyRow[] }) {
           </text>
         ))}
         <text x={width - PAD.right} y={HEIGHT - 4} textAnchor="end" fontSize={12} fill="var(--text-muted)">
-          Pre-Exit Carry
+          Share Before Exit
         </text>
         <text x={PAD.left} y={12} fontSize={12} fill="var(--text-muted)">
-          Attention Change
+          Change After Exit
         </text>
         {points.map((row) => {
           const offScale = Math.abs(row.didEstimate) > extent;

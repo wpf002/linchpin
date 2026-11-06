@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: { default: "Linchpin", template: "%s · Linchpin" },
-  description: "Character attention concentration and franchise fragility from public signals.",
+  description: "Which characters hold a franchise's audience, and what happens when one leaves.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

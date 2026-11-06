@@ -30,12 +30,7 @@ function Completed({ count }: { count: number }) {
 function Residual({ score }: { score: CreatorRow["score"] }) {
   if (!score) {
     return (
-      <span
-        className="text-xs uppercase tracking-wide text-faint"
-        title={`A residual needs ${REQUIRED_PROJECTS} completed projects.`}
-      >
-        Suppressed
-      </span>
+      <span className="text-xs uppercase tracking-wide text-faint">Needs {REQUIRED_PROJECTS} Projects</span>
     );
   }
   return (
@@ -65,7 +60,7 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
               <Count
                 label="Scored"
                 value={page.scoredTotal}
-                hint={`People with at least ${REQUIRED_PROJECTS} completed projects.`}
+                hint={`At least ${REQUIRED_PROJECTS} finished projects.`}
               />
             </dl>
             <QueryForm placeholder="Person" value={query.q} preserved={{}} />
@@ -74,7 +69,7 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
       />
       {page.rows.length === 0 ? (
         <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" detail="No credited person matches this search." />
+          <EmptyState title="No Matches" />
         </div>
       ) : (
         <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
@@ -90,17 +85,17 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
                 <th
                   scope="col"
                   className="px-3 py-3 text-right font-medium"
-                  title="Projects whose run or role has ended."
+                  title="Projects that have ended."
                 >
-                  Completed
+                  Finished
                 </th>
                 {showResidual ? (
                   <th
                     scope="col"
                     className="px-3 py-3 text-right font-medium"
-                    title="Mean carry across completed projects, less what billing order predicts."
+                    title="Average attention share minus what billing position predicts."
                   >
-                    Residual
+                    Vs. Billing
                   </th>
                 ) : null}
               </tr>

@@ -1,5 +1,6 @@
 import { ROSTER_COMPLETE_DISPLAY_FLOOR } from "@linchpin/shared";
 import { formatPercent } from "@/lib/format";
+import { COVERAGE_HINT } from "@/lib/fragility";
 
 /**
  * rosterComplete is the confidence flag for every concentration figure. It is
@@ -8,10 +9,7 @@ import { formatPercent } from "@/lib/format";
 export function CoverageBadge({ value }: { value: number }) {
   const trusted = value >= ROSTER_COMPLETE_DISPLAY_FLOOR;
   return (
-    <span
-      className="inline-flex items-center gap-2"
-      title={`Roster coverage: share of the main cast linked to a verified article. Floor ${formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0)}.`}
-    >
+    <span className="inline-flex items-center gap-2" title={COVERAGE_HINT}>
       <span className="relative h-1 w-10 overflow-hidden rounded-full bg-line" aria-hidden="true">
         <span
           className="absolute inset-y-0 left-0 rounded-full"

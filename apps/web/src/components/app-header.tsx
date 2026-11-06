@@ -8,7 +8,7 @@ import { NavLinks } from "./nav-links";
 async function loadGate() {
   try {
     const report = await fetchValidation();
-    return { gate: report.gate, rankIC: report.rankIC } as const;
+    return report.gate;
   } catch (error) {
     console.error("header could not load the validation gate", error);
     return null;
@@ -28,7 +28,7 @@ export async function AppHeader() {
         <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-4">
           <GlobalSearch />
           <span className="hidden font-mono text-xs text-faint lg:inline">{MODEL_VERSION}</span>
-          <GateChip gate={gate?.gate ?? null} rankIC={gate?.rankIC ?? null} />
+          <GateChip gate={gate} />
         </div>
       </div>
     </header>

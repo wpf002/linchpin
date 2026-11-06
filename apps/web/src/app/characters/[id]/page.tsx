@@ -32,7 +32,7 @@ export default async function CharacterPage({ params }: Props) {
         eyebrow={
           <span className="flex flex-wrap items-center gap-2">
             <Link href="/" className="hover:text-ink">
-              Screener
+              Franchises
             </Link>
             <span className="text-faint">/</span>
             <Link href={`/franchises/${character.franchise.id}`} className="hover:text-ink">
@@ -58,25 +58,25 @@ export default async function CharacterPage({ params }: Props) {
         )}
       >
         <Stat
-          label="Carry Score"
+          label="Attention Share"
           value={formatPercent(character.carryScore)}
           detail={`Confidence ${formatPercent(character.confidence, 0)}`}
-          hint="Blended share of franchise attention across measured signals."
+          hint="Share of the franchise's attention."
         />
-        <Stat label="Off-Cycle Carry" value={formatPercent(character.offCycleCarry)} hint={`Carry on days at least ${EVENT_WINDOWS.offCycleGapDays} days from any release.`} />
+        <Stat label="Between Releases" value={formatPercent(character.offCycleCarry)} hint={`Share on days at least ${EVENT_WINDOWS.offCycleGapDays} days from a release.`} />
         <Stat
           label="Durability"
           value={formatNumber(character.durabilityRatio, 2)}
-          hint="Off-cycle carry divided by on-cycle carry. Above 1 means attention holds between releases."
+          hint="Share between releases divided by share around releases. Above 1 means interest holds."
         />
         {character.substitutability === null ? null : (
           <Stat
-            label="Substitutability"
+            label="Absorbed After Exit"
             value={formatPercent(character.substitutability)}
-            hint="Share of this character's attention the rest of the roster absorbed after their exit. 100% means fully absorbed."
+            hint="How much of this character's attention the rest of the cast picked up after they left."
           />
         )}
-        <Stat label="Seen" value={formatDate(character.lastSeenAt)} detail={`From ${formatDate(character.firstSeenAt)}`} />
+        <Stat label="Last Seen" value={formatDate(character.lastSeenAt)} detail={`First Seen ${formatDate(character.firstSeenAt)}`} />
       </dl>
 
       <div className="flex flex-col gap-6">
@@ -85,21 +85,21 @@ export default async function CharacterPage({ params }: Props) {
           action={
             <span className="flex items-center gap-2 text-xs text-faint">
               <span className="inline-block size-2.5 rounded-sm" style={{ background: "var(--chart-off-cycle)", outline: "1px solid var(--border)" }} />
-              Off-Cycle · {offCycleDays} Days
+              Between Releases · {offCycleDays} Days
             </span>
           }
         >
           {character.series.length === 0 ? (
-            <EmptyState title="No Signal Rows" />
+            <EmptyState title="No Data" />
           ) : (
             <AttentionChart series={character.series} />
           )}
         </Panel>
         <Panel
-          title="Signal Audit"
+          title="Sources"
           action={
             <Link href={`/characters/${character.id}/signals`} className="text-xs text-accent hover:text-accent-strong">
-              Raw Rows
+              Raw Data
             </Link>
           }
         >

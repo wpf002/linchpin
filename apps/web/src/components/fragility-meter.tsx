@@ -1,17 +1,14 @@
-import { BAND_TOKEN, bandOf, domainPosition } from "@/lib/fragility";
+import { BAND_TOKEN, NO_SCORE_HINT, bandOf, domainPosition } from "@/lib/fragility";
 import { formatSigned } from "@/lib/format";
 
 const ZERO = domainPosition(0);
 
-/** Diverging bar from zero. Null renders as suppressed, never as a dimmed value. */
+/** Diverging bar from zero. Null renders as No Score, never as a dimmed value. */
 export function FragilityMeter({ value }: { value: number | null }) {
   if (value === null) {
     return (
-      <span
-        className="text-xs uppercase tracking-wide text-faint"
-        title="Suppressed: roster coverage below the 70% floor."
-      >
-        Suppressed
+      <span className="text-xs uppercase tracking-wide text-faint" title={NO_SCORE_HINT}>
+        No Score
       </span>
     );
   }

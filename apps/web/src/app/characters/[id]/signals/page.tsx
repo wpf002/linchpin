@@ -11,7 +11,7 @@ import { flattenSearchParams, type RawSearchParams } from "@/lib/search-params";
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<RawSearchParams> };
 
-export const metadata: Metadata = { title: "Signal Rows" };
+export const metadata: Metadata = { title: "Raw Data" };
 
 export default async function SignalRowsPage({ params, searchParams }: Props) {
   const { id } = await params;
@@ -41,7 +41,7 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
             </Link>
           </span>
         }
-        title="Signal Rows"
+        title="Raw Data"
         aside={<span className="num text-sm text-faint">{formatCount(page.total)} Rows</span>}
       />
       <nav className="mb-4 flex flex-wrap gap-1 border-b border-line" aria-label="Source">
@@ -63,7 +63,7 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
         })}
       </nav>
       {page.rows.length === 0 ? (
-        <EmptyState title="No Rows" detail="Nothing was ingested for this source." />
+        <EmptyState title="No Rows" />
       ) : (
         <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
           <table className="w-full min-w-[560px] text-sm">
@@ -71,7 +71,7 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
               <tr>
                 <th className="px-4 py-3 font-medium">Date</th>
                 <th className="px-4 py-3 font-medium">Source</th>
-                <th className="px-4 py-3 text-right font-medium">Raw Value</th>
+                <th className="px-4 py-3 text-right font-medium">Value</th>
                 <th className="px-4 py-3 font-medium">Window</th>
                 <th className="px-4 py-3 text-right font-medium">Confidence</th>
               </tr>
@@ -82,7 +82,7 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
                   <td className="px-4 py-2 text-muted">{formatDate(row.measuredOn)}</td>
                   <td className="px-4 py-2 text-muted">{label(row.source)}</td>
                   <td className="px-4 py-2 text-right text-ink">{formatCount(row.rawValue)}</td>
-                  <td className="px-4 py-2 text-muted">{row.isOffCycle ? "Off-Cycle" : "On-Cycle"}</td>
+                  <td className="px-4 py-2 text-muted">{row.isOffCycle ? "Between Releases" : "Release"}</td>
                   <td className="px-4 py-2 text-right text-muted">{formatPercent(row.confidence, 0)}</td>
                 </tr>
               ))}
