@@ -1,9 +1,4 @@
-import {
-  FRAGILITY_BANDS,
-  ROSTER_COMPLETE_DISPLAY_FLOOR,
-  fragilityBand,
-  type FragilityBandId,
-} from "@linchpin/shared";
+import { ROSTER_COMPLETE_DISPLAY_FLOOR, fragilityBand, type FragilityBandId } from "@linchpin/shared";
 import { formatPercent } from "./format";
 
 const COVERAGE_FLOOR = formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0);
@@ -32,14 +27,4 @@ export function bandOf(value: number) {
 export function domainPosition(value: number): number {
   const clamped = Math.min(FRAGILITY_DOMAIN.max, Math.max(FRAGILITY_DOMAIN.min, value));
   return (clamped - FRAGILITY_DOMAIN.min) / (FRAGILITY_DOMAIN.max - FRAGILITY_DOMAIN.min);
-}
-
-/** Band boundaries clipped to the display domain, for drawing band regions. */
-export function bandRegions() {
-  return FRAGILITY_BANDS.map((band) => ({
-    id: band.id,
-    label: band.label,
-    start: domainPosition(Math.max(band.min, FRAGILITY_DOMAIN.min)),
-    end: domainPosition(Math.min(band.max, FRAGILITY_DOMAIN.max)),
-  }));
 }

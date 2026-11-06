@@ -1,32 +1,79 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { leadersQuerySchema, type LeaderRow } from "@linchpin/shared";
+import { leadersQuerySchema, type LeaderRow, type LeadersQuery } from "@linchpin/shared";
+import { Poster } from "@/components/face";
+import { LinkTabs } from "@/components/link-tabs";
 import { PageTitle } from "@/components/page-title";
 import { Pager } from "@/components/pager";
 import { EmptyState } from "@/components/panel";
 import { QueryForm } from "@/components/query-form";
-import { SortHeader } from "@/components/sort-header";
+import { RingFace } from "@/components/ring-face";
 import { fetchLeaders } from "@/lib/api";
-import { formatCount, formatNumber, formatPercent, label } from "@/lib/format";
+import { formatPercent } from "@/lib/format";
 import { flattenSearchParams, type RawSearchParams } from "@/lib/search-params";
+import { CONFIDENCE_LABEL, confidenceLevel, stayingPower } from "@/lib/words";
 
 export const metadata: Metadata = { title: "Characters" };
 
-/** Carry as a bar whose opacity tracks confidence, with both numbers printed. */
-function Carry({ row }: { row: LeaderRow }) {
+type Sort = LeadersQuery["sort"];
+
+const SORT_TABS: { sort: Sort; label: string }[] = [
+  { sort: "carryScore", label: "Biggest Share" },
+  { sort: "offCycleCarry", label: "Between Releases" },
+  { sort: "durabilityRatio", label: "Staying Power" },
+];
+
+/** A sort tab keeps the search term and starts again from the first page, largest first. */
+function sortHref(q: string | undefined, sort: Sort): string {
+  const query = new URLSearchParams(q ? { q, sort } : { sort });
+  return `/characters?${query.toString()}`;
+}
+
+/** The ring follows the sort when the sort is itself a share. Durability is a ratio, so the ring stays on share. */
+function ringShare(row: LeaderRow, sort: Sort): number {
+  return sort === "offCycleCarry" ? (row.offCycleCarry ?? 0) : row.carryScore;
+}
+
+function ringHint(row: LeaderRow, sort: Sort): string {
+  const figure = sort === "offCycleCarry" ? "Between Releases " : "";
+  const confidence = CONFIDENCE_LABEL[confidenceLevel(row.confidence)];
+  return `${row.canonicalName} · ${figure}${formatPercent(ringShare(row, sort), 0)} · ${confidence}`;
+}
+
+function CharacterTile({ row, rank, sort }: { row: LeaderRow; rank: number; sort: Sort }) {
+  const level = confidenceLevel(row.confidence);
   return (
-    <span className="flex items-center justify-end gap-3">
-      <span className="relative hidden h-3 w-24 bg-raised sm:block" aria-hidden="true">
-        <span
-          className="absolute inset-y-0 left-0 bg-ink"
-          style={{ width: `${row.carryScore * 100}%`, opacity: 0.4 + row.confidence * 0.6 }}
-        />
-      </span>
-      <span className="flex flex-col items-end gap-1">
-        <span className="num text-ink">{formatPercent(row.carryScore)}</span>
-        <span className="num text-xs text-faint">Confidence {formatPercent(row.confidence, 0)}</span>
-      </span>
-    </span>
+    <li className="flex min-w-0 flex-col items-center gap-3 text-center">
+      <div className="relative w-28 sm:w-32">
+        <Link href={`/characters/${row.id}`} className="block rounded-full transition-transform duration-200 ease-out hover:scale-105">
+          <RingFace
+            name={row.canonicalName}
+            imageUrl={row.imageUrl}
+            share={ringShare(row, sort)}
+            title={ringHint(row, sort)}
+            className="w-full"
+          />
+        </Link>
+        <Link
+          href={`/franchises/${row.franchise.id}`}
+          title={row.franchise.canonicalName}
+          className="absolute -right-2 bottom-0 w-9 rounded-[var(--radius-ui)] ring-2 ring-bg transition-transform duration-200 ease-out hover:-translate-y-1"
+        >
+          <Poster name={row.franchise.canonicalName} imageUrl={row.franchise.imageUrl} />
+        </Link>
+      </div>
+      <div className="flex w-full min-w-0 flex-col">
+        <Link href={`/characters/${row.id}`} className="font-display text-lg leading-tight text-ink [overflow-wrap:anywhere] hover:text-accent-strong">
+          <span className="num mr-2 text-sm text-faint">{rank}</span>
+          {row.canonicalName}
+        </Link>
+        <span className="truncate text-sm text-muted">{row.portrayedBy ?? row.franchise.canonicalName}</span>
+        {sort === "durabilityRatio" && row.durabilityRatio !== null ? (
+          <span className="text-xs text-faint">{stayingPower(row.durabilityRatio)}</span>
+        ) : null}
+        {level === "high" ? null : <span className="text-xs text-blocked">{CONFIDENCE_LABEL[level]}</span>}
+      </div>
+    </li>
   );
 }
 
@@ -48,92 +95,33 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
           />
         }
       />
+      <div className="mb-12">
+        <LinkTabs
+          label="Sort"
+          tabs={SORT_TABS.map((tab) => ({
+            label: tab.label,
+            href: sortHref(query.q, tab.sort),
+            active: query.sort === tab.sort,
+          }))}
+        />
+      </div>
       {page.rows.length === 0 ? (
         <EmptyState title="No Matches" />
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[880px] border-collapse">
-            <thead className="border-b border-ink text-left text-sm">
-              <tr>
-                <th scope="col" className="w-12 px-3 py-3 text-right font-medium text-muted">
-                  Rank
-                </th>
-                <th scope="col" className="px-3 py-3 font-medium text-muted">
-                  Character
-                </th>
-                <th scope="col" className="px-3 py-3 font-medium text-muted">
-                  Franchise
-                </th>
-                <SortHeader
-                  column="carryScore"
-                  label="Share"
-                  current={query}
-                  params={params}
-                  align="right"
-                  hint="Share of the franchise's attention."
-                />
-                <SortHeader
-                  column="offCycleCarry"
-                  label="Between Releases"
-                  current={query}
-                  params={params}
-                  align="right"
-                  hint="Share on days with no release nearby."
-                />
-                <SortHeader
-                  column="durabilityRatio"
-                  label="Durability"
-                  current={query}
-                  params={params}
-                  align="right"
-                  hint="Above 1 means interest holds between releases."
-                />
-              </tr>
-            </thead>
-            <tbody>
-              {page.rows.map((row, index) => (
-                <tr key={row.id} className="group border-b border-line last:border-b-0 hover:bg-hover">
-                  <td className="num px-3 py-3 text-right text-faint">{query.cursor + index + 1}</td>
-                  <td className="px-3 py-3">
-                    <Link href={`/characters/${row.id}`} className="flex flex-col gap-1">
-                      <span className="font-display text-lg leading-tight text-ink group-hover:text-accent-strong">{row.canonicalName}</span>
-                      <span className="text-xs text-faint">
-                        {row.portrayedBy ? `${row.portrayedBy} · ` : ""}
-                        {label(row.status)}
-                      </span>
-                    </Link>
-                  </td>
-                  <td className="px-3 py-3">
-                    <Link href={`/franchises/${row.franchise.id}`} className="text-muted hover:text-ink">
-                      {row.franchise.canonicalName}
-                    </Link>
-                  </td>
-                  <td className="px-3 py-3">
-                    <Carry row={row} />
-                  </td>
-                  <td className="num px-3 py-3 text-right text-muted">
-                    {row.offCycleCarry === null ? "" : formatPercent(row.offCycleCarry)}
-                  </td>
-                  <td className="num px-3 py-3 text-right text-muted">
-                    {row.durabilityRatio === null ? "" : formatNumber(row.durabilityRatio, 2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ol className="grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-[repeat(auto-fill,minmax(168px,1fr))] sm:gap-x-6">
+          {page.rows.map((row, index) => (
+            <CharacterTile key={row.id} row={row} rank={query.cursor + index + 1} sort={query.sort} />
+          ))}
+        </ol>
       )}
-      <div className="mt-4 flex items-center justify-between gap-4">
-        <span className="num text-sm text-faint">{formatCount(page.total)} Scored</span>
-        <Pager
-          params={params}
-          cursor={query.cursor}
-          limit={query.limit}
-          nextCursor={page.nextCursor}
-          shown={page.rows.length}
-          total={page.total}
-        />
-      </div>
+      <Pager
+        params={params}
+        cursor={query.cursor}
+        limit={query.limit}
+        nextCursor={page.nextCursor}
+        shown={page.rows.length}
+        total={page.total}
+      />
     </>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { clsx } from "clsx";
 import { searchResponseSchema, type SearchResponse } from "@linchpin/shared";
+import { Face, Poster } from "./face";
 import { label } from "@/lib/format";
 
 const DEBOUNCE_MS = 200;
@@ -18,6 +19,7 @@ interface Option {
   href: string;
   name: string;
   context: string;
+  imageUrl: string | null;
   group: Group;
 }
 
@@ -30,6 +32,7 @@ function toOptions(response: SearchResponse): Option[] {
       href: `/franchises/${franchise.id}`,
       name: franchise.canonicalName,
       context: label(franchise.medium),
+      imageUrl: franchise.imageUrl,
       group: "Franchises" as const,
     })),
     ...response.characters.map((character) => ({
@@ -37,6 +40,7 @@ function toOptions(response: SearchResponse): Option[] {
       href: `/characters/${character.id}`,
       name: character.canonicalName,
       context: character.franchiseName,
+      imageUrl: character.imageUrl,
       group: "Characters" as const,
     })),
   ];
@@ -217,12 +221,19 @@ function OptionRow({
         onMouseDown={(event) => event.preventDefault()}
         onClick={onChoose}
         className={clsx(
-          "flex cursor-pointer items-baseline justify-between gap-4 px-3 py-2 text-sm",
+          "flex cursor-pointer items-center gap-3 px-3 py-2 text-sm",
           active ? "bg-hover text-ink" : "text-muted",
         )}
       >
-        <span className="truncate">{option.name}</span>
-        <span className="shrink-0 text-xs text-faint">{option.context}</span>
+        <span className="flex w-8 shrink-0 justify-center">
+          {option.group === "Characters" ? (
+            <Face name={option.name} imageUrl={option.imageUrl} className="w-8" />
+          ) : (
+            <Poster name={option.name} imageUrl={option.imageUrl} className="w-6" />
+          )}
+        </span>
+        <span className="min-w-0 flex-1 truncate">{option.name}</span>
+        <span className="max-w-[40%] shrink-0 truncate text-xs text-faint">{option.context}</span>
       </li>
     </>
   );

@@ -1,67 +1,116 @@
 import { Suspense } from "react";
-import { screenerQuerySchema } from "@linchpin/shared";
-import { FragilityStrip } from "@/components/fragility-strip";
+import {
+  FRAGILITY_BANDS,
+  fragilityBand,
+  screenerQuerySchema,
+  type FragilityBandId,
+  type FranchiseRow,
+  type ScreenerQuery,
+} from "@linchpin/shared";
+import { LeadWall } from "@/components/lead-wall";
+import { LinkTabs } from "@/components/link-tabs";
 import { PageTitle } from "@/components/page-title";
 import { Pager } from "@/components/pager";
-import { EmptyState } from "@/components/panel";
+import { EmptyState, Panel } from "@/components/panel";
 import { ScreenerFilters } from "@/components/screener-filters";
 import { ScreenerTable } from "@/components/screener-table";
+import { ShowTile } from "@/components/show-tile";
 import { fetchAllFranchises, fetchScreener } from "@/lib/api";
-import { formatCount } from "@/lib/format";
-import { NO_SCORE_HINT } from "@/lib/fragility";
 import { flattenSearchParams, type RawSearchParams } from "@/lib/search-params";
+import { BAND_HINT, NOT_ENOUGH_CAST, NOT_ENOUGH_CAST_HINT } from "@/lib/words";
 
-/** Paging params stay out of the export link: the CSV carries every matching row. */
-const PAGING_PARAMS = ["cursor", "limit"] as const;
+const VIEW_PARAM = "view";
+const TABLE_VIEW = "table";
+
+/** Paging and view params stay out of the export link: the CSV carries every matching row. */
+const NON_EXPORT_PARAMS = ["cursor", "limit", VIEW_PARAM] as const;
+
+/** Most lead-heavy first, so the page opens on the shows one character carries. */
+const BANDS_LEAD_HEAVY_FIRST = [...FRAGILITY_BANDS].reverse();
+
+const TILE_GRID = "grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-[repeat(auto-fill,minmax(168px,1fr))] sm:gap-x-6";
+const COMPACT_TILE_GRID = "grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(120px,1fr))]";
 
 function exportHref(params: Record<string, string>): string {
   const query = new URLSearchParams(params);
-  for (const name of PAGING_PARAMS) query.delete(name);
+  for (const name of NON_EXPORT_PARAMS) query.delete(name);
   const suffix = query.toString();
   return suffix ? `/api/export?${suffix}` : "/api/export";
 }
 
-export default async function ScreenerPage({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
-  const params = flattenSearchParams(await searchParams);
-  const parsed = screenerQuerySchema.safeParse(params);
-  const query = parsed.success ? parsed.data : screenerQuerySchema.parse({});
-  // The strip and the counts cover the whole universe regardless of table filters.
-  const [page, universe] = await Promise.all([fetchScreener(query), fetchAllFranchises()]);
-  const scored = universe.filter((row) => row.fragility !== null).length;
-  const exits = universe.reduce((sum, row) => sum + row.exitEventCount, 0);
+function viewHref(params: Record<string, string>, view: string | null): string {
+  const query = new URLSearchParams(params);
+  query.delete("cursor");
+  if (view) query.set(VIEW_PARAM, view);
+  else query.delete(VIEW_PARAM);
+  const suffix = query.toString();
+  return suffix ? `/?${suffix}` : "/";
+}
 
+function byLeadHeavy(a: FranchiseRow, b: FranchiseRow): number {
+  return (b.fragility ?? 0) - (a.fragility ?? 0);
+}
+
+function groupByBand(rows: FranchiseRow[]): Map<FragilityBandId, FranchiseRow[]> {
+  const groups = new Map<FragilityBandId, FranchiseRow[]>();
+  for (const row of rows) {
+    if (row.fragility === null) continue;
+    const band = fragilityBand(row.fragility).id;
+    groups.set(band, [...(groups.get(band) ?? []), row]);
+  }
+  return groups;
+}
+
+function PosterView({ rows }: { rows: FranchiseRow[] }) {
+  if (rows.length === 0) return <EmptyState title="No Matches" />;
+  const groups = groupByBand(rows);
+  const unscored = rows.filter((row) => row.fragility === null);
+  return (
+    <div className="flex flex-col gap-16">
+      {groups.size > 0 ? (
+        <Panel title="Biggest Leads" hint="Face width is the lead's share of the show's attention.">
+          <LeadWall rows={rows} />
+        </Panel>
+      ) : null}
+      {BANDS_LEAD_HEAVY_FIRST.map((band) => {
+        const members = groups.get(band.id);
+        if (!members) return null;
+        return (
+          <Panel
+            key={band.id}
+            title={band.label}
+            hint={BAND_HINT[band.id]}
+            action={<span className="num text-sm text-muted">{members.length}</span>}
+          >
+            <div className={TILE_GRID}>
+              {[...members].sort(byLeadHeavy).map((row) => (
+                <ShowTile key={row.id} row={row} />
+              ))}
+            </div>
+          </Panel>
+        );
+      })}
+      {unscored.length > 0 ? (
+        <Panel
+          title={NOT_ENOUGH_CAST}
+          hint={NOT_ENOUGH_CAST_HINT}
+          action={<span className="num text-sm text-muted">{unscored.length}</span>}
+        >
+          <div className={COMPACT_TILE_GRID}>
+            {unscored.map((row) => (
+              <ShowTile key={row.id} row={row} compact />
+            ))}
+          </div>
+        </Panel>
+      ) : null}
+    </div>
+  );
+}
+
+async function TableView({ query, params }: { query: ScreenerQuery; params: Record<string, string> }) {
+  const page = await fetchScreener(query);
   return (
     <>
-      <PageTitle
-        title="Franchises"
-        aside={
-          <dl className="flex flex-wrap items-baseline gap-x-8 gap-y-2">
-            <Count label="Scored" value={scored} />
-            <Count label="No Score" value={universe.length - scored} hint={NO_SCORE_HINT} />
-            <Count label="Cast Exits" value={exits} />
-          </dl>
-        }
-      />
-      {scored > 0 ? (
-        <section className="mb-16 border-y border-line py-6" aria-label="Fragility of Every Scored Franchise">
-          <FragilityStrip rows={universe} />
-        </section>
-      ) : null}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <Suspense>
-          <ScreenerFilters />
-        </Suspense>
-        <div className="flex items-center gap-4">
-          <span className="num text-sm text-muted">{formatCount(page.total)} Franchises</span>
-          <a
-            href={exportHref(params)}
-            download
-            className="flex h-9 items-center rounded-[var(--radius-ui)] border border-line px-3 text-sm text-muted transition-colors duration-150 hover:border-line-strong hover:text-ink active:bg-hover"
-          >
-            Export CSV
-          </a>
-        </div>
-      </div>
       {page.rows.length === 0 ? (
         <EmptyState title="No Matches" />
       ) : (
@@ -79,13 +128,52 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
   );
 }
 
-function Count({ label, value, hint }: { label: string; value: number; hint?: string }) {
+export default async function ScreenerPage({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
+  const params = flattenSearchParams(await searchParams);
+  const isTable = params[VIEW_PARAM] === TABLE_VIEW;
+  const parsed = screenerQuerySchema.safeParse(params);
+  const query = parsed.success ? parsed.data : screenerQuerySchema.parse({});
+
   return (
-    <div className="flex items-baseline gap-2">
-      <dd className="num text-lg leading-none text-ink">{formatCount(value)}</dd>
-      <dt className="text-sm text-muted" title={hint}>
-        {label}
-      </dt>
-    </div>
+    <>
+      <PageTitle
+        title="Franchises"
+        aside={
+          <LinkTabs
+            label="View"
+            tabs={[
+              { label: "Posters", href: viewHref(params, null), active: !isTable },
+              { label: "Table", href: viewHref(params, TABLE_VIEW), active: isTable },
+            ]}
+          />
+        }
+      />
+      <div className="mb-12 flex flex-wrap items-center justify-between gap-4">
+        <Suspense>
+          <ScreenerFilters />
+        </Suspense>
+        {isTable ? (
+          <a
+            href={exportHref(params)}
+            download
+            className="flex h-9 items-center rounded-[var(--radius-ui)] border border-line px-3 text-sm text-muted transition-colors duration-150 hover:border-line-strong hover:text-ink active:bg-hover"
+          >
+            Export CSV
+          </a>
+        ) : null}
+      </div>
+      {isTable ? (
+        <TableView query={query} params={params} />
+      ) : (
+        <PosterView
+          rows={await fetchAllFranchises({
+            q: query.q,
+            medium: query.medium,
+            status: query.status,
+            minRosterComplete: query.minRosterComplete,
+          })}
+        />
+      )}
+    </>
   );
 }

@@ -1,17 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FranchiseWorkbench } from "@/components/franchise-workbench";
-import { PageTitle } from "@/components/page-title";
+import type { FranchiseDetail } from "@linchpin/shared";
+import { CastStage } from "@/components/cast-stage";
+import { Face, Poster } from "@/components/face";
+import { Numbers } from "@/components/numbers";
 import { EmptyState, Panel } from "@/components/panel";
 import { ReleaseTimeline } from "@/components/release-timeline";
 import { Stat } from "@/components/stat";
 import { fetchFranchise } from "@/lib/api";
 import { orNotFound } from "@/lib/load";
-import { formatDate, formatLogChange, formatNumber, formatPercent, formatSigned, formatYear, label } from "@/lib/format";
-import { ROSTER_COMPLETE_DISPLAY_FLOOR } from "@linchpin/shared";
-import { BAND_TOKEN, COVERAGE_HINT, NO_SCORE_HINT, bandOf } from "@/lib/fragility";
+import { formatDate, formatNumber, formatPercent, formatSigned, formatYear, label } from "@/lib/format";
+import { BAND_TOKEN, COVERAGE_HINT, bandOf } from "@/lib/fragility";
+import {
+  BAND_HINT,
+  CONFIDENCE_LABEL,
+  NOT_ENOUGH_CAST,
+  NOT_ENOUGH_CAST_HINT,
+  castSentence,
+  castTracked,
+  changeInWords,
+  confidenceLevel,
+} from "@/lib/words";
 
 type Props = { params: Promise<{ id: string }> };
+type ExitEvent = FranchiseDetail["exitEvents"][number];
 
 function load(id: string) {
   return orNotFound(fetchFranchise(id));
@@ -25,70 +37,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function FranchisePage({ params }: Props) {
   const franchise = await load((await params).id);
   const scored = franchise.fragility !== null;
-  const lead = franchise.characters[0];
-  // The two study columns are left out when no exit on this franchise has been studied.
-  const hasStudiedExit = franchise.exitEvents.some(
-    (event) => event.preCarryScore !== null || event.didEstimate !== null,
-  );
 
   return (
     <>
-      <PageTitle
-        eyebrow={
-          <span className="flex flex-wrap items-center gap-2">
-            <Link href="/" className="hover:text-ink">
-              Franchises
-            </Link>
-            <span className="text-faint">/</span>
-            <span>
-              {label(franchise.medium)} · {label(franchise.status)} · {formatYear(franchise.firstRelease)}
-            </span>
-          </span>
-        }
-        title={franchise.canonicalName}
-        aside={
-          franchise.scoredOn ? (
-            <span className="text-xs text-faint">
-              Scored {formatDate(franchise.scoredOn)} · <span className="font-mono">{franchise.modelVersion}</span>
-            </span>
-          ) : null
-        }
-      />
-      <dl className="mb-16 grid grid-cols-2 items-start gap-x-8 gap-y-8 border-y border-line py-8 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] lg:items-end">
-        <FragilityFigure value={franchise.fragility} />
-        <Stat
-          label="Lead Share"
-          value={formatPercent(franchise.top1Share, 0)}
-          detail={scored ? lead?.canonicalName : undefined}
-          hint="Share of the franchise's attention on its top character."
-        />
-        <Stat label="Top 3" value={formatPercent(franchise.top3Share, 0)} />
-        <Stat
-          label="HHI"
-          value={formatNumber(franchise.hhi, 3)}
-          hint="Sum of squared attention shares. 1.0 means one character has it all."
-        />
-        <Stat
-          label="Coverage"
-          value={
-            <span className={franchise.rosterComplete >= ROSTER_COMPLETE_DISPLAY_FLOOR ? undefined : "text-fail"}>
-              {formatPercent(franchise.rosterComplete, 0)}
-            </span>
-          }
-          detail={`${franchise.rosterSize} Characters`}
-          hint={COVERAGE_HINT}
-        />
-      </dl>
-
-      {franchise.characters.length === 0 ? (
-        <Panel title="Cast">
-          <EmptyState title="No Characters With Data" />
+      <Hero franchise={franchise} />
+      <div className="flex flex-col gap-16">
+        <Panel title="Cast" action={<span className="num text-sm text-muted">{franchise.characters.length}</span>}>
+          {franchise.characters.length === 0 ? (
+            <EmptyState title="No Characters With Data" />
+          ) : (
+            <CastStage franchiseId={franchise.id} characters={franchise.characters} scored={scored} />
+          )}
         </Panel>
-      ) : (
-        <FranchiseWorkbench franchiseId={franchise.id} characters={franchise.characters} scored={scored} />
-      )}
-
-      <div className="mt-16 flex flex-col gap-16">
         <Panel
           title="Releases and Exits"
           action={<span className="num text-sm text-muted">{franchise.releases.length}</span>}
@@ -99,90 +59,170 @@ export default async function FranchisePage({ params }: Props) {
             <ReleaseTimeline releases={franchise.releases} exitEvents={franchise.exitEvents} />
           )}
         </Panel>
-        <Panel title="Cast Exits" action={<span className="num text-sm text-muted">{franchise.exitEvents.length}</span>}>
-          {franchise.exitEvents.length === 0 ? (
-            <EmptyState title="No Cast Exits" />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px]">
-                <thead className="border-b border-ink text-left text-sm text-muted">
-                  <tr>
-                    <th className="px-3 py-3 font-medium">Date</th>
-                    <th className="px-3 py-3 font-medium">Character</th>
-                    <th className="px-3 py-3 font-medium">Type</th>
-                    {hasStudiedExit ? (
-                      <>
-                        <th className="px-3 py-3 text-right font-medium">Share Before</th>
-                        <th className="px-3 py-3 text-right font-medium">Change After</th>
-                      </>
-                    ) : null}
-                    <th className="px-3 py-3 font-medium">Source</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {franchise.exitEvents.map((event) => (
-                    <tr key={event.id} className="border-b border-line last:border-b-0">
-                      <td className="num px-3 py-3 text-muted">{formatDate(event.eventDate)}</td>
-                      <td className="px-3 py-3 text-ink">
-                        {event.characterName ?? event.personName ?? ""}
-                        {event.verified ? null : <span className="ml-2 text-xs text-faint">Unverified</span>}
-                      </td>
-                      <td className="px-3 py-3 text-muted">{label(event.exitType)}</td>
-                      {hasStudiedExit ? (
-                        <>
-                          <td className="num px-3 py-3 text-right text-muted">
-                            {event.preCarryScore === null ? "" : formatPercent(event.preCarryScore)}
-                          </td>
-                          <td className="num px-3 py-3 text-right text-ink">
-                            {event.didEstimate === null ? "" : formatLogChange(event.didEstimate)}
-                          </td>
-                        </>
-                      ) : null}
-                      <td className="px-3 py-3">
-                        <a
-                          href={event.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="text-accent hover:text-accent-strong"
-                        >
-                          Source
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </Panel>
+        {franchise.exitEvents.length > 0 ? (
+          <Panel title="Cast Exits" action={<span className="num text-sm text-muted">{franchise.exitEvents.length}</span>}>
+            <ul>
+              {franchise.exitEvents.map((event) => (
+                <ExitRow key={event.id} event={event} />
+              ))}
+            </ul>
+          </Panel>
+        ) : null}
+        <Numbers>
+          <FranchiseNumbers franchise={franchise} />
+        </Numbers>
       </div>
     </>
   );
 }
 
-/** The page's one large figure. Below the coverage floor it reads No Score, never a dimmed number. */
-function FragilityFigure({ value }: { value: number | null }) {
-  const band = value === null ? null : bandOf(value);
+function Hero({ franchise }: { franchise: FranchiseDetail }) {
+  const band = franchise.fragility === null ? null : bandOf(franchise.fragility);
+  const measuredNames = franchise.characters
+    .filter((character) => character.confidence > 0)
+    .map((character) => character.canonicalName);
   return (
-    <div className="col-span-2 flex flex-col-reverse gap-2 lg:col-span-1">
-      <dt
-        className="text-sm text-muted"
-        title={
-          value === null
-            ? NO_SCORE_HINT
-            : "Higher means more of the attention sits with one character. Built from HHI, the lead's share and how much the cast absorbs an exit."
-        }
-      >
-        Fragility
-        {band ? (
-          <span className="ml-2 font-medium" style={{ color: BAND_TOKEN[band.id] }}>
-            {band.label}
+    <header className="grid items-end gap-x-12 gap-y-8 pt-12 pb-16 sm:grid-cols-[220px_minmax(0,1fr)] sm:pt-16">
+      <Poster name={franchise.canonicalName} imageUrl={franchise.imageUrl} className="w-40 sm:w-full" />
+      <div className="flex min-w-0 flex-col gap-4">
+        <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
+          <Link href="/" className="hover:text-ink">
+            Franchises
+          </Link>
+          <span className="text-faint">/</span>
+          <span>
+            {label(franchise.medium)} · {label(franchise.status)} · {formatYear(franchise.firstRelease)}
           </span>
-        ) : null}
-      </dt>
-      <dd className={`font-display text-display leading-none ${value === null ? "text-faint" : "text-ink"}`}>
-        {value === null ? "No Score" : formatSigned(value, 2)}
-      </dd>
-    </div>
+        </p>
+        <h1 className="font-display text-display leading-none text-ink [overflow-wrap:anywhere]">
+          {franchise.canonicalName}
+        </h1>
+        {band ? (
+          <>
+            <p className="font-medium" style={{ color: BAND_TOKEN[band.id] }} title={BAND_HINT[band.id]}>
+              {band.label}
+            </p>
+            <p className="max-w-xl font-display text-lg leading-tight text-ink">
+              {castSentence(band.id, measuredNames)}
+            </p>
+          </>
+        ) : (
+          <p className="text-muted" title={NOT_ENOUGH_CAST_HINT}>
+            {NOT_ENOUGH_CAST} · {castTracked(franchise.rosterComplete, franchise.rosterSize)}
+          </p>
+        )}
+      </div>
+    </header>
+  );
+}
+
+function ExitRow({ event }: { event: ExitEvent }) {
+  const name = event.characterName ?? event.personName ?? "";
+  return (
+    <li className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line py-3 last:border-b-0">
+      <Face name={name} imageUrl={event.imageUrl} className="w-10" />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="flex flex-wrap items-baseline gap-x-2">
+          {event.characterId ? (
+            <Link href={`/characters/${event.characterId}`} className="font-medium text-ink hover:text-accent-strong">
+              {name}
+            </Link>
+          ) : (
+            <span className="font-medium text-ink">{name}</span>
+          )}
+          {event.verified ? null : <span className="text-xs text-faint">Unverified</span>}
+        </span>
+        <span className="text-sm text-muted">
+          {label(event.exitType)} · {formatDate(event.eventDate)}
+        </span>
+      </div>
+      {event.didEstimate === null ? null : (
+        <span
+          className="text-sm text-ink"
+          title={
+            event.preCarryScore === null
+              ? undefined
+              : `Held ${formatPercent(event.preCarryScore, 0)} of the attention before leaving.`
+          }
+        >
+          Attention {changeInWords(event.didEstimate)}
+        </span>
+      )}
+      <a
+        href={event.sourceUrl}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="text-sm text-accent hover:text-accent-strong"
+      >
+        Source
+      </a>
+    </li>
+  );
+}
+
+/** Exact figures. Below the coverage floor only the coverage itself is shown; shares are withheld. */
+function FranchiseNumbers({ franchise }: { franchise: FranchiseDetail }) {
+  const coverage = (
+    <Stat
+      label="Cast Tracked"
+      value={formatPercent(franchise.rosterComplete, 0)}
+      detail={`${franchise.rosterSize} Characters`}
+      hint={COVERAGE_HINT}
+    />
+  );
+  if (franchise.fragility === null) return <dl>{coverage}</dl>;
+  const measured = franchise.characters.filter((character) => character.confidence > 0);
+  return (
+    <>
+      <dl className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+        <Stat
+          label="Lead Weight"
+          value={formatSigned(franchise.fragility, 2)}
+          hint="Higher means more of the attention sits with one character."
+        />
+        <Stat label="Lead Share" value={formatPercent(franchise.top1Share, 0)} />
+        <Stat label="Top 3" value={formatPercent(franchise.top3Share, 0)} />
+        <Stat
+          label="Concentration"
+          value={formatNumber(franchise.hhi, 3)}
+          hint="Sum of squared attention shares. 1.0 means one character has it all."
+        />
+        {coverage}
+      </dl>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[480px]">
+          <thead className="border-b border-ink text-left text-sm text-muted">
+            <tr>
+              <th className="px-3 py-3 font-medium">Character</th>
+              <th className="px-3 py-3 font-medium">Played By</th>
+              <th className="px-3 py-3 text-right font-medium">Share</th>
+              <th className="px-3 py-3 text-right font-medium">Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {measured.map((character) => (
+              <tr key={character.id} className="border-b border-line last:border-b-0">
+                <td className="px-3 py-3">
+                  <Link href={`/characters/${character.id}`} className="text-ink hover:text-accent-strong">
+                    {character.canonicalName}
+                  </Link>
+                </td>
+                <td className="px-3 py-3 text-muted">{character.portrayedBy ?? ""}</td>
+                <td className="num px-3 py-3 text-right text-ink">{formatPercent(character.carryScore)}</td>
+                <td className="px-3 py-3 text-right text-sm text-muted">
+                  {CONFIDENCE_LABEL[confidenceLevel(character.confidence)].replace(" Confidence", "")}{" "}
+                  <span className="num">{formatPercent(character.confidence, 0)}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {franchise.scoredOn ? (
+        <p className="text-xs text-faint">
+          Scored {formatDate(franchise.scoredOn)} · <span className="font-mono">{franchise.modelVersion}</span>
+        </p>
+      ) : null}
+    </>
   );
 }

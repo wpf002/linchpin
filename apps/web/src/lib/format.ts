@@ -1,4 +1,5 @@
-const EM_DASH = "—";
+/** What every formatter returns for a missing value. */
+export const EM_DASH = "—";
 
 export function formatPercent(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined) return EM_DASH;
