@@ -21,6 +21,25 @@ All signals in the current scores come from `WIKI`. `TRENDS` rows are read only 
 - Google answered HTTP 429 at Grey's Anatomy 2016-05-19. Fetched batches are cached, so `ingest-search` resumes from that window.
 - `pytrends` is archived and unmaintained. It works today against an unofficial endpoint and can break without notice. Google announced an official Trends API in 2025 with limited access. Switch to it if access opens.
 
+## Wikipedia Title Audit
+
+`audit-titles` re-checks every stored `Character.wikiTitle` against the resolver's current rules. An article is accepted when its title matches the character's name or a known short form, or when its lead sentence names the character as a fictional character.
+
+Run with `--write` on 2026-11-06:
+
+| Figure | Count |
+| --- | --- |
+| Links checked | 561 |
+| Links rejected and cleared | 59 |
+| Franchises affected | 30 |
+| `WIKI` and `TRENDS` signal rows deleted | 181,209 |
+
+The deleted rows measured a different article (an actor, a real person, a disambiguation page). They were attributed to the wrong character, so they were removed and the affected franchises re-ingested. This is the only case where signal rows are deleted. `rawValue` on a kept row is never rewritten.
+
+The rules can't confirm these links, so the characters have no article and no signal: Krusty the Klown ("Krusty the Clown"), Slade Wilson ("Deathstroke"), Quentin Lance ("Larry Lance"), Ivy Pepper ("Poison Ivy"), Winn Schott ("Toyman"), M.J. Delfino. An alias table would recover them.
+
+The v0.1.0 and v0.2.0 validation results were registered before this audit.
+
 ## Cache
 
 `data/cache` stores raw HTTP responses keyed by URL and params. 404s are cached as missing so reruns don't re-request them. Delete a namespace folder to force a refetch.

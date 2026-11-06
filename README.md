@@ -49,7 +49,7 @@ Run from `services/scoring`:
 
 `ingest-search` stops at the first window Google Trends refuses. Fetched batches are cached, so the next run resumes there.
 
-Ingest is cached under `data/cache`. A cold run takes roughly an hour because every source is throttled. Raw signal rows are append-only; scoring never rewrites them.
+Ingest is cached under `data/cache`. A cold run takes roughly an hour because every source is throttled. Scoring never rewrites raw signal rows. `audit-titles --write` is the only command that deletes them, and only for a character whose stored article failed the audit. See [docs/SOURCES.md](docs/SOURCES.md).
 
 ## Run The App
 
