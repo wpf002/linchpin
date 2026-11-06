@@ -25,9 +25,11 @@ from ingest import repository
 from ingest.corpus import CorpusExitEvent, CorpusFranchise, load_exit_events, load_franchises
 from ingest.http import ThrottledClient
 from ingest.names import find, matches
+from ingest.repository import ReleaseRow
 from ingest.resolve import MIN_INTERVAL_SECONDS as RESOLVE_MIN_INTERVAL
 from ingest.resolve import resolve_roster
 from ingest.roster import cap_roster
+from ingest.tmdb import CastMember, ReleaseRecord, fetch_tv_cast, fetch_tv_releases, search_tv
 from ingest.tvmaze import (
     TvMazeCastEntry,
     fetch_cast,
@@ -50,6 +52,9 @@ SCORING_WINDOW_DAYS = 365
 PAGEVIEW_LAG_DAYS = 2
 
 TV_MEDIA = frozenset({"TV", "ANIMATION"})
+
+#: Billing order given to a TMDB credit that has none, so it sorts after billed ones.
+_UNBILLED_ORDER = 10_000
 _STATUS_BY_TVMAZE = {
     "Running": "ACTIVE",
     "To Be Determined": "HIATUS",
@@ -143,26 +148,28 @@ def _ingest_franchise(
 ) -> FranchiseOutcome:
     outcome = FranchiseOutcome(canonical_name=corpus_franchise.canonical_name)
 
-    roster, releases, genres, first_release, status = _describe(corpus_franchise)
-    if roster is None:
+    described = _describe(corpus_franchise)
+    if described.roster is None:
         outcome.skipped_reason = "no catalogue match"
         return outcome
+    roster = described.roster
 
     franchise_id = repository.upsert_franchise(
         conn,
         canonical_name=corpus_franchise.canonical_name,
         medium=corpus_franchise.medium,
-        status=status,
-        genres=genres,
+        status=described.status,
+        genres=described.genres,
         primary_subs=corpus_franchise.primary_subs,
-        first_release=first_release,
+        first_release=described.first_release,
         wiki_title=None,
+        tmdb_id=described.tmdb_id,
     )
     outcome.franchise_id = franchise_id
-    outcome.releases = repository.replace_releases(conn, franchise_id, releases)
+    outcome.releases = repository.replace_releases(conn, franchise_id, described.releases)
     outcome.roster_size = len(roster)
 
-    release_dates = sorted(day for _, day in releases)
+    release_dates = sorted(row.released_on for row in described.releases)
 
     # One batched Action API query for the whole roster: ~2 requests instead of
     # one per candidate title.
@@ -239,9 +246,19 @@ class _RosterEntry:
     wiki_title: str | None
 
 
-def _describe(
-    corpus_franchise: CorpusFranchise,
-) -> tuple[list[_RosterEntry] | None, list[tuple[str, date]], list[str], date | None, str]:
+@dataclass(frozen=True, slots=True)
+class _Description:
+    """What the catalogues say about one franchise. roster is None when nothing matched."""
+
+    roster: list[_RosterEntry] | None
+    releases: list[ReleaseRow]
+    genres: list[str]
+    first_release: date | None
+    status: str
+    tmdb_id: int | None = None
+
+
+def _describe(corpus_franchise: CorpusFranchise) -> _Description:
     """Roster, releases, genres, first release and status for one franchise."""
     if not corpus_franchise.uses_catalogue:
         roster = [
@@ -259,39 +276,105 @@ def _describe(
                 appearances=lambda row: row.appearances,
             )
         ]
-        return (
-            roster,
-            [],
-            corpus_franchise.genres,
-            corpus_franchise.first_release,
-            corpus_franchise.status or "ACTIVE",
+        return _Description(
+            roster=roster,
+            releases=[],
+            genres=corpus_franchise.genres,
+            first_release=corpus_franchise.first_release,
+            status=corpus_franchise.status or "ACTIVE",
         )
 
     show = search_show(corpus_franchise.query_name)
-    if show is None:
-        return None, [], [], None, "ACTIVE"
+    tmdb_id = _tmdb_id_for(corpus_franchise.query_name)
 
-    cast = cap_roster(
-        fetch_cast(show.tvmaze_id),
-        corpus_franchise.medium,
-        billing_order=lambda member: member.billing_order,
-    )
-    roster = [
-        _RosterEntry(
-            character_name=member.character_name,
-            person_name=member.person_name,
-            billing_order=member.billing_order,
-            role_type="ACTOR",
-            wiki_title=None,
+    roster = []
+    releases: list[ReleaseRow] = []
+    if show is not None:
+        cast = cap_roster(
+            fetch_cast(show.tvmaze_id),
+            corpus_franchise.medium,
+            billing_order=lambda member: member.billing_order,
         )
-        for member in _dedupe_cast(cast)
+        roster = [
+            _RosterEntry(
+                character_name=member.character_name,
+                person_name=member.person_name,
+                billing_order=member.billing_order,
+                role_type="ACTOR",
+                wiki_title=None,
+            )
+            for member in _dedupe_cast(cast)
+        ]
+        releases = [
+            ReleaseRow(title=f"{corpus_franchise.canonical_name} episode", released_on=day)
+            for day in fetch_episode_dates(show.tvmaze_id)
+        ]
+
+    # TMDB fills only what TVmaze left empty, so existing rosters do not move.
+    if not roster and tmdb_id is not None:
+        roster = tmdb_roster(fetch_tv_cast(tmdb_id), corpus_franchise.medium)
+        if roster:
+            logger.info("%s: roster from TMDB %d", corpus_franchise.canonical_name, tmdb_id)
+    if not releases and tmdb_id is not None:
+        releases = tmdb_release_rows(fetch_tv_releases(tmdb_id))
+
+    if not roster:
+        return _Description(None, [], [], None, "ACTIVE", tmdb_id)
+    if show is not None:
+        status = _STATUS_BY_TVMAZE.get(show.status, "ACTIVE")
+        return _Description(roster, releases, show.genres, show.premiered, status, tmdb_id)
+    first_release = min((row.released_on for row in releases), default=None)
+    return _Description(roster, releases, [], first_release, "ACTIVE", tmdb_id)
+
+
+def _tmdb_id_for(name: str) -> int | None:
+    if not get_settings().tmdb_api_key:
+        return None
+    return search_tv(name)
+
+
+def tmdb_roster(cast: list[CastMember], medium: str) -> list[_RosterEntry]:
+    """TMDB aggregate credits as roster entries, capped like a TVmaze cast.
+
+    Credits without a billing order sort last. One row per character name; a
+    recast character keeps its first credit.
+    """
+    capped = cap_roster(
+        cast,
+        medium,
+        billing_order=lambda member: (
+            member.billing_order if member.billing_order is not None else _UNBILLED_ORDER
+        ),
+        appearances=lambda member: member.episode_count,
+    )
+    seen: list[str] = []
+    roster: list[_RosterEntry] = []
+    for index, member in enumerate(capped):
+        if any(matches(member.character_name, name) for name in seen):
+            continue
+        seen.append(member.character_name)
+        roster.append(
+            _RosterEntry(
+                character_name=member.character_name,
+                person_name=member.person_name or None,
+                billing_order=member.billing_order if member.billing_order is not None else index,
+                role_type="ACTOR",
+                wiki_title=None,
+            )
+        )
+    return roster
+
+
+def tmdb_release_rows(records: list[ReleaseRecord]) -> list[ReleaseRow]:
+    return [
+        ReleaseRow(
+            title=record.title,
+            released_on=record.released_on,
+            season_no=record.season_no,
+            episode_no=record.episode_no,
+        )
+        for record in records
     ]
-    releases = [
-        (f"{corpus_franchise.canonical_name} episode", day)
-        for day in fetch_episode_dates(show.tvmaze_id)
-    ]
-    status = _STATUS_BY_TVMAZE.get(show.status, "ACTIVE")
-    return roster, releases, show.genres, show.premiered, status
 
 
 def _dedupe_cast(cast: list[TvMazeCastEntry]) -> list[TvMazeCastEntry]:

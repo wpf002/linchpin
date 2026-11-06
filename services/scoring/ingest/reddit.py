@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import re
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 
 from config import get_settings
@@ -17,10 +17,27 @@ class RedditNotConfigured(RuntimeError):
     pass
 
 
+class RedditFetchError(RuntimeError):
+    """Reddit refused or failed a listing request. The subreddit is named in the message."""
+
+
 @dataclass(frozen=True, slots=True)
-class MentionCount:
-    measured_on: date
-    mentions: int
+class SubredditScan:
+    """Daily mention counts per character key over one subreddit's newest posts.
+
+    oldest_post and newest_post bound the posts that were read. Days outside
+    them were not scanned; the two edge days were only partly scanned.
+    """
+
+    subreddit: str
+    oldest_post: date | None
+    newest_post: date | None
+    counts: dict[str, dict[date, int]] = field(default_factory=dict)
+
+
+def is_configured() -> bool:
+    settings = get_settings()
+    return bool(settings.reddit_client_id and settings.reddit_client_secret)
 
 
 def _alias_pattern(aliases: Sequence[str]) -> re.Pattern[str]:
@@ -42,14 +59,15 @@ def fetch_subreddit_mentions(
     aliases_by_character: dict[str, Sequence[str]],
     *,
     limit: int = 1000,
-) -> dict[str, list[MentionCount]]:
-    """Daily mention counts per character across a subreddit's recent posts."""
-    settings = get_settings()
-    if not settings.reddit_client_id or not settings.reddit_client_secret:
+) -> SubredditScan:
+    """Daily mention counts per character across a subreddit's newest posts."""
+    if not is_configured():
         raise RedditNotConfigured("REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are required")
 
     import praw
+    import prawcore
 
+    settings = get_settings()
     reddit = praw.Reddit(
         client_id=settings.reddit_client_id,
         client_secret=settings.reddit_client_secret,
@@ -60,15 +78,21 @@ def fetch_subreddit_mentions(
     patterns = {
         name: _alias_pattern(aliases) for name, aliases in aliases_by_character.items() if aliases
     }
+    oldest: date | None = None
+    newest: date | None = None
 
-    for submission in reddit.subreddit(subreddit).new(limit=limit):
-        created = datetime.fromtimestamp(submission.created_utc, tz=UTC).date()
-        body = f"{submission.title}\n{getattr(submission, 'selftext', '')}"
-        for name, pattern in patterns.items():
-            if pattern.search(body):
-                buckets[name][created] = buckets[name].get(created, 0) + 1
+    try:
+        for submission in reddit.subreddit(subreddit).new(limit=limit):
+            created = datetime.fromtimestamp(submission.created_utc, tz=UTC).date()
+            oldest = created if oldest is None or created < oldest else oldest
+            newest = created if newest is None or created > newest else newest
+            body = f"{submission.title}\n{getattr(submission, 'selftext', '')}"
+            for name, pattern in patterns.items():
+                if pattern.search(body):
+                    buckets[name][created] = buckets[name].get(created, 0) + 1
+    except (prawcore.PrawcoreException, praw.exceptions.PRAWException) as error:
+        raise RedditFetchError(f"r/{subreddit}: {error}") from error
 
-    return {
-        name: [MentionCount(measured_on=day, mentions=count) for day, count in sorted(days.items())]
-        for name, days in buckets.items()
-    }
+    return SubredditScan(
+        subreddit=subreddit, oldest_post=oldest, newest_post=newest, counts=buckets
+    )

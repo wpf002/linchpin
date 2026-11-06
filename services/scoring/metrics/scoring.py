@@ -48,6 +48,10 @@ MIN_OBSERVATIONS = 30
 #: Below this, the character's share is noise and the confidence flag says so.
 LOW_OBSERVATION_FLOOR = 120
 
+#: Reddit rows cover a trailing span of days, not the whole window. A character
+#: needs this many fully scanned days before its mention share is written.
+MIN_DISCOURSE_OBSERVATIONS = 7
+
 
 @dataclass(frozen=True, slots=True)
 class ScoringResult:
@@ -76,8 +80,9 @@ def run_scoring(*, window_days: int = SCORING_WINDOW_DAYS) -> ScoringResult:
 
     with connection() as conn:
         totals = _load_totals(conn, window_start, window_end)
+        discourse = _load_discourse_shares(conn, window_start, window_end)
         absences = load_substitutability(conn)
-        per_franchise = _carry_scores(conn, totals, absences, window_start, window_end)
+        per_franchise = _carry_scores(conn, totals, discourse, absences, window_start, window_end)
         franchises = _fragility_scores(conn, per_franchise, window_end)
         creators = run_creator_scoring(conn, window_start, window_end)
 
@@ -138,6 +143,49 @@ def _load_totals(
     return grouped
 
 
+def _load_discourse_shares(
+    conn: Connection, window_start: date, window_end: date
+) -> dict[str, dict[str, float]]:
+    """Share of Reddit mentions per character within each franchise over the window.
+
+    Stored next to the carry score and never blended into it: the carry score
+    stays wiki-only until the Phase 3 blend test says otherwise.
+    """
+    sql = """
+        SELECT c."franchiseId" AS franchise_id,
+               c.id            AS character_id,
+               SUM(s."rawValue") AS total
+        FROM "Character" c
+        JOIN "AttentionSignal" s ON s."characterId" = c.id
+        WHERE s.source = %s AND s."measuredOn" BETWEEN %s AND %s
+        GROUP BY c."franchiseId", c.id
+        HAVING COUNT(*) >= %s
+    """
+    totals: dict[str, dict[str, float]] = defaultdict(dict)
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(
+            sql,
+            (
+                SIGNAL_SOURCE_BY_SHARE["discourseShare"],
+                window_start,
+                window_end,
+                MIN_DISCOURSE_OBSERVATIONS,
+            ),
+        )
+        for row in cur.fetchall():
+            totals[str(row["franchise_id"])][str(row["character_id"])] = float(row["total"] or 0.0)
+    return {franchise_id: discourse_shares(rows) for franchise_id, rows in totals.items()}
+
+
+def discourse_shares(totals: dict[str, float]) -> dict[str, float]:
+    """Mention share per character. A franchise with no mentions at all gets no shares."""
+    if sum(totals.values()) <= 0:
+        return {}
+    character_ids = list(totals)
+    shares = to_shares([totals[character_id] for character_id in character_ids])
+    return dict(zip(character_ids, shares, strict=True))
+
+
 @dataclass(frozen=True, slots=True)
 class _ScoredCharacter:
     character_id: str
@@ -151,6 +199,7 @@ class _ScoredCharacter:
 def _carry_scores(
     conn: Connection,
     totals: dict[str, list[_CharacterTotals]],
+    discourse: dict[str, dict[str, float]],
     absences: dict[str, SubstitutabilityResult],
     window_start: date,
     window_end: date,
@@ -166,6 +215,7 @@ def _carry_scores(
 
         payload = []
         franchise_scores: list[_ScoredCharacter] = []
+        franchise_discourse = discourse.get(franchise_id, {})
         for index, row in enumerate(rows):
             wiki_share = shares[index]
             carry = carry_score({"wikiShare": wiki_share}, WIKI_ONLY_WEIGHTS)
@@ -183,6 +233,7 @@ def _carry_scores(
                     window_end,
                     MODEL_VERSION,
                     wiki_share,
+                    franchise_discourse.get(row.character_id),
                     carry,
                     off_carry,
                     durability_ratio(off_carry, on_carry),
@@ -208,10 +259,11 @@ def _carry_scores(
                 """
                 INSERT INTO "CarryScore" (
                     id, "characterId", "windowStart", "windowEnd", "modelVersion",
-                    "wikiShare", "carryScore", "offCycleCarry", "durabilityRatio",
-                    confidence, "observationCount", substitutability, "substitutabilityFlag"
+                    "wikiShare", "discourseShare", "carryScore", "offCycleCarry",
+                    "durabilityRatio", confidence, "observationCount", substitutability,
+                    "substitutabilityFlag"
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 payload,
             )

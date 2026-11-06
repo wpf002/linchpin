@@ -8,6 +8,7 @@ string concatenation.
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from uuid import uuid4
 
@@ -24,6 +25,14 @@ def now_utc() -> datetime:
     return datetime.now(tz=UTC)
 
 
+@dataclass(frozen=True, slots=True)
+class ReleaseRow:
+    title: str
+    released_on: date
+    season_no: int | None = None
+    episode_no: int | None = None
+
+
 def upsert_franchise(
     conn: Connection,
     *,
@@ -34,19 +43,21 @@ def upsert_franchise(
     primary_subs: list[str],
     first_release: date | None,
     wiki_title: str | None,
+    tmdb_id: int | None = None,
 ) -> str:
     sql = """
         INSERT INTO "Franchise" (
             id, "canonicalName", aliases, "wikiTitle", "primarySubs", genres,
-            medium, "firstRelease", status, "rosterComplete", "createdAt", "updatedAt"
+            medium, "firstRelease", status, "tmdbId", "rosterComplete", "createdAt", "updatedAt"
         )
-        VALUES (%s, %s, ARRAY[]::text[], %s, %s, %s, %s, %s, %s, 0, %s, %s)
+        VALUES (%s, %s, ARRAY[]::text[], %s, %s, %s, %s, %s, %s, %s, 0, %s, %s)
         ON CONFLICT ("canonicalName", medium) DO UPDATE SET
             "wikiTitle" = EXCLUDED."wikiTitle",
             "primarySubs" = EXCLUDED."primarySubs",
             genres = EXCLUDED.genres,
             "firstRelease" = EXCLUDED."firstRelease",
             status = EXCLUDED.status,
+            "tmdbId" = COALESCE(EXCLUDED."tmdbId", "Franchise"."tmdbId"),
             "updatedAt" = EXCLUDED."updatedAt"
         RETURNING id
     """
@@ -63,6 +74,7 @@ def upsert_franchise(
                 medium,
                 first_release,
                 status,
+                tmdb_id,
                 now,
                 now,
             ),
@@ -81,16 +93,27 @@ def set_roster_complete(conn: Connection, franchise_id: str, value: float) -> No
         )
 
 
-def replace_releases(conn: Connection, franchise_id: str, releases: list[tuple[str, date]]) -> int:
+def replace_releases(conn: Connection, franchise_id: str, releases: list[ReleaseRow]) -> int:
     """Releases are derived entirely from the catalogue, so they are replaced wholesale."""
     with conn.cursor() as cur:
         cur.execute('DELETE FROM "Release" WHERE "franchiseId" = %s', (franchise_id,))
         if not releases:
             return 0
         cur.executemany(
-            'INSERT INTO "Release" (id, "franchiseId", title, "releasedOn")'
-            " VALUES (%s, %s, %s, %s)",
-            [(str(uuid4()), franchise_id, title, released_on) for title, released_on in releases],
+            'INSERT INTO "Release" '
+            '(id, "franchiseId", title, "releasedOn", "seasonNo", "episodeNo")'
+            " VALUES (%s, %s, %s, %s, %s, %s)",
+            [
+                (
+                    str(uuid4()),
+                    franchise_id,
+                    row.title,
+                    row.released_on,
+                    row.season_no,
+                    row.episode_no,
+                )
+                for row in releases
+            ],
         )
     return len(releases)
 

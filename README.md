@@ -40,6 +40,7 @@ Run from `services/scoring`:
 ```bash
 .venv/bin/python cli.py ingest        # rosters, releases, pageviews, exit events
 .venv/bin/python cli.py ingest-search # Google Trends interest for each exit event's pre-window
+.venv/bin/python cli.py ingest-reddit # daily character mention counts from each franchise's subreddits; needs REDDIT_* keys
 .venv/bin/python cli.py score         # carry, fragility, substitutability and creator scores, keyed by MODEL_VERSION
 .venv/bin/python cli.py validate      # event study, strata, blend test and kill criteria
 .venv/bin/python cli.py language-test # English-only vs summed Wikipedia editions; writes docs/results/language_test.json

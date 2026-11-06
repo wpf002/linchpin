@@ -159,6 +159,27 @@ def stage_exits(
         typer.echo(f"appended={append_staged(staged)} (verified=false)")
 
 
+@app.command("ingest-reddit")
+def ingest_reddit(
+    only: list[str] = typer.Option(None, "--only", help="Franchise names to limit the pass to."),
+    limit: int = typer.Option(1000, help="Newest posts to read per subreddit."),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),
+) -> None:
+    """Count character mentions in each franchise's subreddits. Counting only, no sentiment."""
+    from ingest.discourse import run_discourse_ingest
+
+    _configure_logging(verbose)
+    report = run_discourse_ingest(only=only or None, limit=limit)
+    typer.echo(
+        f"franchises={report.franchises} characters={report.characters} "
+        f"rows={report.rows_written} skipped={len(report.skipped)}"
+    )
+    for label in report.skipped:
+        typer.echo(f"  skipped {label}")
+    if report.stopped:
+        typer.echo(f"  stopped {report.stopped}")
+
+
 @app.command("ingest-images")
 def ingest_images(
     only: list[str] = typer.Option(None, "--only", help="Franchise names to limit the pass to."),

@@ -5,9 +5,9 @@
 | Wikimedia Pageviews | Daily per-character attention (`WIKI`) | Wired into ingest | REST, no key, `WIKIMEDIA_USER_AGENT` required | Throttled client, cached, Retry-After honoured |
 | Wikipedia Action API | Resolving characters to articles | Wired into ingest | No key | 20 titles per query (the API returns intro extracts for at most 20 pages), 1 request/second |
 | TVmaze | Casts, episode and season dates, poster and portrait URLs | Wired into ingest | No key | Throttled, cached. CC BY-SA, credited in the app footer |
-| TMDB | Cast, credits, air dates | Module present, untested. `TMDB_API_KEY` is empty | `TMDB_API_KEY` | Attribution required by TMDB terms |
+| TMDB | Cast, credits, air dates | Wired into `ingest` as the fallback when TVmaze has no show or no cast; `Franchise.tmdbId` is stored for every TV title. `TMDB_API_KEY` is empty, so it has not run live | `TMDB_API_KEY` | Attribution required by TMDB terms once its data is shown |
 | Google Trends | Pre-window interest per exit event (`TRENDS`) | Wired into `ingest-search`. 9 of 28 windows stored as of 2026-11-06 | pytrends, no key | 5 terms per query, 8 seconds between batches, anchor term pinned in every batch. Stops on the first refusal |
-| Reddit | Mention counts | Module present, untested. Credentials are empty | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` | Counting only. No sentiment |
+| Reddit | Mention counts | `ingest-reddit` counts character mentions per day in each franchise's `primarySubs` and stores them as `REDDIT` signals; `score` writes `discourseShare` beside the carry score (stored, not blended). Credentials are empty, so it has not run live | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USER_AGENT` | Counting only. No sentiment |
 | AO3 | Tagged work counts | Unavailable. Three requests on 2026-11-06 returned HTTP 418. No workaround attempted | Public HTML | 6 requests/minute, per AO3 terms |
 | Fandom | Character lists | Not used | | Fandom terms prohibit bulk scraping |
 | `data/corpus/exit_events.json` | Exit events for Phase 2 | Hand-curated, each with a source URL | | |
