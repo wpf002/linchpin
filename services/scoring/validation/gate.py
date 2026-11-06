@@ -1,9 +1,13 @@
-"""The Phase 2 validation gate.
+"""The validation gate.
 
 Runs the event study over every exit event, compares carry-score ranking against
 the billing-order baseline, then evaluates the kill criteria written before any
 result was seen. A FAIL is a deliverable: it is recorded with its failures and
 reported, not retried with different weights.
+
+From v0.2.0 the predictor is the character's share inside the event's own
+pre-window, announced exits and recasts are reported as separate strata, and the
+wiki + search blend is compared with wiki-only on a held-out split.
 """
 
 from __future__ import annotations
@@ -19,8 +23,8 @@ from psycopg import Connection
 from db import connection
 from ingest.repository import now_utc
 from metrics.constants import EVENT_WINDOWS, KILL_CRITERIA, MODEL_VERSION
+from validation import blend, did, pre_event, strata
 from validation import controls as control_matching
-from validation import did
 from validation.rank_ic import RankIC, rank_ic
 
 logger = logging.getLogger(__name__)
@@ -31,6 +35,13 @@ POST_WINDOW_DAYS = EVENT_WINDOWS["postEnd"]
 #: Events announced ahead of the exit leak into the pre-window. They are analysed
 #: as their own stratum rather than mixed into the headline estimate.
 ANNOUNCEMENT_LEAK_DAYS = 14
+
+#: A recast keeps the character on screen, so it is a different shock from a
+#: death or departure. It gets its own stratum and stays out of the headline.
+HEADLINE_EXCLUDED_EXIT_TYPES = frozenset({"RECAST"})
+
+STRATUM_ANNOUNCED = "ANNOUNCED"
+STRATUM_UNANNOUNCED = "UNANNOUNCED"
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,10 +58,21 @@ class EventRow:
     franchise_id: str
     character_id: str | None
     event_date: date
+    exit_type: str
     verified: bool
     announced: bool
+    #: Pageview share in the pre-window. v0.2.0 scores on wiki alone, so this is the carry score.
     pre_carry: float | None
+    pre_search_share: float | None
     billing_order: int | None
+
+    @property
+    def in_headline(self) -> bool:
+        return (
+            self.pre_carry is not None
+            and not self.announced
+            and self.exit_type not in HEADLINE_EXCLUDED_EXIT_TYPES
+        )
 
 
 @dataclass(slots=True)
@@ -64,6 +86,9 @@ class ValidationResult:
     median_roster_complete: float | None
     failures: list[Failure] = field(default_factory=list)
     notes: str | None = None
+    strata: list[strata.Stratum] = field(default_factory=list)
+    comparisons: list[strata.Comparison] = field(default_factory=list)
+    blend: blend.BlendResult | None = None
 
 
 def run_validation() -> ValidationResult:
@@ -94,18 +119,10 @@ def _load_events(conn: Connection) -> list[EventRow]:
                    e."characterId",
                    e."eventDate",
                    e."announcedDate",
+                   e."exitType",
                    e.verified,
-                   cs."carryScore"    AS pre_carry,
                    pl."billingOrder"  AS billing_order
             FROM "ExitEvent" e
-            LEFT JOIN LATERAL (
-                SELECT c."carryScore"
-                FROM "CarryScore" c
-                WHERE c."characterId" = e."characterId"
-                  AND c."modelVersion" = %s
-                ORDER BY c."windowEnd" DESC
-                LIMIT 1
-            ) cs ON TRUE
             LEFT JOIN LATERAL (
                 SELECT l."billingOrder"
                 FROM "PersonLink" l
@@ -114,24 +131,39 @@ def _load_events(conn: Connection) -> list[EventRow]:
                 LIMIT 1
             ) pl ON TRUE
             ORDER BY e."eventDate"
-            """,
-            (MODEL_VERSION,),
+            """
         )
         rows = cur.fetchall()
 
-    return [
-        EventRow(
-            exit_event_id=str(row["id"]),
-            franchise_id=str(row["franchiseId"]),
-            character_id=str(row["characterId"]) if row["characterId"] else None,
-            event_date=row["eventDate"],
-            verified=bool(row["verified"]),
-            announced=_is_announced(row["announcedDate"], row["eventDate"]),
-            pre_carry=float(row["pre_carry"]) if row["pre_carry"] is not None else None,
-            billing_order=int(row["billing_order"]) if row["billing_order"] is not None else None,
+    # Several characters often leave one franchise on the same day; the window
+    # shares are the same for all of them.
+    wiki_cache: dict[tuple[str, date], dict[str, float]] = {}
+    search_cache: dict[tuple[str, date], dict[str, float]] = {}
+    events: list[EventRow] = []
+    for row in rows:
+        franchise_id = str(row["franchiseId"])
+        character_id = str(row["characterId"]) if row["characterId"] else None
+        key = (franchise_id, row["eventDate"])
+        if key not in wiki_cache:
+            wiki_cache[key] = pre_event.load_wiki_shares(conn, *key)
+            search_cache[key] = pre_event.load_search_shares(conn, *key)
+        events.append(
+            EventRow(
+                exit_event_id=str(row["id"]),
+                franchise_id=franchise_id,
+                character_id=character_id,
+                event_date=row["eventDate"],
+                exit_type=str(row["exitType"]),
+                verified=bool(row["verified"]),
+                announced=_is_announced(row["announcedDate"], row["eventDate"]),
+                pre_carry=wiki_cache[key].get(character_id) if character_id else None,
+                pre_search_share=search_cache[key].get(character_id) if character_id else None,
+                billing_order=(
+                    int(row["billing_order"]) if row["billing_order"] is not None else None
+                ),
+            )
         )
-        for row in rows
-    ]
+    return events
 
 
 def _is_announced(announced_date: date | None, event_date: date) -> bool:
@@ -228,9 +260,10 @@ def _write_event_study(
             INSERT INTO "EventStudy" (
                 id, "exitEventId", "controlSetId", "preMean", "postMean",
                 "controlPre", "controlPost", "didEstimate", "stdError",
-                "preCarryScore", "baselineRank", announced, split, "modelVersion", "runAt"
+                "preCarryScore", "preWikiShare", "preSearchShare",
+                "baselineRank", announced, split, "modelVersion", "runAt"
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT ("exitEventId", "modelVersion") DO UPDATE SET
                 "controlSetId" = EXCLUDED."controlSetId",
                 "preMean" = EXCLUDED."preMean",
@@ -240,8 +273,11 @@ def _write_event_study(
                 "didEstimate" = EXCLUDED."didEstimate",
                 "stdError" = EXCLUDED."stdError",
                 "preCarryScore" = EXCLUDED."preCarryScore",
+                "preWikiShare" = EXCLUDED."preWikiShare",
+                "preSearchShare" = EXCLUDED."preSearchShare",
                 "baselineRank" = EXCLUDED."baselineRank",
                 announced = EXCLUDED.announced,
+                split = EXCLUDED.split,
                 "runAt" = EXCLUDED."runAt"
             """,
             (
@@ -255,9 +291,11 @@ def _write_event_study(
                 estimate.estimate,
                 estimate.std_error,
                 event.pre_carry or 0.0,
+                event.pre_carry,
+                event.pre_search_share,
                 event.billing_order,
                 event.announced,
-                "test",
+                blend.assign_split(event.exit_event_id),
                 MODEL_VERSION,
                 now_utc(),
             ),
@@ -282,11 +320,7 @@ def _evaluate(
     # A fall in attention is a negative DiD estimate, so the predicted direction
     # is "higher carry score -> more negative estimate". Sign-flip the outcome so
     # a positive rank IC means the model ranked correctly.
-    scored = [
-        study
-        for study in studies
-        if study.event.pre_carry is not None and not study.event.announced
-    ]
+    scored = [study for study in studies if study.event.in_headline]
     carry_ic = rank_ic(
         [study.event.pre_carry or 0.0 for study in scored],
         [-study.estimate.estimate for study in scored],
@@ -358,7 +392,55 @@ def _evaluate(
         median_roster_complete=median_roster,
         failures=failures,
         notes=_notes(events, studies),
+        strata=(stratum_rows := _strata(studies)),
+        comparisons=_comparisons(stratum_rows),
+        blend=blend.compare(_blend_rows(scored)),
     )
+
+
+def _strata(studies: list[_Study]) -> list[strata.Stratum]:
+    """Announced vs unannounced (recasts excluded), then one stratum per exit type."""
+    with_carry = [study for study in studies if study.event.pre_carry is not None]
+    groups: dict[str, list[_Study]] = {STRATUM_UNANNOUNCED: [], STRATUM_ANNOUNCED: []}
+    for study in with_carry:
+        if study.event.exit_type in HEADLINE_EXCLUDED_EXIT_TYPES:
+            continue
+        name = STRATUM_ANNOUNCED if study.event.announced else STRATUM_UNANNOUNCED
+        groups[name].append(study)
+    for study in with_carry:
+        if not study.event.announced:
+            groups.setdefault(study.event.exit_type, []).append(study)
+    return [
+        strata.summarise(
+            name,
+            [
+                strata.StratumRow(study.event.pre_carry or 0.0, study.estimate.estimate)
+                for study in members
+            ],
+        )
+        for name, members in groups.items()
+    ]
+
+
+def _comparisons(rows: list[strata.Stratum]) -> list[strata.Comparison]:
+    """Each non-headline stratum against the unannounced headline stratum."""
+    by_name = {row.name: row for row in rows}
+    headline = by_name[STRATUM_UNANNOUNCED]
+    others = [STRATUM_ANNOUNCED, *sorted(HEADLINE_EXCLUDED_EXIT_TYPES)]
+    return [strata.compare(by_name[name], headline) for name in others if name in by_name]
+
+
+def _blend_rows(scored: list[_Study]) -> list[blend.BlendRow]:
+    return [
+        blend.BlendRow(
+            exit_event_id=study.event.exit_event_id,
+            wiki_share=study.event.pre_carry,
+            search_share=study.event.pre_search_share,
+            outcome=-study.estimate.estimate,
+        )
+        for study in scored
+        if study.event.pre_carry is not None and study.event.pre_search_share is not None
+    ]
 
 
 def _is_blocked(events: list[EventRow], studies: list[_Study]) -> bool:
@@ -382,9 +464,9 @@ def _record(conn: Connection, result: ValidationResult) -> None:
                 id, "modelVersion", "runAt", "eventCount", "verifiedEventCount",
                 "rankIC", "rankICLower", "rankICUpper",
                 "baselineRankIC", "baselineLower", "baselineUpper",
-                "medianRosterComplete", gate, failures, notes
+                "medianRosterComplete", gate, failures, notes, strata, blend
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (
                 str(uuid4()),
@@ -402,5 +484,12 @@ def _record(conn: Connection, result: ValidationResult) -> None:
                 result.gate,
                 json.dumps([asdict(failure) for failure in result.failures]),
                 result.notes,
+                json.dumps(
+                    {
+                        "strata": [asdict(row) for row in result.strata],
+                        "comparisons": [asdict(row) for row in result.comparisons],
+                    }
+                ),
+                json.dumps(asdict(result.blend)) if result.blend else None,
             ),
         )

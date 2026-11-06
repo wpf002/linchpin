@@ -2,9 +2,16 @@
 
 from __future__ import annotations
 
+import json
 import logging
+from dataclasses import asdict
+from pathlib import Path
 
 import typer
+
+from config import REPO_ROOT
+
+LANGUAGE_REPORT = REPO_ROOT / "docs" / "results" / "language_test.json"
 
 app = typer.Typer(add_completion=False, help="Linchpin scoring service")
 
@@ -49,7 +56,44 @@ def score(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
     result = run_scoring()
     typer.echo(
         f"characters={result.characters_scored} franchises={result.franchises_scored} "
-        f"window={result.window_start}..{result.window_end}"
+        f"creators={result.creators_scored} window={result.window_start}..{result.window_end}"
+    )
+
+
+@app.command("ingest-search")
+def ingest_search(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
+    """Fetch Google Trends interest for each exit event's pre-window."""
+    from ingest.search_signals import run_search_ingest
+
+    _configure_logging(verbose)
+    report = run_search_ingest()
+    typer.echo(
+        f"windows={report.windows} stored={report.stored} "
+        f"incomplete={len(report.incomplete)} rows={report.rows_written}"
+    )
+    for label in report.incomplete:
+        typer.echo(f"  incomplete {label}")
+    if report.stopped:
+        typer.echo(f"  stopped {report.stopped}")
+
+
+@app.command("language-test")
+def language_test(
+    out: Path = typer.Option(LANGUAGE_REPORT, help="Where to write the JSON report."),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),
+) -> None:
+    """Compare English-only shares with shares summed across language editions."""
+    from validation.language import run_language_test
+
+    _configure_logging(verbose)
+    result = run_language_test()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(asdict(result), indent=2, default=str) + "\n", "utf-8")
+    median = result.median_rank_agreement
+    typer.echo(
+        f"decision={result.decision} franchises={len(result.franchises)} "
+        f"median_rank_agreement={'n/a' if median is None else format(median, '.3f')} "
+        f"top_character_changes={result.top_character_changes} floor={result.floor}"
     )
 
 
@@ -69,6 +113,24 @@ def validate(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
     typer.echo(f"billing rankIC={_ic(run.baseline_rank_ic)}")
     if run.median_roster_complete is not None:
         typer.echo(f"median rosterComplete={run.median_roster_complete:.3f}")
+    for stratum in run.strata:
+        mean = "n/a" if stratum.mean_did is None else f"{stratum.mean_did:.3f}"
+        typer.echo(
+            f"  stratum {stratum.name}: events={stratum.events} meanDiD={mean}"
+            f" rankIC={_ic(stratum.rank_ic)}"
+        )
+    for comparison in run.comparisons:
+        z_score = "n/a" if comparison.z_score is None else f"{comparison.z_score:.2f}"
+        typer.echo(
+            f"  {comparison.stratum} vs {comparison.against}: z={z_score}"
+            f" diverges={comparison.diverges}"
+        )
+    if run.blend is not None:
+        typer.echo(
+            f"blend verdict={run.blend.verdict} wikiWeight={run.blend.wiki_weight}"
+            f" train={run.blend.train_pairs} heldOut={run.blend.held_out_pairs}"
+            f" ({run.blend.reason})"
+        )
     for failure in run.failures:
         typer.echo(f"  FAIL {failure.criterion}: {failure.detail}")
 

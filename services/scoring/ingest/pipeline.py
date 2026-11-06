@@ -27,8 +27,8 @@ from ingest.http import ThrottledClient
 from ingest.names import find, matches
 from ingest.resolve import MIN_INTERVAL_SECONDS as RESOLVE_MIN_INTERVAL
 from ingest.resolve import resolve_roster
+from ingest.roster import cap_roster
 from ingest.tvmaze import (
-    MAIN_CAST_CAP,
     TvMazeCastEntry,
     fetch_cast,
     fetch_episode_dates,
@@ -252,7 +252,12 @@ def _describe(
                 role_type="CREATOR",
                 wiki_title=row.wiki_title,
             )
-            for row in corpus_franchise.roster
+            for row in cap_roster(
+                corpus_franchise.roster,
+                corpus_franchise.medium,
+                billing_order=lambda row: row.billing_order,
+                appearances=lambda row: row.appearances,
+            )
         ]
         return (
             roster,
@@ -266,7 +271,11 @@ def _describe(
     if show is None:
         return None, [], [], None, "ACTIVE"
 
-    cast = fetch_cast(show.tvmaze_id)[:MAIN_CAST_CAP]
+    cast = cap_roster(
+        fetch_cast(show.tvmaze_id),
+        corpus_franchise.medium,
+        billing_order=lambda member: member.billing_order,
+    )
     roster = [
         _RosterEntry(
             character_name=member.character_name,

@@ -39,6 +39,8 @@ class RosterEntry(BaseModel):
     wiki_title: str = Field(alias="wikiTitle")
     creator: str | None = None
     billing_order: int = Field(alias="billingOrder")
+    #: Issue or episode appearance count. The roster cap ranks by it when present.
+    appearances: int | None = Field(default=None, ge=0)
 
 
 class CorpusFranchise(BaseModel):

@@ -15,7 +15,7 @@ from datetime import date, timedelta
 
 from psycopg import Connection
 
-from metrics.constants import EVENT_WINDOWS
+from metrics.constants import EVENT_WINDOWS, SIGNAL_SOURCE_BY_SHARE
 
 PRE_START = timedelta(days=abs(EVENT_WINDOWS["preStart"]))
 PRE_END = timedelta(days=abs(EVENT_WINDOWS["preEnd"]))
@@ -44,7 +44,10 @@ class DidEstimate:
 def franchise_daily_totals(
     conn: Connection, franchise_ids: Sequence[str], start: date, end: date
 ) -> dict[str, dict[date, float]]:
-    """Total franchise attention per day, summed across its characters."""
+    """Franchise pageviews per day, summed across its characters.
+
+    Pageviews only. Trends rows are in anchor units and cannot be added to counts.
+    """
     if not franchise_ids:
         return {}
     with conn.cursor() as cur:
@@ -56,10 +59,11 @@ def franchise_daily_totals(
             FROM "AttentionSignal" s
             JOIN "Character" c ON c.id = s."characterId"
             WHERE c."franchiseId" = ANY(%s)
+              AND s.source = %s
               AND s."measuredOn" BETWEEN %s AND %s
             GROUP BY c."franchiseId", s."measuredOn"
             """,
-            (list(franchise_ids), start, end),
+            (list(franchise_ids), SIGNAL_SOURCE_BY_SHARE["wikiShare"], start, end),
         )
         rows = cur.fetchall()
 

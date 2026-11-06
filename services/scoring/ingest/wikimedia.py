@@ -35,6 +35,11 @@ def _client() -> ThrottledClient:
     )
 
 
+def open_client() -> ThrottledClient:
+    """A shared client for callers that make many requests and must share one throttle."""
+    return _client()
+
+
 def fetch_pageviews(
     article: str,
     start: date,

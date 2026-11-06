@@ -7,14 +7,18 @@ be compared with each other.
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 from collections.abc import Sequence
+
+from ingest.http import JsonCache
 
 logger = logging.getLogger("linchpin.trends")
 
 MAX_TERMS_PER_QUERY = 5
 BATCH_PAUSE_SECONDS = 8.0
+CACHE_NAMESPACE = "trends"
 
 
 class TrendsUnavailable(RuntimeError):
@@ -47,24 +51,50 @@ def fetch_comparative_interest(
     timeframe: str = "today 5-y",
     geo: str = "",
 ) -> dict[str, float]:
-    """Mean comparative interest per term, expressed in anchor units."""
-    try:
-        from pytrends.request import TrendReq
-    except ImportError as error:  # pragma: no cover - dependency guard
-        raise TrendsUnavailable("pytrends is not installed") from error
+    """Mean comparative interest per term, expressed in anchor units.
 
-    pytrends = TrendReq(hl="en-US", tz=0)
+    A term is missing from the result when its batch came back empty or the
+    anchor scored zero in it. Callers that need the whole roster must check.
+    """
+    cache = JsonCache(CACHE_NAMESPACE)
+    session = _Session()
     results: dict[str, float] = {}
     for batch in batch_terms(terms, anchor):
-        try:
-            pytrends.build_payload(batch, timeframe=timeframe, geo=geo)
-            frame = pytrends.interest_over_time()
-        except Exception as error:  # pytrends raises bare exceptions on 429
-            raise TrendsUnavailable(f"Google Trends refused batch {batch}: {error}") from error
-        if frame.empty:
+        key = json.dumps({"batch": batch, "timeframe": timeframe, "geo": geo})
+        means = cache.get(key)
+        if means is None:
+            means = session.batch_means(batch, timeframe, geo)
+            if means:
+                # Only a relative timeframe ("today 5-y") changes from day to day,
+                # and the ingest never uses one. Fixed windows are safe to keep.
+                cache.set(key, means)
+        if not means:
             logger.info("empty Trends frame for batch %s", batch)
             continue
-        means = {term: float(frame[term].mean()) for term in batch if term in frame}
         results.update(rescale_to_anchor(means, anchor))
-        time.sleep(BATCH_PAUSE_SECONDS)
     return results
+
+
+class _Session:
+    """One pytrends session, opened on the first request that misses the cache."""
+
+    def __init__(self) -> None:
+        self._client: object | None = None
+
+    def batch_means(self, batch: list[str], timeframe: str, geo: str) -> dict[str, float]:
+        try:
+            from pytrends.request import TrendReq
+        except ImportError as error:  # pragma: no cover - dependency guard
+            raise TrendsUnavailable("pytrends is not installed") from error
+        try:
+            if self._client is None:
+                self._client = TrendReq(hl="en-US", tz=0)
+            self._client.build_payload(batch, timeframe=timeframe, geo=geo)  # type: ignore[attr-defined]
+            frame = self._client.interest_over_time()  # type: ignore[attr-defined]
+        except Exception as error:  # pytrends raises bare exceptions on 429
+            raise TrendsUnavailable(f"Google Trends refused batch {batch}: {error}") from error
+        finally:
+            time.sleep(BATCH_PAUSE_SECONDS)
+        if frame.empty:
+            return {}
+        return {term: float(frame[term].mean()) for term in batch if term in frame}

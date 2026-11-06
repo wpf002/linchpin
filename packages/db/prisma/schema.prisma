@@ -135,6 +135,7 @@ model Person {
   roleTypes     RoleType[]
   links         PersonLink[]
   exitEvents    ExitEvent[]
+  creatorScores CreatorScore[]
 
   @@index([canonicalName])
 }
@@ -189,6 +190,9 @@ model CarryScore {
   offCycleCarry    Float?
   durabilityRatio  Float?
   substitutability Float?
+  /// Why substitutability is null. Characters without an absence window are
+  /// flagged and excluded, never imputed.
+  substitutabilityFlag String?
   confidence       Float     @default(1.0)
   observationCount Int       @default(0)
 
@@ -207,6 +211,8 @@ model FragilityScore {
   top3Share      Float
   fragility      Float
   rosterComplete Float
+  /// Mean substitutability of the franchise's exited characters; null when none has an absence window.
+  substitutability Float?
 
   @@unique([franchiseId, scoredOn, modelVersion])
   @@index([modelVersion, fragility])
@@ -258,6 +264,9 @@ model EventStudy {
   didEstimate   Float
   stdError      Float
   preCarryScore Float
+  /// Shares measured inside the event's own pre-window, so nothing after the exit leaks in.
+  preWikiShare  Float?
+  preSearchShare Float?
   baselineRank  Int?
   /// Announced exits leak into the pre-window and are analysed as a separate stratum.
   announced     Boolean    @default(false)
@@ -288,6 +297,27 @@ model ValidationRun {
   gate                GateOutcome
   failures            Json
   notes               String?
+  /// Per-stratum estimates: announced vs unannounced, and one per exit type.
+  strata              Json?
+  /// Multi-signal comparison: fitted weight, train and held-out rank IC, verdict.
+  blend               Json?
 
   @@index([modelVersion, runAt])
+}
+
+/// Weakest component in the system. A row exists only for a person with at
+/// least KILL_CRITERIA.minCreatorProjects completed projects; below that the
+/// score is suppressed by not being written.
+model CreatorScore {
+  id           String   @id @default(uuid())
+  personId     String
+  person       Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  modelVersion String
+  scoredOn     DateTime @db.Date
+  residual     Float
+  projectCount Int
+  confidence   Float
+
+  @@unique([personId, modelVersion])
+  @@index([modelVersion, residual])
 }

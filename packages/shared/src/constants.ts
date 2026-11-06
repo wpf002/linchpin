@@ -2,7 +2,7 @@
  * Canonical model constants. Every score row records MODEL_VERSION.
  * Changing any weight requires a version bump and a full validation re-run.
  */
-export const MODEL_VERSION = "v0.1.0";
+export const MODEL_VERSION = "v0.2.0";
 
 /** Phase 2 runs wiki-only (wikiShare = 1.0). Phase 3 fits these on a training split. */
 export const SIGNAL_WEIGHTS = {
