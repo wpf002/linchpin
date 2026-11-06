@@ -322,7 +322,7 @@ export async function getCharacter(id: string): Promise<CharacterDetail> {
   const character = await prisma.character.findUnique({
     where: { id },
     include: {
-      franchise: { select: { id: true, canonicalName: true, imageUrl: true } },
+      franchise: { select: { id: true, canonicalName: true, imageUrl: true, rosterComplete: true } },
       carryScores: {
         where: { modelVersion: MODEL_VERSION },
         orderBy: { windowEnd: "desc" },
@@ -406,11 +406,13 @@ export async function getValidationReport(): Promise<ValidationReport> {
     orderBy: { runAt: "desc" },
   });
   if (!run) {
+    // Before the first run the count comes from the corpus, so progress toward the minimum is visible.
+    const verifiedEventCount = await prisma.exitEvent.count({ where: { verified: true } });
     return {
       modelVersion: MODEL_VERSION,
       runAt: null,
       eventCount: 0,
-      verifiedEventCount: 0,
+      verifiedEventCount,
       rankIC: null,
       rankICLower: null,
       rankICUpper: null,
@@ -565,7 +567,8 @@ export async function listEventStudies(): Promise<EventStudyRow[]> {
       exitEvent: {
         include: {
           franchise: { select: { id: true, canonicalName: true } },
-          character: { select: { id: true, canonicalName: true } },
+          character: { select: { id: true, canonicalName: true, imageUrl: true } },
+          person: { select: { imageUrl: true } },
         },
       },
     },
@@ -578,6 +581,7 @@ export async function listEventStudies(): Promise<EventStudyRow[]> {
     franchiseName: study.exitEvent.franchise.canonicalName,
     characterId: study.exitEvent.character?.id ?? null,
     characterName: study.exitEvent.character?.canonicalName ?? null,
+    imageUrl: study.exitEvent.character?.imageUrl ?? study.exitEvent.person?.imageUrl ?? null,
     eventDate: toIsoDate(study.exitEvent.eventDate) ?? "",
     preCarryScore: study.preCarryScore,
     didEstimate: study.didEstimate,

@@ -128,7 +128,8 @@ export const signalPointSchema = z.object({
 });
 
 export const characterDetailSchema = characterRowSchema.extend({
-  franchise: z.object({ id: z.string(), canonicalName: z.string(), imageUrl }),
+  /** rosterComplete travels with the row so a share below the coverage floor can be withheld. */
+  franchise: z.object({ id: z.string(), canonicalName: z.string(), imageUrl, rosterComplete: share }),
   aliases: z.array(z.string()),
   wikiTitle: z.string().nullable(),
   firstSeenAt: z.string().nullable(),
@@ -290,6 +291,7 @@ export const eventStudyRowSchema = z.object({
   franchiseName: z.string(),
   characterId: z.string().nullable(),
   characterName: z.string().nullable(),
+  imageUrl,
   eventDate: z.string(),
   preCarryScore: z.number().nullable(),
   didEstimate: z.number(),
