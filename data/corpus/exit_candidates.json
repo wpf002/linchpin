@@ -688,6 +688,1244 @@
       "season": 4,
       "episode": 1,
       "episodeTitle": "Episode 1"
+    },
+    {
+      "franchise": "24",
+      "character": "Nina Myers",
+      "person": "Sarah Clarke",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 14,
+      "episodeTitle": "Day 3: 2:00 a.m. – 3:00 a.m."
+    },
+    {
+      "franchise": "24",
+      "character": "David Palmer",
+      "person": "Dennis Haysbert",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 1,
+      "episodeTitle": "Day 5: 7:00 a.m. – 8:00 a.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Michelle Dessler",
+      "person": "Reiko Aylesworth",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 1,
+      "episodeTitle": "Day 5: 7:00 a.m. – 8:00 a.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Edgar Stiles",
+      "person": "Louis Lombardi",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 12,
+      "episodeTitle": "Day 5: 6:00 p.m. – 7:00 p.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Curtis Manning",
+      "person": "Roger Cross",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 4,
+      "episodeTitle": "Day 6: 9:00 a.m. – 10:00 a.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Bill Buchanan",
+      "person": "James Morrison",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 13,
+      "episodeTitle": "Day 7: 8:00 p.m. – 9:00 p.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Renee Walker",
+      "person": "Annie Wersching",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 17,
+      "episodeTitle": "Day 8: 8:00 a.m. – 9:00 a.m."
+    },
+    {
+      "franchise": "24",
+      "character": "Sherry Palmer",
+      "person": "Penny Johnson Jerald",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 23,
+      "episodeTitle": "Day 3: 11:00 a.m. – 12:00 p.m."
+    },
+    {
+      "franchise": "Angel",
+      "character": "Allen Francis Doyle",
+      "person": "Glenn Quinn",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 9,
+      "episodeTitle": "Hero"
+    },
+    {
+      "franchise": "Angel",
+      "character": "Cordelia Chase",
+      "person": "Charisma Carpenter",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 12,
+      "episodeTitle": "You're Welcome"
+    },
+    {
+      "franchise": "Angel",
+      "character": "Winifred \"Fred\" Burkle",
+      "person": "Amy Acker",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 15,
+      "episodeTitle": "A Hole in the World"
+    },
+    {
+      "franchise": "Babylon 5",
+      "character": "Jeffrey Sinclair",
+      "person": "Michael O'Hare",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 1,
+      "episode": 22,
+      "episodeTitle": "Chrysalis"
+    },
+    {
+      "franchise": "Babylon 5",
+      "character": "Marcus Cole",
+      "person": "Jason Carter",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 20,
+      "episodeTitle": "Endgame"
+    },
+    {
+      "franchise": "Babylon 5",
+      "character": "Talia Winters",
+      "person": "Andrea Thompson",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 2,
+      "episode": 19,
+      "episodeTitle": "Divided Loyalties"
+    },
+    {
+      "franchise": "Babylon 5",
+      "character": "Warren Keffer",
+      "person": "Robert Rusler",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 22,
+      "episodeTitle": "The Fall of Night"
+    },
+    {
+      "franchise": "Brooklyn Nine-Nine",
+      "character": "Gina Linetti",
+      "person": "Chelsea Peretti",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 4,
+      "episodeTitle": "Four Movements"
+    },
+    {
+      "franchise": "Cheers",
+      "character": "Ernie \"Coach\" Pantusso",
+      "person": "Nicholas Colasanto",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "Birth, Death, Love and Rice"
+    },
+    {
+      "franchise": "Cheers",
+      "character": "Diane Chambers",
+      "person": "Shelley Long",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 5,
+      "episode": 26,
+      "episodeTitle": "I Do, Adieu"
+    },
+    {
+      "franchise": "Farscape",
+      "character": "Pa'u Zotoh Zhaan",
+      "person": "Virginia Hey",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 4,
+      "episodeTitle": "Wait for the Wheel"
+    },
+    {
+      "franchise": "Farscape",
+      "character": "Bialar Crais",
+      "person": "Lani Tupu",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 21,
+      "episodeTitle": "Wolf in Sheep's Clothing"
+    },
+    {
+      "franchise": "Fringe",
+      "character": "Charlie Francis",
+      "person": "Kirk Acevedo",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 1,
+      "episodeTitle": "A New Day in the Old Town"
+    },
+    {
+      "franchise": "Fringe",
+      "character": "John Scott",
+      "person": "Mark Valley",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 13,
+      "episodeTitle": "The Transformation"
+    },
+    {
+      "franchise": "Fringe",
+      "character": "Nina Sharp",
+      "person": "Blair Brown",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 10,
+      "episodeTitle": "Anomaly XB-6783746"
+    },
+    {
+      "franchise": "Desperate Housewives",
+      "character": "Edie Britt",
+      "person": "Nicollette Sheridan",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 19,
+      "episodeTitle": "Look Into Their Eyes and You See What They Know"
+    },
+    {
+      "franchise": "Desperate Housewives",
+      "character": "Karl Mayer",
+      "person": "Richard Burgi",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 11,
+      "episodeTitle": "If..."
+    },
+    {
+      "franchise": "Desperate Housewives",
+      "character": "Mike Delfino",
+      "person": "James Denton",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 16,
+      "episodeTitle": "You Take for Granted"
+    },
+    {
+      "franchise": "Glee",
+      "character": "Finn Hudson",
+      "person": "Cory Monteith",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 3,
+      "episodeTitle": "The Quarterback"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Tara Thornton",
+      "person": "Rutina Wesley",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 1,
+      "episodeTitle": "Jesus Gonna Be Here"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Terry Bellefleur",
+      "person": "Todd Lowe",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 6,
+      "episodeTitle": "Don't You Feel Me"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Jesus Velasquez",
+      "person": "Kevin Alejandro",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 12,
+      "episodeTitle": "And When I Die"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Tommy Mickens",
+      "person": "Marshall Allman",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 9,
+      "episodeTitle": "Let's Get Out of Here"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Alcide Herveaux",
+      "person": "Joe Manganiello",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 3,
+      "episodeTitle": "Fire in the Hole"
+    },
+    {
+      "franchise": "True Blood",
+      "character": "Steve Newlin",
+      "person": "Michael McMillian",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 9,
+      "episodeTitle": "Life Matters"
+    },
+    {
+      "franchise": "Twin Peaks",
+      "character": "Leland Palmer",
+      "person": "Ray Wise",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 9,
+      "episodeTitle": "Arbitrary Law"
+    },
+    {
+      "franchise": "Alias",
+      "character": "Francine \"Francie\" Calfo",
+      "person": "Merrin Dungey",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 13,
+      "episodeTitle": "Phase One"
+    },
+    {
+      "franchise": "Alias",
+      "character": "Lauren Reed",
+      "person": "Melissa George",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 22,
+      "episodeTitle": "Resurrection"
+    },
+    {
+      "franchise": "Alias",
+      "character": "Nadia Santos",
+      "person": "Mía Maestro",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 12,
+      "episodeTitle": "There's Only One Sydney Bristow"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Jonathan Kent",
+      "person": "John Schneider",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 12,
+      "episodeTitle": "Reckoning"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Whitney Fordman",
+      "person": "Eric Johnson",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 1,
+      "episode": 21,
+      "episodeTitle": "Tempest"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Lex Luthor",
+      "person": "Michael Rosenbaum",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 7,
+      "episode": 20,
+      "episodeTitle": "Arctic"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Lana Lang",
+      "person": "Kristin Kreuk",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 8,
+      "episode": 14,
+      "episodeTitle": "Requiem"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Lionel Luthor",
+      "person": "John Glover",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 16,
+      "episodeTitle": "Descent"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Jimmy Olsen",
+      "person": "Aaron Ashmore",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 22,
+      "episodeTitle": "Doomsday"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Pete Ross",
+      "person": "Sam Jones III",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 3,
+      "episode": 22,
+      "episodeTitle": "Covenant"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Davis Bloome",
+      "person": "Sam Witwer",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 22,
+      "episodeTitle": "Doomsday"
+    },
+    {
+      "franchise": "Smallville",
+      "character": "Jason Teague",
+      "person": "Jensen Ackles",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 22,
+      "episodeTitle": "Commencement"
+    },
+    {
+      "franchise": "The West Wing",
+      "character": "Leo McGarry",
+      "person": "John Spencer",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 17,
+      "episodeTitle": "Election Day"
+    },
+    {
+      "franchise": "The West Wing",
+      "character": "Sam Seaborn",
+      "person": "Rob Lowe",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Red Haven's on Fire"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Vicki Donovan",
+      "person": "Kayla Ewell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 7,
+      "episodeTitle": "Haunted"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Jenna Sommers",
+      "person": "Sara Canning",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 21,
+      "episodeTitle": "The Sun Also Rises"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Elena Gilbert",
+      "person": "Nina Dobrev",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 22,
+      "episodeTitle": "I'm Thinking of You All the While"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Jeremy Gilbert",
+      "person": "Steven R. McQueen",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 15,
+      "episodeTitle": "Let Her Go"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Tyler Lockwood",
+      "person": "Michael Trevino",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 5,
+      "episodeTitle": "Coming Home Was a Mistake"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Enzo St. John",
+      "person": "Michael Malarkey",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 10,
+      "episodeTitle": "Nostalgia's a Bitch"
+    },
+    {
+      "franchise": "The Vampire Diaries",
+      "character": "Klaus Mikaelson",
+      "person": "Joseph Morgan",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 20,
+      "episodeTitle": "The Originals"
+    },
+    {
+      "franchise": "The O.C.",
+      "character": "Marissa Cooper",
+      "person": "Mischa Barton",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 25,
+      "episodeTitle": "The Graduates"
+    },
+    {
+      "franchise": "The O.C.",
+      "character": "Caleb Nichol",
+      "person": "Alan Dale",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 23,
+      "episodeTitle": "The O.Sea"
+    },
+    {
+      "franchise": "Gossip Girl",
+      "character": "Jenny Humphrey",
+      "person": "Taylor Momsen",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 9,
+      "episodeTitle": "The Witches of Bushwick"
+    },
+    {
+      "franchise": "Gossip Girl",
+      "character": "Vanessa Abrams",
+      "person": "Jessica Szohr",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 22,
+      "episodeTitle": "The Wrong Goodbye"
+    },
+    {
+      "franchise": "Gotham",
+      "character": "Fish Mooney",
+      "person": "Jada Pinkett Smith",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 22,
+      "episodeTitle": "Heavydirtysoul"
+    },
+    {
+      "franchise": "Gotham",
+      "character": "Theo Galavan",
+      "person": "James Frain",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 20,
+      "episodeTitle": "Unleashed"
+    },
+    {
+      "franchise": "Gotham",
+      "character": "Tabitha Galavan",
+      "person": "Jessica Lucas",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 1,
+      "episodeTitle": "Year Zero"
+    },
+    {
+      "franchise": "Gotham",
+      "character": "Captain Sarah Essen",
+      "person": "Zabryna Guevara",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 2,
+      "episodeTitle": "Knock, Knock"
+    },
+    {
+      "franchise": "Gotham",
+      "character": "Butch Gilzean / Solomon Grundy",
+      "person": "Drew Powell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 22,
+      "episodeTitle": "No Man's Land"
+    },
+    {
+      "franchise": "Grey's Anatomy",
+      "character": "Dr. Margaret \"Maggie\" Pierce",
+      "person": "Kelly McCreary",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 19,
+      "episode": 15,
+      "episodeTitle": "Mama Who Bore Me"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Isaac Mendez",
+      "person": "Santiago Cabrera",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 19,
+      "episodeTitle": ".07%"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Simone Deveaux",
+      "person": "Tawny Cypress",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 16,
+      "episodeTitle": "Unexpected"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Nathan Petrelli",
+      "person": "Adrian Pasdar",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "The Fifth Stage"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Niki Sanders / Jessica Sanders",
+      "person": "Ali Larter",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 11,
+      "episodeTitle": "Powerless"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Elle",
+      "person": "Kristen Bell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 12,
+      "episodeTitle": "Our Father"
+    },
+    {
+      "franchise": "Heroes",
+      "character": "Takezo Kensei / Adam Monroe",
+      "person": "David Anders",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 4,
+      "episodeTitle": "I Am Become Death"
+    },
+    {
+      "franchise": "Star Trek: Voyager",
+      "character": "Kes",
+      "person": "Jennifer Lien",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 2,
+      "episodeTitle": "The Gift"
+    },
+    {
+      "franchise": "Stargate SG-1",
+      "character": "Dr. Daniel Jackson",
+      "person": "Michael Shanks",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 5,
+      "episode": 21,
+      "episodeTitle": "Meridian"
+    },
+    {
+      "franchise": "Scandal",
+      "character": "Harrison Wright",
+      "person": "Columbus Short",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "Randy, Red, Superfreak and Julia"
+    },
+    {
+      "franchise": "ER",
+      "character": "Dr. Michael Gallant",
+      "person": "Sharif Atkins",
+      "exitType": "CHARACTER_DEATH",
+      "season": 12,
+      "episode": 21,
+      "episodeTitle": "Gallant Hero"
+    },
+    {
+      "franchise": "For All Mankind",
+      "character": "Gordo Stevens",
+      "person": "Michael Dorman",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 10,
+      "episodeTitle": "The Grey"
+    },
+    {
+      "franchise": "For All Mankind",
+      "character": "Tracy Stevens",
+      "person": "Sarah Jones",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 10,
+      "episodeTitle": "The Grey"
+    },
+    {
+      "franchise": "For All Mankind",
+      "character": "Molly Cobb",
+      "person": "Sonya Walger",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 10,
+      "episodeTitle": "Stranger in a Strange Land"
+    },
+    {
+      "franchise": "For All Mankind",
+      "character": "Karen Baldwin",
+      "person": "Shantel VanSanten",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 10,
+      "episodeTitle": "Stranger in a Strange Land"
+    },
+    {
+      "franchise": "One Tree Hill",
+      "character": "Keith Scott",
+      "person": "Craig Sheffer",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 16,
+      "episodeTitle": "With Tired Eyes, Tired Minds, Tired Souls, We Slept"
+    },
+    {
+      "franchise": "One Tree Hill",
+      "character": "Peyton Sawyer",
+      "person": "Hilarie Burton",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 24,
+      "episodeTitle": "Remember Me as a Time of Day"
+    },
+    {
+      "franchise": "One Tree Hill",
+      "character": "Lucas Scott",
+      "person": "Chad Michael Murray",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 24,
+      "episodeTitle": "Remember Me as a Time of Day"
+    },
+    {
+      "franchise": "One Tree Hill",
+      "character": "Dan Scott",
+      "person": "Paul Johansson",
+      "exitType": "CHARACTER_DEATH",
+      "season": 9,
+      "episode": 11,
+      "episodeTitle": "Danny Boy"
+    },
+    {
+      "franchise": "Prison Break",
+      "character": "John Abruzzi",
+      "person": "Peter Stormare",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 4,
+      "episodeTitle": "First Down"
+    },
+    {
+      "franchise": "Prison Break",
+      "character": "Veronica Donovan",
+      "person": "Robin Tunney",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 1,
+      "episodeTitle": "Manhunt"
+    },
+    {
+      "franchise": "Prison Break",
+      "character": "Brad Bellick",
+      "person": "Wade Williams",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 12,
+      "episodeTitle": "Selfless"
+    },
+    {
+      "franchise": "Prison Break",
+      "character": "James Whistler",
+      "person": "Chris Vance",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "Scylla"
+    },
+    {
+      "franchise": "Prison Break",
+      "character": "Norman \"Lechero\" St. John",
+      "person": "Robert Wisdom",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 13,
+      "episodeTitle": "The Art of the Deal"
+    },
+    {
+      "franchise": "Private Practice",
+      "character": "William \"Dell\" Parker",
+      "person": "Chris Lowell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 23,
+      "episodeTitle": "The End of a Beautiful Friendship"
+    },
+    {
+      "franchise": "Private Practice",
+      "character": "Dr. Pete Wilder",
+      "person": "Tim Daly",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 1,
+      "episodeTitle": "Aftershock"
+    },
+    {
+      "franchise": "King of the Hill",
+      "character": "Cotton Hill",
+      "person": "Toby Huss",
+      "exitType": "CHARACTER_DEATH",
+      "season": 12,
+      "episode": 5,
+      "episodeTitle": "Death Picks Cotton"
+    },
+    {
+      "franchise": "Euphoria",
+      "character": "Ashtray",
+      "person": "Javon Walton",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 8,
+      "episodeTitle": "All My Life, My Heart Has Yearned for a Thing I Cannot Name"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "Nicholas Brody",
+      "person": "Damian Lewis",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 12,
+      "episodeTitle": "The Star"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "Peter Quinn",
+      "person": "Rupert Friend",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 12,
+      "episodeTitle": "America First"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "David Estes",
+      "person": "David Harewood",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 12,
+      "episodeTitle": "The Choice"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "Abu Nazir",
+      "person": "Navid Negahban",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 11,
+      "episodeTitle": "In Memoriam"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "Fara Sherazi",
+      "person": "Nazanin Boniadi",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 10,
+      "episodeTitle": "13 Hours in Islamabad"
+    },
+    {
+      "franchise": "Homeland",
+      "character": "Max Piotrowski",
+      "person": "Maury Sterling",
+      "exitType": "CHARACTER_DEATH",
+      "season": 8,
+      "episode": 8,
+      "episodeTitle": "Threnody(s)"
+    },
+    {
+      "franchise": "Star Trek: Deep Space Nine",
+      "character": "Lt. Commander Jadzia Dax",
+      "person": "Terry Farrell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 26,
+      "episodeTitle": "Tears of the Prophets"
+    },
+    {
+      "franchise": "Stargate Atlantis",
+      "character": "Dr. Carson Beckett",
+      "person": "Paul McGillion",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 17,
+      "episodeTitle": "Sunday"
+    },
+    {
+      "franchise": "Stargate Atlantis",
+      "character": "Dr. Elizabeth Weir",
+      "person": "Torri Higginson",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 4,
+      "episode": 2,
+      "episodeTitle": "Lifeline"
+    },
+    {
+      "franchise": "Stargate Atlantis",
+      "character": "Lt. Aiden Ford",
+      "person": "Rainbow Sun Francks",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 2,
+      "episode": 11,
+      "episodeTitle": "The Hive"
+    },
+    {
+      "franchise": "The Last of Us",
+      "character": "Joel Miller",
+      "person": "Pedro Pascal",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 2,
+      "episodeTitle": "Through the Valley"
+    },
+    {
+      "franchise": "Veronica Mars",
+      "character": "Sheriff Don Lamb",
+      "person": "Michael Muhney",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 14,
+      "episodeTitle": "Mars, Bars"
+    },
+    {
+      "franchise": "Veronica Mars",
+      "character": "Cassidy \"Beaver\" Casablancas",
+      "person": "Kyle Gallner",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 22,
+      "episodeTitle": "Not Pictured"
+    },
+    {
+      "franchise": "Veronica Mars",
+      "character": "Duncan Kane",
+      "person": "Teddy Dunn",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 2,
+      "episode": 11,
+      "episodeTitle": "Donut Run"
+    },
+    {
+      "franchise": "Veronica Mars",
+      "character": "Logan Echolls",
+      "person": "Jason Dohring",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 8,
+      "episodeTitle": "Years, Continents, Bloodshed"
+    },
+    {
+      "franchise": "Wednesday",
+      "character": "Principal Larissa Weems",
+      "person": "Gwendoline Christie",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 7,
+      "episodeTitle": "If You Don't Woe Me by Now"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Wells Jaha",
+      "person": "Eli Goree",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 3,
+      "episodeTitle": "Earth Kills"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Finn Collins",
+      "person": "Thomas McDonell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 8,
+      "episodeTitle": "Spacewalker"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Lincoln",
+      "person": "Ricky Whittle",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 9,
+      "episodeTitle": "Stealing Fire"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Jasper Jordan",
+      "person": "Devon Bostick",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 11,
+      "episodeTitle": "The Other Side"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Monty Green",
+      "person": "Christopher Larkin",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 13,
+      "episodeTitle": "Damocles"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Bellamy Blake",
+      "person": "Bob Morley",
+      "exitType": "CHARACTER_DEATH",
+      "season": 7,
+      "episode": 13,
+      "episodeTitle": "Blood Giant"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Marcus Kane",
+      "person": "Henry Ian Cusick",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 9,
+      "episodeTitle": "What You Take with You"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Abigail Griffin",
+      "person": "Paige Turco",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 13,
+      "episodeTitle": "The Blood of Sanctum"
+    },
+    {
+      "franchise": "The 100",
+      "character": "Roan",
+      "person": "Zach McGowan",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 10,
+      "episodeTitle": "Die All, Die Merrily"
+    },
+    {
+      "franchise": "Suits",
+      "character": "Jessica Pearson",
+      "person": "Gina Torres",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 6,
+      "episode": 10,
+      "episodeTitle": "P.S.L."
+    },
+    {
+      "franchise": "The Boys",
+      "character": "Madelyn Stillwell",
+      "person": "Elisabeth Shue",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 8,
+      "episodeTitle": "You Found Me"
+    },
+    {
+      "franchise": "The Boys",
+      "character": "Maggie Shaw / Queen Maeve",
+      "person": "Dominique McElligott",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 3,
+      "episode": 8,
+      "episodeTitle": "The Instant White-Hot Wild"
+    },
+    {
+      "franchise": "The Boys",
+      "character": "Earving / Black Noir",
+      "person": "Nathan Mitchell",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 8,
+      "episodeTitle": "The Instant White-Hot Wild"
+    },
+    {
+      "franchise": "The Boys",
+      "character": "Victoria Neuman",
+      "person": "Claudia Doumit",
+      "exitType": "CHARACTER_DEATH",
+      "season": 4,
+      "episode": 8,
+      "episodeTitle": "Season Four Finale"
+    },
+    {
+      "franchise": "The Fresh Prince of Bel-Air",
+      "character": "Vivian Banks",
+      "person": "Janet Hubert",
+      "exitType": "RECAST",
+      "season": 4,
+      "episode": 1,
+      "episodeTitle": "Where There's a Will, There's a Way"
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Dr. Robert Ford",
+      "person": "Anthony Hopkins",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 10,
+      "episodeTitle": "The Bicameral Mind"
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Theresa Cullen",
+      "person": "Sidse Babett Knudsen",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 7,
+      "episodeTitle": "Trompe L'Oeil"
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Teddy Flood",
+      "person": "James Marsden",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 9,
+      "episodeTitle": "Vanishing Point"
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Elsie King",
+      "person": "Shannon Woodward",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 9,
+      "episodeTitle": "Vanishing Point"
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Lee Sizemore",
+      "person": "Simon Quarterman",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 10,
+      "episodeTitle": "The Passenger"
+    },
+    {
+      "franchise": "How to Get Away with Murder",
+      "character": "Wes Gibbins",
+      "person": "Alfred Enoch",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 9,
+      "episodeTitle": "Who's Dead?"
+    },
+    {
+      "franchise": "How to Get Away with Murder",
+      "character": "Asher Millstone",
+      "person": "Matt McGorry",
+      "exitType": "CHARACTER_DEATH",
+      "season": 6,
+      "episode": 9,
+      "episodeTitle": "Are You the Mole?"
+    },
+    {
+      "franchise": "How to Get Away with Murder",
+      "character": "Rebecca Sutter",
+      "person": "Katie Findlay",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 15,
+      "episodeTitle": "It's All My Fault"
+    },
+    {
+      "franchise": "Rick and Morty",
+      "character": "Rick Sanchez",
+      "person": "Justin Roiland",
+      "exitType": "RECAST",
+      "season": 7,
+      "episode": 1,
+      "episodeTitle": "How Poopy Got His Poop Back"
+    },
+    {
+      "franchise": "Rick and Morty",
+      "character": "Morty Smith",
+      "person": "Justin Roiland",
+      "exitType": "RECAST",
+      "season": 7,
+      "episode": 1,
+      "episodeTitle": "How Poopy Got His Poop Back"
+    },
+    {
+      "franchise": "Supergirl",
+      "character": "Winslow \"Winn\" Schott",
+      "person": "Jeremy Jordan",
+      "exitType": "ACTOR_DEPARTURE",
+      "season": 3,
+      "episode": 23,
+      "episodeTitle": "Battles Lost and Won"
+    },
+    {
+      "franchise": "Six Feet Under",
+      "character": "Nate Fisher",
+      "person": "Peter Krause",
+      "exitType": "CHARACTER_DEATH",
+      "season": 5,
+      "episode": 9,
+      "episodeTitle": "Ecotone"
+    },
+    {
+      "franchise": "Six Feet Under",
+      "character": "Nathaniel Fisher",
+      "person": "Richard Jenkins",
+      "exitType": "CHARACTER_DEATH",
+      "season": 1,
+      "episode": 1,
+      "episodeTitle": "Pilot"
+    },
+    {
+      "franchise": "Six Feet Under",
+      "character": "Lisa Kimmel Fisher",
+      "person": "Lili Taylor",
+      "exitType": "CHARACTER_DEATH",
+      "season": 3,
+      "episode": 12,
+      "episodeTitle": "Twilight"
+    },
+    {
+      "franchise": "Pretty Little Liars",
+      "character": "Maya St. Germain",
+      "person": "Bianca Lawson",
+      "exitType": "CHARACTER_DEATH",
+      "season": 2,
+      "episode": 25,
+      "episodeTitle": "UnmAsked"
     }
   ]
 }
