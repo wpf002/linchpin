@@ -144,11 +144,11 @@ export function GlobalSearch() {
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={onKeyDown}
-        className="h-9 w-full rounded-[var(--radius-ui)] border border-line bg-surface pl-3 pr-8 text-sm text-ink transition-colors duration-150 placeholder:text-faint hover:border-line-strong"
+        className="h-9 w-full rounded-[var(--radius-ui)] border border-line bg-surface px-3 text-sm text-ink md:pr-8 transition-colors duration-150 placeholder:text-faint hover:border-line-strong"
       />
       <kbd
         aria-hidden="true"
-        className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 rounded-sm border border-line px-1 font-mono text-xs text-faint md:block"
+        className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 border border-line px-1 font-mono text-xs text-faint md:block"
       >
         {FOCUS_KEY}
       </kbd>
@@ -204,7 +204,7 @@ function OptionRow({
   return (
     <>
       {heading ? (
-        <li role="presentation" className="px-3 pb-1 pt-2 text-xs uppercase tracking-wide text-faint">
+        <li role="presentation" className="px-3 pb-1 pt-2 text-sm text-faint">
           {heading}
         </li>
       ) : null}

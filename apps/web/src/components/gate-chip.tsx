@@ -1,16 +1,17 @@
 import Link from "next/link";
 import type { ValidationReport } from "@linchpin/shared";
 
-const GATE_STYLE: Record<ValidationReport["gate"], { label: string; color: string }> = {
+/** wideSuffix is dropped on narrow screens so the search box keeps a usable width. */
+const GATE_STYLE: Record<ValidationReport["gate"], { label: string; wideSuffix?: string; color: string }> = {
   PASS: { label: "Validated", color: "var(--pass)" },
-  FAIL: { label: "Failed Validation", color: "var(--fail)" },
+  FAIL: { label: "Failed", wideSuffix: " Validation", color: "var(--fail)" },
   BLOCKED: { label: "Not Tested", color: "var(--blocked)" },
 };
 
 export function GateChip({ gate }: { gate: ValidationReport["gate"] | null }) {
   if (gate === null) {
     return (
-      <span className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs text-muted">
+      <span className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm text-muted">
         <Dot color="var(--fail)" />
         API Offline
       </span>
@@ -21,10 +22,13 @@ export function GateChip({ gate }: { gate: ValidationReport["gate"] | null }) {
     <Link
       href="/validation"
       title="Accuracy test result. Scores are unproven until it passes."
-      className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs text-ink transition-colors duration-150 hover:border-line-strong hover:bg-hover"
+      className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm text-ink transition-colors duration-150 hover:text-accent-strong"
     >
       <Dot color={style.color} />
-      {style.label}
+      <span>
+        {style.label}
+        {style.wideSuffix ? <span className="hidden sm:inline">{style.wideSuffix}</span> : null}
+      </span>
     </Link>
   );
 }

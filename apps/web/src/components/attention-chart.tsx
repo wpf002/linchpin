@@ -102,7 +102,7 @@ export function AttentionChart({ series }: { series: Point[] }) {
             </text>
           </g>
         ))}
-        <path d={area} fill="var(--accent)" opacity={0.08} />
+        <path d={area} fill="var(--chart-line)" opacity={0.08} />
         <path d={path} fill="none" stroke="var(--chart-line)" strokeWidth={1.25} strokeLinejoin="round" />
         {hovered ? (
           <g pointerEvents="none">

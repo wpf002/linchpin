@@ -25,7 +25,7 @@ export function SortHeader({
     <th
       scope="col"
       aria-sort={active ? (current.order === "asc" ? "ascending" : "descending") : "none"}
-      className={clsx("px-3 py-3 font-medium", align === "right" && "text-right")}
+      className={clsx("px-3 py-3 font-medium whitespace-nowrap", align === "right" && "text-right")}
     >
       <Link
         href={`?${query.toString()}`}

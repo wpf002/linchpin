@@ -10,9 +10,9 @@ export function CoverageBadge({ value }: { value: number }) {
   const trusted = value >= ROSTER_COMPLETE_DISPLAY_FLOOR;
   return (
     <span className="inline-flex items-center gap-2" title={COVERAGE_HINT}>
-      <span className="relative h-1 w-10 overflow-hidden rounded-full bg-line" aria-hidden="true">
+      <span className="relative h-1 w-10 overflow-hidden bg-line" aria-hidden="true">
         <span
-          className="absolute inset-y-0 left-0 rounded-full"
+          className="absolute inset-y-0 left-0"
           style={{
             width: `${Math.min(1, value) * 100}%`,
             background: trusted ? "var(--text-muted)" : "var(--fail)",

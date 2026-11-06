@@ -14,7 +14,7 @@ const LINKS = [
 export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Primary" className={clsx("flex items-stretch gap-6 overflow-x-auto", className)}>
+    <nav aria-label="Primary" className={clsx("flex items-stretch justify-between gap-2 overflow-x-auto [scrollbar-width:none] md:justify-start md:gap-6", className)}>
       {LINKS.map((link) => {
         const active = link.matches(pathname);
         return (

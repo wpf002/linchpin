@@ -98,8 +98,8 @@
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 16px;
-  --text-lg: 20px;
-  --text-display: 40px;
+  --text-lg: 24px;
+  --text-display: clamp(36px, 6vw, 56px);
 
   --radius-ui: 6px;
 }

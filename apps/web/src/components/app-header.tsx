@@ -19,7 +19,7 @@ export async function AppHeader() {
   const gate = await loadGate();
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg/90 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center gap-x-4 px-4 sm:px-8 md:gap-x-8">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center gap-x-4 px-4 sm:px-8 md:gap-x-8">
         <Link href="/" className="group flex h-16 items-center gap-2" aria-label="Linchpin Home">
           <PinMark />
           <span className="font-display text-lg leading-none tracking-tight text-ink">Linchpin</span>

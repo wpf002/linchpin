@@ -65,25 +65,25 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
       {page.rows.length === 0 ? (
         <EmptyState title="No Rows" />
       ) : (
-        <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
+        <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
-            <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
+            <thead className="border-b border-ink text-left text-sm text-muted">
               <tr>
-                <th className="px-4 py-3 font-medium">Date</th>
-                <th className="px-4 py-3 font-medium">Source</th>
-                <th className="px-4 py-3 text-right font-medium">Value</th>
-                <th className="px-4 py-3 font-medium">Window</th>
-                <th className="px-4 py-3 text-right font-medium">Confidence</th>
+                <th className="px-3 py-3 font-medium">Date</th>
+                <th className="px-3 py-3 font-medium">Source</th>
+                <th className="px-3 py-3 text-right font-medium">Value</th>
+                <th className="px-3 py-3 font-medium">Window</th>
+                <th className="px-3 py-3 text-right font-medium">Confidence</th>
               </tr>
             </thead>
             <tbody className="num">
               {page.rows.map((row) => (
                 <tr key={`${row.source}-${row.measuredOn}`} className="border-b border-line last:border-b-0">
-                  <td className="px-4 py-2 text-muted">{formatDate(row.measuredOn)}</td>
-                  <td className="px-4 py-2 text-muted">{label(row.source)}</td>
-                  <td className="px-4 py-2 text-right text-ink">{formatCount(row.rawValue)}</td>
-                  <td className="px-4 py-2 text-muted">{row.isOffCycle ? "Between Releases" : "Release"}</td>
-                  <td className="px-4 py-2 text-right text-muted">{formatPercent(row.confidence, 0)}</td>
+                  <td className="px-3 py-2 text-muted">{formatDate(row.measuredOn)}</td>
+                  <td className="px-3 py-2 text-muted">{label(row.source)}</td>
+                  <td className="px-3 py-2 text-right text-ink">{formatCount(row.rawValue)}</td>
+                  <td className="px-3 py-2 text-muted">{row.isOffCycle ? "Between Releases" : "Release"}</td>
+                  <td className="px-3 py-2 text-right text-muted">{formatPercent(row.confidence, 0)}</td>
                 </tr>
               ))}
             </tbody>

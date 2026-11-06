@@ -12,7 +12,7 @@ export function QueryForm({
   preserved: Record<string, string>;
 }) {
   return (
-    <form method="get" role="search" className="flex gap-2">
+    <form method="get" role="search" className="flex w-full gap-2 sm:w-auto">
       {Object.entries(preserved).map(([name, preservedValue]) => (
         <input key={name} type="hidden" name={name} value={preservedValue} />
       ))}
@@ -24,7 +24,7 @@ export function QueryForm({
         aria-label={placeholder}
         minLength={MIN_QUERY_LENGTH}
         maxLength={MAX_QUERY_LENGTH}
-        className="h-9 w-56 rounded-[var(--radius-ui)] border border-line bg-surface px-3 text-sm text-ink transition-colors duration-150 placeholder:text-faint hover:border-line-strong"
+        className="h-9 min-w-0 flex-1 rounded-[var(--radius-ui)] border border-line bg-surface px-3 sm:w-56 sm:flex-none text-sm text-ink transition-colors duration-150 placeholder:text-faint hover:border-line-strong"
       />
       <button
         type="submit"

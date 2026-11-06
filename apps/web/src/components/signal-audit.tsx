@@ -6,19 +6,19 @@ import { formatCount, formatPercent, label } from "@/lib/format";
 export function SignalAudit({ characterId, attribution }: { characterId: string; attribution: CharacterDetail["attribution"] }) {
   const totalContribution = attribution.reduce((sum, row) => sum + row.contribution, 0) || 1;
   return (
-    <div className="-m-4 overflow-x-auto">
+    <div className="overflow-x-auto">
       <table className="w-full min-w-[640px] text-sm">
-        <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
+        <thead className="border-b border-ink text-left text-sm text-muted">
           <tr>
-            <th className="px-4 py-3 font-medium">Source</th>
-            <th className="px-4 py-3 text-right font-medium" title="Share of the franchise's attention from this source.">
+            <th className="px-3 py-3 font-medium">Source</th>
+            <th className="px-3 py-3 text-right font-medium" title="Share of the franchise's attention from this source.">
               Share
             </th>
-            <th className="px-4 py-3 text-right font-medium" title="How much this source counts toward the score.">
+            <th className="px-3 py-3 text-right font-medium" title="How much this source counts toward the score.">
               Weight
             </th>
-            <th className="px-4 py-3 font-medium">Contribution</th>
-            <th className="px-4 py-3 text-right font-medium">Rows</th>
+            <th className="px-3 py-3 font-medium">Contribution</th>
+            <th className="px-3 py-3 text-right font-medium">Rows</th>
           </tr>
         </thead>
         <tbody>
@@ -26,17 +26,17 @@ export function SignalAudit({ characterId, attribution }: { characterId: string;
             const measured = row.share !== null;
             return (
               <tr key={row.source} className="border-b border-line last:border-b-0">
-                <td className="px-4 py-3 text-ink">{label(row.source)}</td>
-                <td className="num px-4 py-3 text-right text-ink">
+                <td className="px-3 py-3 text-ink">{label(row.source)}</td>
+                <td className="num px-3 py-3 text-right text-ink">
                   {measured ? formatPercent(row.share) : <span className="text-faint">No Data</span>}
                 </td>
-                <td className="num px-4 py-3 text-right text-muted">{measured ? formatPercent(row.weight, 0) : "—"}</td>
-                <td className="px-4 py-3">
+                <td className="num px-3 py-3 text-right text-muted">{measured ? formatPercent(row.weight, 0) : ""}</td>
+                <td className="px-3 py-3">
                   {measured ? (
                     <span className="flex items-center gap-3">
-                      <span className="relative h-1.5 w-32 rounded-sm bg-raised" aria-hidden="true">
+                      <span className="relative h-3 w-32 bg-raised" aria-hidden="true">
                         <span
-                          className="absolute inset-y-0 left-0 rounded-sm bg-accent"
+                          className="absolute inset-y-0 left-0 bg-ink"
                           style={{ width: `${(row.contribution / totalContribution) * 100}%` }}
                         />
                       </span>
@@ -44,7 +44,7 @@ export function SignalAudit({ characterId, attribution }: { characterId: string;
                     </span>
                   ) : null}
                 </td>
-                <td className="num px-4 py-3 text-right">
+                <td className="num px-3 py-3 text-right">
                   {row.observationCount > 0 ? (
                     <Link
                       href={`/characters/${characterId}/signals?source=${row.source}`}

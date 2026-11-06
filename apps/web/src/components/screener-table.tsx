@@ -20,19 +20,25 @@ function scoresOf(row: FranchiseRow): Scores | null {
   return { top1Share, top3Share, hhi, fragility };
 }
 
-/** Carry split into the lead, the next two, and everyone else. */
+/** Attention split into the lead, the next two, and everyone else. */
 function Concentration({ top1Share, top3Share }: Pick<Scores, "top1Share" | "top3Share">) {
   const nextTwo = Math.max(0, top3Share - top1Share);
   return (
     <span className="flex items-center gap-3">
-      <span className="flex h-2 w-32 gap-px overflow-hidden rounded-sm bg-raised" aria-hidden="true">
+      <span className="num w-12 text-right text-ink">{formatPercent(top1Share, 0)}</span>
+      <span className="flex h-3 w-32 gap-px bg-raised" aria-hidden="true">
         <span className="bg-ink" style={{ width: `${top1Share * 100}%` }} />
         <span className="bg-faint" style={{ width: `${nextTwo * 100}%` }} />
       </span>
-      <span className="num w-12 text-right text-ink">{formatPercent(top1Share)}</span>
-      <span className="num w-12 text-right text-muted">{formatPercent(top3Share)}</span>
+      <span className="num w-12 text-muted">{formatPercent(top3Share, 0)}</span>
     </span>
   );
+}
+
+function franchiseFacts(row: FranchiseRow): string {
+  const exits = row.exitEventCount;
+  const exitText = exits > 0 ? ` · ${exits} ${exits === 1 ? "Exit" : "Exits"}` : "";
+  return `${label(row.medium)} · ${label(row.status)}${exitText}`;
 }
 
 export function ScreenerTable({
@@ -45,23 +51,30 @@ export function ScreenerTable({
   params: Record<string, string>;
 }) {
   return (
-    <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
-      <table className="w-full min-w-[960px] border-collapse text-sm">
-        <thead className="border-b border-line text-left text-xs uppercase tracking-wide">
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[960px] border-collapse">
+        <thead className="border-b border-ink text-left text-sm">
           <tr>
             <SortHeader column="name" label="Franchise" current={query} params={params} />
-            <SortHeader column="rosterSize" label="Cast" current={query} params={params} />
             <th scope="col" className="px-3 py-3 font-medium text-muted">
               Lead
             </th>
             <SortHeader
               column="top1Share"
-              label="Top 1 / Top 3"
+              label="Lead Share / Top 3"
               current={query}
               params={params}
               hint="Share of attention on the lead, then on the top three."
             />
-            <SortHeader column="hhi" label="HHI" current={query} params={params} align="right" />
+            <SortHeader
+              column="hhi"
+              label="HHI"
+              current={query}
+              params={params}
+              align="right"
+              hint="Sum of squared attention shares. 1.0 means one character has it all."
+            />
+            <SortHeader column="rosterSize" label="Cast" current={query} params={params} align="right" />
             <SortHeader column="fragility" label="Fragility" current={query} params={params} align="right" />
           </tr>
         </thead>
@@ -69,48 +82,43 @@ export function ScreenerTable({
           {rows.map((row) => {
             const scores = scoresOf(row);
             return (
-              <tr key={row.id} className="group border-b border-line last:border-b-0 hover:bg-hover">
-                <td className="px-3 py-3">
+              <tr key={row.id} className="group border-b border-line align-baseline hover:bg-hover">
+                <td className="py-4 pr-3 pl-3">
                   <Link href={`/franchises/${row.id}`} className="flex flex-col gap-1">
-                    <span className="font-medium text-ink group-hover:text-accent-strong">{row.canonicalName}</span>
-                    <span className="text-xs text-faint">
-                      {label(row.medium)} · {label(row.status)}
-                      {row.exitEventCount > 0 ? ` · ${row.exitEventCount} ${row.exitEventCount === 1 ? "Exit" : "Exits"}` : ""}
+                    <span
+                      className={`font-display text-lg leading-tight group-hover:text-accent-strong ${scores ? "text-ink" : "text-muted"}`}
+                    >
+                      {row.canonicalName}
                     </span>
+                    <span className="text-xs text-faint">{franchiseFacts(row)}</span>
                   </Link>
-                </td>
-                <td className="px-3 py-3">
-                  <span className="flex items-center gap-3">
-                    <span className="num w-6 text-right text-muted">{row.rosterSize}</span>
-                    <CoverageBadge value={row.rosterComplete} />
-                  </span>
                 </td>
                 {scores ? (
                   <>
-                    <td className="px-3 py-3 text-muted">
+                    <td className="px-3 py-4 text-muted">
                       {row.topCharacter ? (
                         <Link href={`/characters/${row.topCharacter.id}`} className="hover:text-ink">
                           {row.topCharacter.canonicalName}
                         </Link>
                       ) : null}
                     </td>
-                    <td className="px-3 py-3">
+                    <td className="px-3 py-4">
                       <Concentration top1Share={scores.top1Share} top3Share={scores.top3Share} />
                     </td>
-                    <td className="num px-3 py-3 text-right text-muted">{formatNumber(scores.hhi, 3)}</td>
-                    <td className="px-3 py-3">
-                      <FragilityMeter value={scores.fragility} />
-                    </td>
+                    <td className="num px-3 py-4 text-right text-muted">{formatNumber(scores.hhi, 3)}</td>
                   </>
                 ) : (
-                  <td
-                    colSpan={4}
-                    className="px-3 py-3 text-xs uppercase tracking-wide text-faint"
-                    title={NO_SCORE_HINT}
-                  >
+                  <td colSpan={3} className="px-3 py-4 text-sm text-faint" title={NO_SCORE_HINT}>
                     No Score
                   </td>
                 )}
+                <td className="px-3 py-4">
+                  <span className="flex items-center justify-end gap-3">
+                    <CoverageBadge value={row.rosterComplete} />
+                    <span className="num w-6 text-right text-muted">{row.rosterSize}</span>
+                  </span>
+                </td>
+                <td className="px-3 py-4">{scores ? <FragilityMeter value={scores.fragility} /> : null}</td>
               </tr>
             );
           })}

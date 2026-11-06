@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: "Characters" };
 function Carry({ row }: { row: LeaderRow }) {
   return (
     <span className="flex items-center justify-end gap-3">
-      <span className="relative hidden h-2 w-24 overflow-hidden rounded-sm bg-raised sm:block" aria-hidden="true">
+      <span className="relative hidden h-3 w-24 bg-raised sm:block" aria-hidden="true">
         <span
           className="absolute inset-y-0 left-0 bg-ink"
           style={{ width: `${row.carryScore * 100}%`, opacity: 0.4 + row.confidence * 0.6 }}
@@ -49,13 +49,11 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
         }
       />
       {page.rows.length === 0 ? (
-        <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" />
-        </div>
+        <EmptyState title="No Matches" />
       ) : (
-        <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
-          <table className="w-full min-w-[880px] border-collapse text-sm">
-            <thead className="border-b border-line text-left text-xs uppercase tracking-wide">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[880px] border-collapse">
+            <thead className="border-b border-ink text-left text-sm">
               <tr>
                 <th scope="col" className="w-12 px-3 py-3 text-right font-medium text-muted">
                   Rank
@@ -98,7 +96,7 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
                   <td className="num px-3 py-3 text-right text-faint">{query.cursor + index + 1}</td>
                   <td className="px-3 py-3">
                     <Link href={`/characters/${row.id}`} className="flex flex-col gap-1">
-                      <span className="font-medium text-ink group-hover:text-accent-strong">{row.canonicalName}</span>
+                      <span className="font-display text-lg leading-tight text-ink group-hover:text-accent-strong">{row.canonicalName}</span>
                       <span className="text-xs text-faint">
                         {row.portrayedBy ? `${row.portrayedBy} · ` : ""}
                         {label(row.status)}

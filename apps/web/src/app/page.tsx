@@ -35,29 +35,24 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
       <PageTitle
         title="Franchises"
         aside={
-          <dl className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-            <Count label="Franchises" value={universe.length} />
+          <dl className="flex flex-wrap items-baseline gap-x-8 gap-y-2">
             <Count label="Scored" value={scored} />
-            <Count
-              label="No Score"
-              value={universe.length - scored}
-              hint={NO_SCORE_HINT}
-            />
+            <Count label="No Score" value={universe.length - scored} hint={NO_SCORE_HINT} />
             <Count label="Cast Exits" value={exits} />
           </dl>
         }
       />
       {scored > 0 ? (
-        <section className="mb-12 rounded-[var(--radius-ui)] border border-line bg-surface p-4 sm:p-6">
+        <section className="mb-16 border-y border-line py-6" aria-label="Fragility of Every Scored Franchise">
           <FragilityStrip rows={universe} />
         </section>
       ) : null}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <Suspense>
           <ScreenerFilters />
         </Suspense>
         <div className="flex items-center gap-4">
-          <span className="num text-sm text-faint">{formatCount(page.total)} Results</span>
+          <span className="num text-sm text-muted">{formatCount(page.total)} Franchises</span>
           <a
             href={exportHref(params)}
             download
@@ -68,9 +63,7 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
         </div>
       </div>
       {page.rows.length === 0 ? (
-        <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" />
-        </div>
+        <EmptyState title="No Matches" />
       ) : (
         <ScreenerTable rows={page.rows} query={query} params={params} />
       )}
@@ -88,11 +81,11 @@ export default async function ScreenerPage({ searchParams }: { searchParams: Pro
 
 function Count({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
-    <div className="flex flex-col items-end gap-1">
-      <dt className="text-xs uppercase tracking-wide text-faint" title={hint}>
+    <div className="flex items-baseline gap-2">
+      <dd className="num text-lg leading-none text-ink">{formatCount(value)}</dd>
+      <dt className="text-sm text-muted" title={hint}>
         {label}
       </dt>
-      <dd className="num text-lg text-ink">{formatCount(value)}</dd>
     </div>
   );
 }

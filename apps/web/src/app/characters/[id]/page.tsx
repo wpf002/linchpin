@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { clsx } from "clsx";
 import Link from "next/link";
 import { EVENT_WINDOWS } from "@linchpin/shared";
 import { AttentionChart } from "@/components/attention-chart";
@@ -42,7 +41,7 @@ export default async function CharacterPage({ params }: Props) {
         }
         title={character.canonicalName}
         aside={
-          <div className="flex flex-col items-end gap-1 text-sm text-muted">
+          <div className="flex flex-col gap-1 text-sm text-muted sm:items-end">
             <span>{character.portrayedBy ?? "Uncredited"}</span>
             <span className="text-xs text-faint">
               {label(character.status)} · Rank {character.rankInFranchise}
@@ -51,24 +50,27 @@ export default async function CharacterPage({ params }: Props) {
           </div>
         }
       />
-      <dl
-        className={clsx(
-          "mb-12 grid grid-cols-2 gap-6 border-y border-line py-6 sm:grid-cols-3",
-          character.substitutability === null ? "lg:grid-cols-4" : "lg:grid-cols-5",
-        )}
-      >
+      <dl className="mb-16 grid grid-cols-2 items-start gap-8 border-y border-line py-8 sm:grid-cols-3 lg:grid-flow-col lg:items-end lg:auto-cols-fr lg:grid-cols-none">
         <Stat
           label="Attention Share"
           value={formatPercent(character.carryScore)}
           detail={`Confidence ${formatPercent(character.confidence, 0)}`}
           hint="Share of the franchise's attention."
         />
-        <Stat label="Between Releases" value={formatPercent(character.offCycleCarry)} hint={`Share on days at least ${EVENT_WINDOWS.offCycleGapDays} days from a release.`} />
-        <Stat
-          label="Durability"
-          value={formatNumber(character.durabilityRatio, 2)}
-          hint="Share between releases divided by share around releases. Above 1 means interest holds."
-        />
+        {character.offCycleCarry === null ? null : (
+          <Stat
+            label="Between Releases"
+            value={formatPercent(character.offCycleCarry)}
+            hint={`Share on days at least ${EVENT_WINDOWS.offCycleGapDays} days from a release.`}
+          />
+        )}
+        {character.durabilityRatio === null ? null : (
+          <Stat
+            label="Durability"
+            value={formatNumber(character.durabilityRatio, 2)}
+            hint="Share between releases divided by share around releases. Above 1 means interest holds."
+          />
+        )}
         {character.substitutability === null ? null : (
           <Stat
             label="Absorbed After Exit"
@@ -76,15 +78,21 @@ export default async function CharacterPage({ params }: Props) {
             hint="How much of this character's attention the rest of the cast picked up after they left."
           />
         )}
-        <Stat label="Last Seen" value={formatDate(character.lastSeenAt)} detail={`First Seen ${formatDate(character.firstSeenAt)}`} />
+        {character.lastSeenAt === null ? null : (
+          <Stat
+            label="Last Seen"
+            value={formatDate(character.lastSeenAt)}
+            detail={character.firstSeenAt === null ? undefined : `First Seen ${formatDate(character.firstSeenAt)}`}
+          />
+        )}
       </dl>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-16">
         <Panel
           title="Attention"
           action={
-            <span className="flex items-center gap-2 text-xs text-faint">
-              <span className="inline-block size-2.5 rounded-sm" style={{ background: "var(--chart-off-cycle)", outline: "1px solid var(--border)" }} />
+            <span className="flex items-center gap-2 text-sm text-muted">
+              <span className="inline-block size-2.5" style={{ background: "var(--chart-off-cycle)", outline: "1px solid var(--border)" }} />
               Between Releases · {offCycleDays} Days
             </span>
           }
@@ -98,7 +106,7 @@ export default async function CharacterPage({ params }: Props) {
         <Panel
           title="Sources"
           action={
-            <Link href={`/characters/${character.id}/signals`} className="text-xs text-accent hover:text-accent-strong">
+            <Link href={`/characters/${character.id}/signals`} className="text-sm text-accent hover:text-accent-strong">
               Raw Data
             </Link>
           }

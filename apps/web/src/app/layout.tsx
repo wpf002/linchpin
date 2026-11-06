@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body>
         <AppHeader />
-        <main className="mx-auto w-full max-w-[1440px] px-4 pb-24 sm:px-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1280px] px-4 pb-24 sm:px-8">{children}</main>
       </body>
     </html>
   );

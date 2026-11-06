@@ -30,7 +30,7 @@ function Completed({ count }: { count: number }) {
 function Residual({ score }: { score: CreatorRow["score"] }) {
   if (!score) {
     return (
-      <span className="text-xs uppercase tracking-wide text-faint">Needs {REQUIRED_PROJECTS} Projects</span>
+      <span className="text-sm text-faint">Needs {REQUIRED_PROJECTS} Projects</span>
     );
   }
   return (
@@ -54,8 +54,8 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
       <PageTitle
         title="Creators"
         aside={
-          <div className="flex flex-wrap items-end gap-8">
-            <dl className="flex gap-8 text-sm">
+          <div className="flex w-full flex-wrap items-center gap-x-8 gap-y-4 sm:w-auto">
+            <dl className="flex items-baseline gap-8">
               <Count label="People" value={page.total} />
               <Count
                 label="Scored"
@@ -68,13 +68,11 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
         }
       />
       {page.rows.length === 0 ? (
-        <div className="rounded-[var(--radius-ui)] border border-line bg-surface">
-          <EmptyState title="No Matches" />
-        </div>
+        <EmptyState title="No Matches" />
       ) : (
-        <div className="overflow-x-auto rounded-[var(--radius-ui)] border border-line bg-surface">
-          <table className="w-full min-w-[720px] border-collapse text-sm">
-            <thead className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px] border-collapse">
+            <thead className="border-b border-ink text-left text-sm text-muted">
               <tr>
                 <th scope="col" className="px-3 py-3 font-medium">
                   Person
@@ -105,7 +103,7 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
                 <tr key={row.personId} className="border-b border-line last:border-b-0 hover:bg-hover">
                   <td className="px-3 py-3">
                     <span className="flex flex-col gap-1">
-                      <span className="font-medium text-ink">{row.name}</span>
+                      <span className="font-display text-lg leading-tight text-ink">{row.name}</span>
                       <span className="text-xs text-faint">{row.roles.map((role) => label(role)).join(" · ")}</span>
                     </span>
                   </td>
@@ -150,11 +148,11 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Pro
 
 function Count({ label: name, value, hint }: { label: string; value: number; hint?: string }) {
   return (
-    <div className="flex flex-col items-end gap-1">
-      <dt className="text-xs uppercase tracking-wide text-faint" title={hint}>
+    <div className="flex items-baseline gap-2">
+      <dd className="num text-lg leading-none text-ink">{formatCount(value)}</dd>
+      <dt className="text-sm text-muted" title={hint}>
         {name}
       </dt>
-      <dd className="num text-lg text-ink">{formatCount(value)}</dd>
     </div>
   );
 }

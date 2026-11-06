@@ -159,7 +159,7 @@ export function FragilityStrip({ rows }: { rows: FranchiseRow[] }) {
             textAnchor={label.anchor}
             fontSize={12}
             fill={active ? "var(--text)" : "var(--text-muted)"}
-            stroke="var(--surface)"
+            stroke="var(--bg)"
             strokeWidth={4}
             paintOrder="stroke"
             pointerEvents="none"

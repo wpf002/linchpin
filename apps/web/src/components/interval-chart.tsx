@@ -45,8 +45,8 @@ export function IntervalChart({ rows, threshold }: { rows: IntervalRow[]; thresh
           </g>
         ))}
         <line x1={x(0)} x2={x(0)} y1={TOP} y2={axisY} stroke="var(--border-strong)" />
-        <line x1={x(threshold)} x2={x(threshold)} y1={TOP} y2={axisY} stroke="var(--accent)" strokeDasharray="4 3" />
-        <text x={x(threshold) + 6} y={12} fontSize={12} fill="var(--accent)" className="num">
+        <line x1={x(threshold)} x2={x(threshold)} y1={TOP} y2={axisY} stroke="var(--text-muted)" strokeDasharray="4 3" />
+        <text x={x(threshold) + 6} y={12} fontSize={12} fill="var(--text-muted)" className="num">
           Needs {formatNumber(threshold, 2)}
         </text>
         {rows.map((row, index) => {

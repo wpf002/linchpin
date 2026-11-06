@@ -74,14 +74,14 @@ export function EventScatter({ rows }: { rows: EventStudyRow[] }) {
         </text>
         {points.map((row) => {
           const offScale = Math.abs(row.didEstimate) > extent;
-          const fill = row.announced ? "none" : "var(--accent)";
+          const fill = row.announced ? "none" : "var(--chart-line)";
           return (
             <a key={row.exitEventId} href={`/franchises/${row.franchiseId}`} aria-label={describe(row)}>
               {offScale ? (
                 <polygon
                   points={triangle(x(row.preCarryScore), y(Math.sign(row.didEstimate) * extent), row.didEstimate > 0)}
                   fill={fill}
-                  stroke="var(--accent)"
+                  stroke="var(--chart-line)"
                   strokeWidth={1.5}
                 >
                   <title>{`${describe(row)} · Off Scale`}</title>
@@ -92,7 +92,7 @@ export function EventScatter({ rows }: { rows: EventStudyRow[] }) {
                   cy={y(row.didEstimate)}
                   r={POINT_RADIUS}
                   fill={fill}
-                  stroke="var(--accent)"
+                  stroke="var(--chart-line)"
                   strokeWidth={1.5}
                   opacity={0.85}
                 >
