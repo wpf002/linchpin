@@ -2,7 +2,7 @@
 
 Character-level attention concentration and franchise fragility scoring, built only on public signals. It answers one question: what happens to this franchise if the lead leaves?
 
-**Status:** Phase 2 gate is **FAIL**. See [docs/PHASE2_RESULT.md](docs/PHASE2_RESULT.md). Scores in the UI are exploratory until the gate passes.
+**Status:** Phase 2 gate is **FAIL** under `v0.1.0` and under the `v0.2.0` re-run. See [docs/PHASE2_RESULT.md](docs/PHASE2_RESULT.md) and [docs/PHASE3_RESULT.md](docs/PHASE3_RESULT.md). Scores in the UI are exploratory until the gate passes.
 
 ## Layout
 
@@ -36,11 +36,15 @@ Set `WIKIMEDIA_USER_AGENT` to a real contact address before ingesting. Wikimedia
 Run from `services/scoring`:
 
 ```bash
-.venv/bin/python cli.py ingest      # rosters, releases, pageviews, exit events
-.venv/bin/python cli.py score       # carry scores and fragility, keyed by MODEL_VERSION
-.venv/bin/python cli.py validate    # event study and kill criteria
-.venv/bin/python cli.py stage-exits # date and source data/corpus/exit_candidates.json; --write appends them unverified
+.venv/bin/python cli.py ingest        # rosters, releases, pageviews, exit events
+.venv/bin/python cli.py ingest-search # Google Trends interest for each exit event's pre-window
+.venv/bin/python cli.py score         # carry, fragility, substitutability and creator scores, keyed by MODEL_VERSION
+.venv/bin/python cli.py validate      # event study, strata, blend test and kill criteria
+.venv/bin/python cli.py language-test # English-only vs summed Wikipedia editions; writes docs/results/language_test.json
+.venv/bin/python cli.py stage-exits   # date and source data/corpus/exit_candidates.json; --write appends them unverified
 ```
+
+`ingest-search` stops at the first window Google Trends refuses. Fetched batches are cached, so the next run resumes there.
 
 Ingest is cached under `data/cache`. A cold run takes roughly an hour because every source is throttled. Raw signal rows are append-only; scoring never rewrites them.
 
@@ -52,6 +56,12 @@ API_URL=http://localhost:4000 pnpm --filter @linchpin/web dev
 ```
 
 Web runs on port 3000. Pass `--port` to `next dev` if it's taken.
+
+## Vantage Dataset
+
+`GET /vantage/sector` returns the scored universe as one read-only document: sector `entertainment_franchises`, the model version, the Phase 2 gate, and franchise, character and creator rows. Concentration figures below the roster floor are null, the same as in the UI. The response shape is `vantageSectorSchema` in `packages/shared/src/contracts.ts`.
+
+Vantage's `Sector` enum has no entertainment value. Consuming this needs an adapter on the Vantage side that maps each franchise to a `Company` row. Nothing in the Vantage repo was changed.
 
 ## Checks
 

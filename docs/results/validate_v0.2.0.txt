@@ -1,0 +1,16 @@
+gate=FAIL
+events=140 verified=70 studied=41
+carry   rankIC=-0.450 [-0.751, 0.011] n=22
+billing rankIC=-0.370 [-0.684, 0.049] n=22
+median rosterComplete=0.750
+  stratum UNANNOUNCED: events=22 meanDiD=-0.363 rankIC=-0.450 [-0.751, 0.011] n=22
+  stratum ANNOUNCED: events=7 meanDiD=-0.054 rankIC=n/a (only 7 usable event pairs)
+  stratum ACTOR_DEPARTURE: events=6 meanDiD=-0.211 rankIC=n/a (only 6 usable event pairs)
+  stratum CHARACTER_DEATH: events=16 meanDiD=-0.420 rankIC=-0.422 [-0.729, 0.061] n=16
+  ANNOUNCED vs UNANNOUNCED: z=2.23 diverges=True
+blend verdict=INCONCLUSIVE wikiWeight=None train=5 heldOut=7 (training split has 5 events with both signals; needs 12)
+  FAIL minExitEvents: verified exit events 70 < 200
+  FAIL minRankIC: rank IC -0.450 < 0.15
+  FAIL rankICInterval: rank IC lower bound -0.751 does not exclude zero
+  FAIL beatsBaseline: rank IC -0.450 does not beat the billing-order baseline -0.370
+skipped: 70 events with too few treated-franchise observations, 29 with fewer than two comparable controls
