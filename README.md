@@ -4,6 +4,8 @@ Character-level attention concentration and franchise fragility scoring, built o
 
 **Status:** Phase 2 gate is **FAIL** under `v0.1.0` and under the `v0.2.0` re-run. See [docs/PHASE2_RESULT.md](docs/PHASE2_RESULT.md) and [docs/PHASE3_RESULT.md](docs/PHASE3_RESULT.md). Scores in the UI are exploratory until the gate passes.
 
+`MODEL_VERSION` is `v0.3.0`. It adds redirect-title counting for characters without their own Wikipedia article ([docs/SOURCES.md](docs/SOURCES.md)). `validate` hasn't run under `v0.3.0`. It needs 200 verified cast exits first, and 70 are verified.
+
 ## Layout
 
 | Path | What |
@@ -64,7 +66,7 @@ Web runs on port 3000. Pass `--port` to `next dev` if it's taken.
 
 | Route | Returns |
 | --- | --- |
-| `GET /franchises` | Screener rows. Filter by medium and status; sort by fragility, HHI, top-1 share, roster size or name; cursor paging |
+| `GET /franchises` | Screener rows. Filter by medium and status; sort by fragility, HHI, lead share, roster size or name; cursor paging |
 | `GET /franchises/:id` | Franchise detail, roster, releases, exit events |
 | `GET /franchises/:id/simulate/:characterId` | Concentration figures with one character removed |
 | `GET /characters` | Characters across all scored franchises, sorted by carry, off-cycle carry or durability |

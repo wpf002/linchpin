@@ -36,9 +36,31 @@ Run with `--write` on 2026-11-06:
 
 The deleted rows measured a different article (an actor, a real person, a disambiguation page). They were attributed to the wrong character, so they were removed and the affected franchises re-ingested. This is the only case where signal rows are deleted. `rawValue` on a kept row is never rewritten.
 
-The rules can't confirm these links, so the characters have no article and no signal: Krusty the Klown ("Krusty the Clown"), Slade Wilson ("Deathstroke"), Quentin Lance ("Larry Lance"), Ivy Pepper ("Poison Ivy"), Winn Schott ("Toyman"), M.J. Delfino. An alias table would recover them.
+At the time of the audit the rules couldn't confirm these links, so the characters had no article and no signal: Krusty the Klown ("Krusty the Clown"), Slade Wilson ("Deathstroke"), Quentin Lance ("Larry Lance"), Ivy Pepper ("Poison Ivy"), Winn Schott ("Toyman"), M.J. Delfino.
 
 The v0.1.0 and v0.2.0 validation results were registered before this audit.
+
+## Redirect titles (v0.3.0)
+
+Many characters have no article of their own. Their name is a Wikipedia redirect. From `v0.3.0` the resolver in `services/scoring/ingest/resolve.py` handles two redirect cases:
+
+| Case | Title stored | Confidence |
+| --- | --- | --- |
+| The name redirects into the franchise article or its character list | The redirect title itself | 0.5 |
+| The name redirects to a differently named character article that mentions the franchise | The redirect target | 0.9 |
+
+Page views for a redirect title count only the readers who arrived through that redirect. Readers who opened the franchise article directly aren't counted. A character resolved this way is under-counted against cast members who have their own article, which is why the confidence is 0.5.
+
+Dry run on four franchises, resolved of roster:
+
+| Franchise | v0.2.0 | v0.3.0 |
+| --- | --- | --- |
+| Succession | 3 of 20 | 12 of 20 |
+| The Simpsons | 15 of 18 | 18 of 18 |
+| Arrow | 10 of 19 | 12 of 19 |
+| Killing Eve | 2 of 20 | 8 of 20 |
+
+No previously resolved character lost its link. The full re-ingest and re-score under `v0.3.0` hasn't run yet, so scores in the database are still `v0.2.0`.
 
 ## Cache
 
