@@ -4,6 +4,7 @@ import {
   ROSTER_COMPLETE_DISPLAY_FLOOR,
   SIGNAL_SOURCE_BY_SHARE,
   SIGNAL_WEIGHTS,
+  castFaceSchema,
   hhi as computeHhi,
   simulateRemoval,
   topNShare,
@@ -22,8 +23,9 @@ import type {
 } from "@linchpin/shared";
 import { z } from "zod";
 import { toIsoDate, toIsoDateTime } from "./dates.js";
-import { applyDisplayFloor } from "./display.js";
+import { applyDisplayFloor, withholdCastShares } from "./display.js";
 import { NotFoundError } from "./errors.js";
+import { CHARACTER_IMAGE } from "./images.js";
 import { parseBlend, parseStrata } from "./validation-run.js";
 
 /** Signal history returned with a character. A year of daily points. */
@@ -31,6 +33,11 @@ const SERIES_DAYS = 365;
 
 /** How many absorbers an exit simulation names. Beyond this the deltas are noise. */
 const MAX_ABSORBERS = 5;
+
+/** Cast faces returned with each franchise row. */
+const TOP_CAST_SIZE = 6;
+
+const topCastSchema = z.array(castFaceSchema);
 
 type SortKey = ScreenerQuery["sort"];
 
@@ -54,6 +61,7 @@ const SORT_COLUMNS: Record<SortKey, Prisma.Sql> = {
 interface ScreenerRecord {
   id: string;
   canonicalName: string;
+  imageUrl: string | null;
   medium: FranchiseRow["medium"];
   status: FranchiseRow["status"];
   firstRelease: Date | null;
@@ -67,6 +75,7 @@ interface ScreenerRecord {
   exit_event_count: bigint;
   top_character_id: string | null;
   top_character_name: string | null;
+  top_cast: unknown;
 }
 
 export async function listFranchises(
@@ -85,6 +94,7 @@ export async function listFranchises(
   const records = await prisma.$queryRaw<ScreenerRecord[]>`
     SELECT f.id,
            f."canonicalName",
+           f."imageUrl",
            f.medium::text   AS "medium",
            f.status::text    AS "status",
            f."firstRelease",
@@ -97,7 +107,8 @@ export async function listFranchises(
            fs."scoredOn",
            COALESCE(exits.exit_event_count, 0) AS exit_event_count,
            top.character_id  AS top_character_id,
-           top.character_name AS top_character_name
+           top.character_name AS top_character_name,
+           COALESCE(faces.members, '[]'::json) AS top_cast
     FROM "Franchise" f
     LEFT JOIN LATERAL (
       SELECT COUNT(*) AS roster_size FROM "Character" c WHERE c."franchiseId" = f.id
@@ -120,6 +131,44 @@ export async function listFranchises(
       ORDER BY cs."carryScore" DESC
       LIMIT 1
     ) top ON TRUE
+    LEFT JOIN LATERAL (
+      SELECT json_agg(
+               json_build_object(
+                 'id', member.id,
+                 'canonicalName', member.canonical_name,
+                 'imageUrl', member.image_url,
+                 'share', member.share
+               )
+               ORDER BY member.position
+             ) AS members
+      FROM (
+        SELECT c.id,
+               c."canonicalName" AS canonical_name,
+               ${CHARACTER_IMAGE} AS image_url,
+               latest."carryScore" AS share,
+               ROW_NUMBER() OVER (
+                 ORDER BY ${gated(Prisma.sql`latest."carryScore"`)} DESC NULLS LAST,
+                          billing.billing_order ASC NULLS LAST,
+                          c."canonicalName" ASC
+               ) AS position
+        FROM "Character" c
+        LEFT JOIN LATERAL (
+          SELECT s."carryScore"
+          FROM "CarryScore" s
+          WHERE s."characterId" = c.id AND s."modelVersion" = ${MODEL_VERSION} AND s.confidence > 0
+          ORDER BY s."windowEnd" DESC
+          LIMIT 1
+        ) latest ON TRUE
+        LEFT JOIN LATERAL (
+          SELECT MIN(pl."billingOrder") AS billing_order
+          FROM "PersonLink" pl
+          WHERE pl."characterId" = c.id
+        ) billing ON TRUE
+        WHERE c."franchiseId" = f.id
+        ORDER BY position
+        LIMIT ${TOP_CAST_SIZE}
+      ) member
+    ) faces ON TRUE
     WHERE ${where}
     ORDER BY ${SORT_COLUMNS[query.sort]} ${direction} NULLS LAST, f."canonicalName" ASC
     LIMIT ${query.limit + 1} OFFSET ${query.cursor}
@@ -147,6 +196,7 @@ function toFranchiseRow(record: ScreenerRecord): FranchiseRow {
   return {
     id: record.id,
     canonicalName: record.canonicalName,
+    imageUrl: record.imageUrl,
     medium: record.medium,
     status: record.status,
     firstRelease: toIsoDate(record.firstRelease),
@@ -157,6 +207,7 @@ function toFranchiseRow(record: ScreenerRecord): FranchiseRow {
       record.top_character_id && record.top_character_name
         ? { id: record.top_character_id, canonicalName: record.top_character_name }
         : null,
+    topCast: withholdCastShares(record.rosterComplete, topCastSchema.parse(record.top_cast)),
     exitEventCount: Number(record.exit_event_count),
     scoredOn: toIsoDate(record.scoredOn),
     modelVersion: MODEL_VERSION,
@@ -171,8 +222,8 @@ export async function getFranchise(id: string): Promise<FranchiseDetail> {
       exitEvents: {
         orderBy: { eventDate: "desc" },
         include: {
-          character: { select: { canonicalName: true } },
-          person: { select: { canonicalName: true } },
+          character: { select: { id: true, canonicalName: true, imageUrl: true } },
+          person: { select: { canonicalName: true, imageUrl: true } },
           studyResults: { where: { modelVersion: MODEL_VERSION }, take: 1 },
         },
       },
@@ -209,8 +260,10 @@ export async function getFranchise(id: string): Promise<FranchiseDetail> {
         exitType: event.exitType,
         eventDate: toIsoDate(event.eventDate) ?? "",
         announcedDate: toIsoDate(event.announcedDate),
+        characterId: event.character?.id ?? null,
         characterName: event.character?.canonicalName ?? null,
         personName: event.person?.canonicalName ?? null,
+        imageUrl: event.character?.imageUrl ?? event.person?.imageUrl ?? null,
         verified: event.verified,
         sourceUrl: event.sourceUrl,
         didEstimate: study?.didEstimate ?? null,
@@ -230,7 +283,7 @@ export async function listCharacters(franchiseId: string): Promise<CharacterRow[
         take: 1,
       },
       portrayedBy: {
-        include: { person: { select: { canonicalName: true } } },
+        include: { person: { select: { canonicalName: true, imageUrl: true } } },
         orderBy: { billingOrder: "asc" },
         take: 1,
       },
@@ -244,6 +297,7 @@ export async function listCharacters(franchiseId: string): Promise<CharacterRow[
       return {
         id: character.id,
         canonicalName: character.canonicalName,
+        imageUrl: character.imageUrl ?? link?.person.imageUrl ?? null,
         status: character.status,
         portrayedBy: link?.person.canonicalName ?? null,
         billingOrder: link?.billingOrder ?? null,
@@ -268,7 +322,7 @@ export async function getCharacter(id: string): Promise<CharacterDetail> {
   const character = await prisma.character.findUnique({
     where: { id },
     include: {
-      franchise: { select: { id: true, canonicalName: true } },
+      franchise: { select: { id: true, canonicalName: true, imageUrl: true } },
       carryScores: {
         where: { modelVersion: MODEL_VERSION },
         orderBy: { windowEnd: "desc" },

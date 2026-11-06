@@ -1,4 +1,5 @@
 import { ROSTER_COMPLETE_DISPLAY_FLOOR } from "@linchpin/shared";
+import type { CastFace } from "@linchpin/shared";
 
 export interface ConcentrationFigures {
   fragility: number | null;
@@ -17,4 +18,13 @@ export function applyDisplayFloor(
 ): ConcentrationFigures {
   if (rosterComplete >= ROSTER_COMPLETE_DISPLAY_FLOOR) return figures;
   return { fragility: null, hhi: null, top1Share: null, top3Share: null };
+}
+
+/**
+ * Faces are roster facts and always shown. Their shares are concentration
+ * figures, so below the floor each share is withheld.
+ */
+export function withholdCastShares(rosterComplete: number, cast: CastFace[]): CastFace[] {
+  if (rosterComplete >= ROSTER_COMPLETE_DISPLAY_FLOOR) return cast;
+  return cast.map((member) => ({ ...member, share: null }));
 }

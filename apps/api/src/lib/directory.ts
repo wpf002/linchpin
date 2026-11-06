@@ -1,5 +1,6 @@
 import { prisma, Prisma } from "@linchpin/db";
 import { KILL_CRITERIA, MODEL_VERSION, ROSTER_COMPLETE_DISPLAY_FLOOR } from "@linchpin/shared";
+import { CHARACTER_IMAGE } from "./images.js";
 import type {
   CreatorRow,
   CreatorsQuery,
@@ -35,14 +36,18 @@ export async function search(query: SearchQuery): Promise<SearchResponse> {
   const prefix = likePattern(query.q, "prefix");
   const [franchises, characters] = await Promise.all([
     prisma.$queryRaw<SearchResponse["franchises"]>`
-      SELECT f.id, f."canonicalName", f.medium::text AS "medium"
+      SELECT f.id, f."canonicalName", f.medium::text AS "medium", f."imageUrl"
       FROM "Franchise" f
       WHERE f."canonicalName" ILIKE ${contains}
       ORDER BY (f."canonicalName" ILIKE ${prefix}) DESC, f."canonicalName" ASC
       LIMIT ${SEARCH_LIMIT}
     `,
     prisma.$queryRaw<SearchResponse["characters"]>`
-      SELECT c.id, c."canonicalName", f.id AS "franchiseId", f."canonicalName" AS "franchiseName"
+      SELECT c.id,
+             c."canonicalName",
+             f.id AS "franchiseId",
+             f."canonicalName" AS "franchiseName",
+             ${CHARACTER_IMAGE} AS "imageUrl"
       FROM "Character" c
       JOIN "Franchise" f ON f.id = c."franchiseId"
       WHERE c."canonicalName" ILIKE ${contains}
@@ -63,8 +68,10 @@ interface LeaderRecord {
   id: string;
   canonicalName: string;
   status: LeaderRow["status"];
+  image_url: string | null;
   franchise_id: string;
   franchise_name: string;
+  franchise_image_url: string | null;
   rosterComplete: number;
   carryScore: number;
   confidence: number;
@@ -107,8 +114,10 @@ export async function listLeaders(query: LeadersQuery): Promise<LeadersResponse>
       SELECT c.id,
              c."canonicalName",
              c.status::text AS "status",
+             ${CHARACTER_IMAGE} AS image_url,
              f.id AS franchise_id,
              f."canonicalName" AS franchise_name,
+             f."imageUrl" AS franchise_image_url,
              f."rosterComplete",
              cs."carryScore",
              cs.confidence,
@@ -135,7 +144,12 @@ export async function listLeaders(query: LeadersQuery): Promise<LeadersResponse>
       canonicalName: record.canonicalName,
       status: record.status,
       portrayedBy: record.portrayed_by,
-      franchise: { id: record.franchise_id, canonicalName: record.franchise_name },
+      imageUrl: record.image_url,
+      franchise: {
+        id: record.franchise_id,
+        canonicalName: record.franchise_name,
+        imageUrl: record.franchise_image_url,
+      },
       rosterComplete: record.rosterComplete,
       carryScore: record.carryScore,
       confidence: record.confidence,
@@ -150,6 +164,7 @@ export async function listLeaders(query: LeadersQuery): Promise<LeadersResponse>
 interface CreatorRecord {
   id: string;
   canonicalName: string;
+  imageUrl: string | null;
   roles: CreatorRow["roles"];
   franchise_count: bigint;
   completed_count: bigint;
@@ -172,7 +187,10 @@ async function franchisePreviews(personIds: string[]): Promise<Map<string, Creat
   const links = await prisma.personLink.findMany({
     where: { personId: { in: personIds } },
     distinct: ["personId", "franchiseId"],
-    select: { personId: true, franchise: { select: { id: true, canonicalName: true } } },
+    select: {
+      personId: true,
+      franchise: { select: { id: true, canonicalName: true, imageUrl: true } },
+    },
     orderBy: { franchise: { canonicalName: "asc" } },
   });
   const byPerson = new Map<string, CreatorRow["franchises"]>();
@@ -207,6 +225,7 @@ export async function listCreators(query: CreatorsQuery): Promise<CreatorsRespon
       )
       SELECT p.id,
              p."canonicalName",
+             p."imageUrl",
              credits.roles,
              credits.franchise_count,
              credits.completed_count,
@@ -244,6 +263,7 @@ export async function listCreators(query: CreatorsQuery): Promise<CreatorsRespon
     rows: page.map((record) => ({
       personId: record.id,
       name: record.canonicalName,
+      imageUrl: record.imageUrl,
       roles: record.roles,
       franchiseCount: Number(record.franchise_count),
       completedCount: Number(record.completed_count),

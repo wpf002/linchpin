@@ -69,6 +69,8 @@ model Franchise {
   aliases        String[]
   tmdbId         Int?
   wikiTitle      String?
+  // Poster from the roster catalogue. Null for franchises the catalogue doesn't cover.
+  imageUrl       String?
   fandomWiki     String?
   primarySubs    String[]
   // Added beyond ROADMAP section 7: the control-set matcher matches on genre,
@@ -112,6 +114,7 @@ model Character {
   canonicalName String
   aliases       String[]
   wikiTitle     String?
+  imageUrl      String?
   fandomPage    String?
   ao3Tag        String?
   tmdbCharId    Int?
@@ -132,6 +135,7 @@ model Person {
   canonicalName String
   aliases       String[]
   tmdbPersonId  Int?
+  imageUrl      String?
   roleTypes     RoleType[]
   links         PersonLink[]
   exitEvents    ExitEvent[]

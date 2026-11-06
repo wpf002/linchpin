@@ -6,6 +6,8 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from datetime import date, datetime
+from typing import Any
+from urllib.parse import urlsplit
 
 from ingest.http import ThrottledClient
 
@@ -16,6 +18,8 @@ MIN_INTERVAL_SECONDS = 0.55  # TVMaze allows ~20 calls / 10s; stay well under.
 # Long-running shows list hundreds of credited actors. Past the main cast the
 # entries are guests, and including them makes the HHI denominator meaningless.
 MAIN_CAST_CAP = 20
+#: The only host image URLs are accepted from. The web app renders them as-is.
+IMAGE_HOST = "static.tvmaze.com"
 
 
 @dataclass(frozen=True, slots=True)
@@ -26,6 +30,7 @@ class TvMazeShow:
     ended: date | None
     status: str
     genres: list[str]
+    image_url: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,6 +47,23 @@ class TvMazeCastEntry:
     character_name: str
     billing_order: int
     is_main: bool
+    character_image_url: str | None = None
+    person_image_url: str | None = None
+
+
+def image_url_of(node: dict[str, Any]) -> str | None:
+    """The medium image of a show, character or person, if it is an https TVMaze URL."""
+    image = node.get("image")
+    if not isinstance(image, dict):
+        return None
+    url = image.get("medium")
+    if not isinstance(url, str):
+        return None
+    parts = urlsplit(url)
+    if parts.scheme != "https" or parts.hostname != IMAGE_HOST:
+        logger.warning("ignoring image URL outside %s: %r", IMAGE_HOST, url)
+        return None
+    return url
 
 
 def open_client() -> ThrottledClient:
@@ -70,6 +92,7 @@ def search_show(name: str, *, client: ThrottledClient | None = None) -> TvMazeSh
             ended=_parse_date(payload.get("ended")),
             status=str(payload.get("status", "Unknown")),
             genres=[str(genre) for genre in payload.get("genres", [])],
+            image_url=image_url_of(payload),
         )
     finally:
         if owned:
@@ -97,6 +120,8 @@ def fetch_cast(show_id: int, *, client: ThrottledClient | None = None) -> list[T
                     character_name=str(character_name),
                     billing_order=order + 1,
                     is_main=order < MAIN_CAST_CAP,
+                    character_image_url=image_url_of(character),
+                    person_image_url=image_url_of(person),
                 )
             )
         return entries

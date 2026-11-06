@@ -32,10 +32,13 @@ def ingest(
     verbose: bool = typer.Option(False, "--verbose", "-v"),
 ) -> None:
     """Pull rosters, release calendars and attention signals into the database."""
+    from ingest.images import run_image_pass
     from ingest.pipeline import run_ingest
 
     _configure_logging(verbose)
-    report = run_ingest(only=list(only) if only else None, skip_signals=skip_signals)
+    names = list(only) if only else None
+    report = run_ingest(only=names, skip_signals=skip_signals)
+    run_image_pass(only=names)
     resolved = sum(f.resolved for f in report.franchises)
     roster = sum(f.roster_size for f in report.franchises)
     typer.echo(
@@ -154,6 +157,21 @@ def stage_exits(
     typer.echo(f"staged={len(staged)} rejected={len(rejected)}")
     if write:
         typer.echo(f"appended={append_staged(staged)} (verified=false)")
+
+
+@app.command("ingest-images")
+def ingest_images(
+    only: list[str] = typer.Option(None, "--only", help="Franchise names to limit the pass to."),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),
+) -> None:
+    """Store poster and portrait URLs from the roster catalogue."""
+    from ingest.images import run_image_pass
+
+    _configure_logging(verbose)
+    report = run_image_pass(only=only or None)
+    typer.echo(
+        f"franchises={report.franchises} characters={report.characters} people={report.people}"
+    )
 
 
 @app.command("audit-titles")

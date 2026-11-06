@@ -33,9 +33,24 @@ export const signalBreakdownSchema = z.object({
   discourseShare: share.nullable(),
 });
 
+/** Poster or portrait from the roster catalogue. Null when the catalogue has none. */
+const imageUrl = z.string().url().nullable();
+
+/** A cast member as drawn on a franchise tile. */
+export const castFaceSchema = z.object({
+  id: z.string(),
+  canonicalName: z.string(),
+  imageUrl,
+  /** Null when the franchise is below the roster coverage floor. Suppressed, not greyed. */
+  share: share.nullable(),
+});
+export type CastFace = z.infer<typeof castFaceSchema>;
+
 export const characterRowSchema = z.object({
   id: z.string(),
   canonicalName: z.string(),
+  /** The character's image, or the actor's when the character has none. */
+  imageUrl,
   status: characterStatusSchema,
   portrayedBy: z.string().nullable(),
   billingOrder: z.number().int().nullable(),
@@ -54,6 +69,7 @@ export type CharacterRow = z.infer<typeof characterRowSchema>;
 export const franchiseRowSchema = z.object({
   id: z.string(),
   canonicalName: z.string(),
+  imageUrl,
   medium: mediumSchema,
   status: franchiseStatusSchema,
   firstRelease: z.string().nullable(),
@@ -65,6 +81,8 @@ export const franchiseRowSchema = z.object({
   top1Share: share.nullable(),
   top3Share: share.nullable(),
   topCharacter: z.object({ id: z.string(), canonicalName: z.string() }).nullable(),
+  /** Largest shares first above the coverage floor, billing order below it. */
+  topCast: z.array(castFaceSchema),
   exitEventCount: z.number().int(),
   scoredOn: z.string().nullable(),
   modelVersion: z.string(),
@@ -90,8 +108,10 @@ export const franchiseDetailSchema = franchiseRowSchema.extend({
       exitType: exitTypeSchema,
       eventDate: z.string(),
       announcedDate: z.string().nullable(),
+      characterId: z.string().nullable(),
       characterName: z.string().nullable(),
       personName: z.string().nullable(),
+      imageUrl,
       verified: z.boolean(),
       sourceUrl: z.string(),
       didEstimate: z.number().nullable(),
@@ -108,7 +128,7 @@ export const signalPointSchema = z.object({
 });
 
 export const characterDetailSchema = characterRowSchema.extend({
-  franchise: z.object({ id: z.string(), canonicalName: z.string() }),
+  franchise: z.object({ id: z.string(), canonicalName: z.string(), imageUrl }),
   aliases: z.array(z.string()),
   wikiTitle: z.string().nullable(),
   firstSeenAt: z.string().nullable(),
@@ -355,7 +375,7 @@ export type SearchQuery = z.infer<typeof searchQuerySchema>;
 
 export const searchResponseSchema = z.object({
   franchises: z.array(
-    z.object({ id: z.string(), canonicalName: z.string(), medium: mediumSchema }),
+    z.object({ id: z.string(), canonicalName: z.string(), medium: mediumSchema, imageUrl }),
   ),
   characters: z.array(
     z.object({
@@ -363,6 +383,7 @@ export const searchResponseSchema = z.object({
       canonicalName: z.string(),
       franchiseId: z.string(),
       franchiseName: z.string(),
+      imageUrl,
     }),
   ),
 });
@@ -378,7 +399,8 @@ export const leaderRowSchema = z.object({
   canonicalName: z.string(),
   status: characterStatusSchema,
   portrayedBy: z.string().nullable(),
-  franchise: z.object({ id: z.string(), canonicalName: z.string() }),
+  imageUrl,
+  franchise: z.object({ id: z.string(), canonicalName: z.string(), imageUrl }),
   rosterComplete: share,
   carryScore: share,
   confidence: share,
@@ -406,12 +428,13 @@ export type LeadersResponse = z.infer<typeof leadersResponseSchema>;
 export const creatorRowSchema = z.object({
   personId: z.string(),
   name: z.string(),
+  imageUrl,
   roles: z.array(roleTypeSchema),
   /** Distinct franchises this person is credited on. */
   franchiseCount: z.number().int(),
   /** Credits on a finished franchise or a departed character. An upper bound on scoreable projects. */
   completedCount: z.number().int(),
-  franchises: z.array(z.object({ id: z.string(), canonicalName: z.string() })),
+  franchises: z.array(z.object({ id: z.string(), canonicalName: z.string(), imageUrl })),
   /** Null below the minimum project count. Suppressed, never imputed. */
   score: z
     .object({ residual: z.number(), projectCount: z.number().int(), confidence: share })
