@@ -24,9 +24,6 @@ class Settings(BaseSettings):
         alias="WIKIMEDIA_USER_AGENT",
     )
     tmdb_api_key: str = Field(default="", alias="TMDB_API_KEY")
-    reddit_client_id: str = Field(default="", alias="REDDIT_CLIENT_ID")
-    reddit_client_secret: str = Field(default="", alias="REDDIT_CLIENT_SECRET")
-    reddit_user_agent: str = Field(default="linchpin/0.1 by wpf002", alias="REDDIT_USER_AGENT")
     cache_dir: Path = Field(default=REPO_ROOT / "data" / "cache")
     corpus_dir: Path = Field(default=REPO_ROOT / "data" / "corpus")
     request_timeout_seconds: float = Field(default=20.0)

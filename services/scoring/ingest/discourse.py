@@ -1,19 +1,18 @@
-"""Reddit mention counts per character, stored as REDDIT attention signals.
+"""Bluesky mention counts per character, stored as BLUESKY attention signals.
 
-Mentions are counted, never scored for sentiment. A post counts once for a
-character when its title or body contains the character's canonical name or a
-stored alias as a whole word. Reddit's listing API returns only a subreddit's
-newest posts, so one run covers a trailing span of days. Rows are inserted with
-ON CONFLICT DO NOTHING, so repeated runs extend the series and never rewrite a
-raw value.
+Mentions are counted, never scored for sentiment. One row is a character's
+post count for one UTC day: posts that contain both the character's name and
+the franchise's name as exact phrases. Each run fills the trailing days not yet
+stored. Rows are inserted with ON CONFLICT DO NOTHING, so a raw value is never
+rewritten.
 """
 
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Collection
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Final
 
 from psycopg import Connection
@@ -21,14 +20,8 @@ from psycopg.rows import dict_row
 
 from db import connection
 from ingest import repository
+from ingest.bluesky import FIRST_SEARCHABLE_DAY, BlueskyClient, BlueskyFetchError, build_query
 from ingest.corpus import CorpusFranchise, load_franchises
-from ingest.reddit import (
-    RedditFetchError,
-    RedditNotConfigured,
-    SubredditScan,
-    fetch_subreddit_mentions,
-    is_configured,
-)
 from metrics.constants import SIGNAL_SOURCE_BY_SHARE
 from metrics.windows import is_off_cycle
 
@@ -36,11 +29,8 @@ logger = logging.getLogger(__name__)
 
 SOURCE: Final = SIGNAL_SOURCE_BY_SHARE["discourseShare"]
 
-#: Names shorter than this match too many unrelated words ("Al", "Bo").
-MIN_NAME_LENGTH: Final = 3
-
-#: Newest posts read per subreddit per run. Reddit's listing API stops at 1000.
-DEFAULT_POST_LIMIT: Final = 1000
+#: Trailing days a run fills by default. One request per character per day.
+DEFAULT_DAYS: Final = 30
 
 
 @dataclass(slots=True)
@@ -52,123 +42,87 @@ class DiscourseReport:
     stopped: str | None = None
 
 
-def match_names(canonical_name: str, aliases: Sequence[str]) -> tuple[str, ...]:
-    """Canonical name plus stored aliases, minus duplicates and names too short to mean anything."""
-    kept: list[str] = []
-    for name in (canonical_name, *aliases):
-        cleaned = name.strip()
-        if len(cleaned) < MIN_NAME_LENGTH:
-            continue
-        if cleaned.lower() in {existing.lower() for existing in kept}:
-            continue
-        kept.append(cleaned)
-    return tuple(kept)
+@dataclass(frozen=True, slots=True)
+class _Character:
+    character_id: str
+    name: str
 
 
-def covered_span(scans: Sequence[SubredditScan]) -> tuple[date, date] | None:
-    """Days every scan covers in full.
-
-    Each scan's oldest and newest post days are partial (the listing cut off
-    inside one and the other is still running), so both are dropped. With
-    several subreddits the span is the intersection, so a day's sum always
-    covers every subreddit.
-    """
-    starts: list[date] = []
-    ends: list[date] = []
-    for scan in scans:
-        if scan.oldest_post is None or scan.newest_post is None:
-            return None
-        starts.append(scan.oldest_post + timedelta(days=1))
-        ends.append(scan.newest_post - timedelta(days=1))
-    if not starts:
-        return None
-    start, end = max(starts), min(ends)
-    if start > end:
-        return None
-    return start, end
+def trailing_days(last_day: date, days: int) -> list[date]:
+    """The `days` days ending on last_day, oldest first, never before Bluesky existed."""
+    first_day = max(last_day - timedelta(days=days - 1), FIRST_SEARCHABLE_DAY)
+    span = (last_day - first_day).days + 1
+    return [first_day + timedelta(days=offset) for offset in range(max(span, 0))]
 
 
-def daily_points(
-    scans: Sequence[SubredditScan],
-    character_key: str,
-    span: tuple[date, date],
-    release_dates: Sequence[date],
-) -> list[tuple[date, float, bool]]:
-    """One row per day in the span, summed across subreddits. Days with no mention are zero."""
-    start, end = span
-    points: list[tuple[date, float, bool]] = []
-    day = start
-    while day <= end:
-        mentions = sum(scan.counts.get(character_key, {}).get(day, 0) for scan in scans)
-        points.append((day, float(mentions), is_off_cycle(day, release_dates)))
-        day += timedelta(days=1)
-    return points
+def days_to_fetch(wanted: list[date], stored: Collection[date]) -> list[date]:
+    return [day for day in wanted if day not in stored]
 
 
 def run_discourse_ingest(
-    *, only: list[str] | None = None, limit: int = DEFAULT_POST_LIMIT
+    *, only: list[str] | None = None, days: int = DEFAULT_DAYS
 ) -> DiscourseReport:
     report = DiscourseReport()
-    if not is_configured():
-        report.stopped = "REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are required"
+    # Today is still being posted; the last full day is yesterday in UTC.
+    wanted = trailing_days(datetime.now(UTC).date() - timedelta(days=1), days)
+    if not wanted:
+        report.stopped = "no searchable days in range"
         return report
     franchises = [
         franchise
         for franchise in load_franchises()
-        if franchise.primary_subs and (only is None or franchise.canonical_name in only)
+        if only is None or franchise.canonical_name in only
     ]
-    with connection() as conn:
+    with connection() as conn, BlueskyClient() as client:
         for franchise in franchises:
             try:
-                _ingest_franchise(conn, franchise, report, limit=limit)
-            except RedditNotConfigured as error:
-                report.stopped = str(error)
-                return report
-            except RedditFetchError as error:
-                logger.warning("%s: %s", franchise.canonical_name, error)
-                report.skipped.append(f"{franchise.canonical_name}: {error}")
+                _ingest_franchise(conn, client, franchise, wanted, report)
+            except BlueskyFetchError as error:
+                # A refusal outside the retried 429/5xx set means search is
+                # blocked for this client, so later franchises would fail too.
                 conn.rollback()
-                continue
-            conn.commit()
+                report.stopped = f"{franchise.canonical_name}: {error}"
+                return report
     return report
 
 
 def _ingest_franchise(
-    conn: Connection, franchise: CorpusFranchise, report: DiscourseReport, *, limit: int
+    conn: Connection,
+    client: BlueskyClient,
+    franchise: CorpusFranchise,
+    wanted: list[date],
+    report: DiscourseReport,
 ) -> None:
     franchise_id = _franchise_id(conn, franchise)
     if franchise_id is None:
         report.skipped.append(f"{franchise.canonical_name}: not ingested")
         return
-    names_by_character = _names_by_character(conn, franchise_id)
-    if not names_by_character:
+    characters = _characters(conn, franchise_id)
+    if not characters:
         report.skipped.append(f"{franchise.canonical_name}: no characters")
-        return
-
-    scans = [
-        fetch_subreddit_mentions(subreddit, names_by_character, limit=limit)
-        for subreddit in franchise.primary_subs
-    ]
-    span = covered_span(scans)
-    if span is None:
-        report.skipped.append(f"{franchise.canonical_name}: no fully covered day")
         return
 
     release_dates = _release_dates(conn, franchise_id)
     written = 0
-    for character_id in names_by_character:
-        points = daily_points(scans, character_id, span, release_dates)
-        written += repository.insert_signals(conn, character_id, SOURCE, points)
+    for character in characters:
+        stored = _stored_days(conn, character.character_id, wanted[0], wanted[-1])
+        query = build_query(character.name, franchise.canonical_name)
+        points = [
+            (day, float(client.count_posts(query, day)), is_off_cycle(day, release_dates))
+            for day in days_to_fetch(wanted, stored)
+        ]
+        written += repository.insert_signals(conn, character.character_id, SOURCE, points)
+        # Commit per character so an interrupted run keeps what it fetched.
+        conn.commit()
     report.franchises += 1
-    report.characters += len(names_by_character)
+    report.characters += len(characters)
     report.rows_written += written
     logger.info(
-        "%s: r/%s %s..%s, %d characters, %d new rows",
+        "%s: %s..%s, %d characters, %d new rows",
         franchise.canonical_name,
-        "+".join(franchise.primary_subs),
-        span[0],
-        span[1],
-        len(names_by_character),
+        wanted[0],
+        wanted[-1],
+        len(characters),
         written,
     )
 
@@ -183,18 +137,28 @@ def _franchise_id(conn: Connection, franchise: CorpusFranchise) -> str | None:
     return str(row["id"]) if row else None
 
 
-def _names_by_character(conn: Connection, franchise_id: str) -> dict[str, Sequence[str]]:
+def _characters(conn: Connection, franchise_id: str) -> list[_Character]:
     with conn.cursor(row_factory=dict_row) as cur:
         cur.execute(
-            'SELECT id, "canonicalName", aliases FROM "Character" WHERE "franchiseId" = %s',
+            'SELECT id, "canonicalName" FROM "Character" WHERE "franchiseId" = %s ORDER BY id',
             (franchise_id,),
         )
         rows = cur.fetchall()
-    names = {
-        str(row["id"]): match_names(str(row["canonicalName"]), list(row["aliases"] or []))
+    return [
+        _Character(str(row["id"]), str(row["canonicalName"]).strip())
         for row in rows
-    }
-    return {character_id: found for character_id, found in names.items() if found}
+        if str(row["canonicalName"]).strip()
+    ]
+
+
+def _stored_days(conn: Connection, character_id: str, start: date, end: date) -> set[date]:
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(
+            'SELECT "measuredOn"::date AS day FROM "AttentionSignal" '
+            'WHERE "characterId" = %s AND source = %s AND "measuredOn" BETWEEN %s AND %s',
+            (character_id, SOURCE, start, end),
+        )
+        return {row["day"] for row in cur.fetchall()}
 
 
 def _release_dates(conn: Connection, franchise_id: str) -> list[date]:

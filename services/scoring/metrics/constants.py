@@ -46,5 +46,5 @@ SIGNAL_SOURCE_BY_SHARE: Final[dict[str, str]] = {
     "wikiShare": "WIKI",
     "fanworkShare": "AO3",
     "searchShare": "TRENDS",
-    "discourseShare": "REDDIT",
+    "discourseShare": "BLUESKY",
 }

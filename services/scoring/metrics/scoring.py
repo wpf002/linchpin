@@ -48,8 +48,8 @@ MIN_OBSERVATIONS = 30
 #: Below this, the character's share is noise and the confidence flag says so.
 LOW_OBSERVATION_FLOOR = 120
 
-#: Reddit rows cover a trailing span of days, not the whole window. A character
-#: needs this many fully scanned days before its mention share is written.
+#: Bluesky rows cover a trailing span of days, not the whole window. A character
+#: needs this many counted days before its mention share is written.
 MIN_DISCOURSE_OBSERVATIONS = 7
 
 
@@ -146,7 +146,7 @@ def _load_totals(
 def _load_discourse_shares(
     conn: Connection, window_start: date, window_end: date
 ) -> dict[str, dict[str, float]]:
-    """Share of Reddit mentions per character within each franchise over the window.
+    """Share of Bluesky mentions per character within each franchise over the window.
 
     Stored next to the carry score and never blended into it: the carry score
     stays wiki-only until the Phase 3 blend test says otherwise.

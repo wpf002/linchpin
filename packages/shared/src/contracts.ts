@@ -15,7 +15,7 @@ export const characterStatusSchema = z.enum([
   "RECAST",
   "UNKNOWN",
 ]);
-export const signalSourceSchema = z.enum(["WIKI", "AO3", "TRENDS", "REDDIT", "FANDOM"]);
+export const signalSourceSchema = z.enum(["WIKI", "AO3", "TRENDS", "REDDIT", "BLUESKY", "FANDOM"]);
 export const exitTypeSchema = z.enum([
   "CHARACTER_DEATH",
   "ACTOR_DEPARTURE",

@@ -51,7 +51,7 @@ export const SIGNAL_SOURCE_BY_SHARE = {
   wikiShare: "WIKI",
   fanworkShare: "AO3",
   searchShare: "TRENDS",
-  discourseShare: "REDDIT",
+  discourseShare: "BLUESKY",
 } as const;
 
 export const ROSTER_COMPLETE_DISPLAY_FLOOR = KILL_CRITERIA.minRosterCompleteness;

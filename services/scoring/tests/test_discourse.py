@@ -1,60 +1,52 @@
-"""Reddit mention ingest: name matching, covered span and zero-filled daily rows."""
+"""Bluesky mention ingest: query shape, hit parsing, day selection and shares."""
 
 from __future__ import annotations
 
 from datetime import date
 
-from ingest.discourse import covered_span, daily_points, match_names
-from ingest.reddit import SubredditScan, count_mentions
+import pytest
+
+from ingest.bluesky import FIRST_SEARCHABLE_DAY, build_query, parse_hits
+from ingest.discourse import days_to_fetch, trailing_days
 from metrics.scoring import discourse_shares
 
 
-def _scan(
-    sub: str, oldest: date, newest: date, counts: dict[str, dict[date, int]]
-) -> SubredditScan:
-    return SubredditScan(subreddit=sub, oldest_post=oldest, newest_post=newest, counts=counts)
-
-
-def test_match_names_drops_short_and_duplicate_names() -> None:
-    assert match_names("Al Swearengen", ["Al", "al swearengen", "Swearengen"]) == (
-        "Al Swearengen",
-        "Swearengen",
+def test_build_query_quotes_both_names_and_drops_inner_quotes() -> None:
+    assert build_query("Fiona Gallagher", "Shameless") == '"Fiona Gallagher" "Shameless"'
+    assert build_query('Jim "Hop" Hopper', "Stranger Things") == (
+        '"Jim Hop Hopper" "Stranger Things"'
     )
 
 
-def test_count_mentions_is_one_hit_per_post_and_whole_word() -> None:
-    posts = ["Rick Grimes again, Rick Grimes forever", "Ricky is not Rick", "nothing here"]
-    assert count_mentions(posts, ["Rick Grimes", "Rick"]) == 2
+def test_parse_hits_prefers_hits_total_and_falls_back_to_posts() -> None:
+    assert parse_hits({"hitsTotal": 58, "posts": [{}]}) == 58
+    assert parse_hits({"posts": [{}, {}]}) == 2
+    assert parse_hits({"hitsTotal": 0, "posts": []}) == 0
 
 
-def test_covered_span_drops_edge_days_and_intersects_subreddits() -> None:
-    first = _scan("a", date(2026, 10, 1), date(2026, 10, 20), {})
-    second = _scan("b", date(2026, 10, 5), date(2026, 10, 30), {})
-    assert covered_span([first]) == (date(2026, 10, 2), date(2026, 10, 19))
-    assert covered_span([first, second]) == (date(2026, 10, 6), date(2026, 10, 19))
+@pytest.mark.parametrize("payload", [None, [], {"cursor": "x"}, {"hitsTotal": -1}])
+def test_parse_hits_rejects_malformed_responses(payload: object) -> None:
+    with pytest.raises(ValueError):
+        parse_hits(payload)
 
 
-def test_covered_span_is_none_for_an_empty_or_one_day_scan() -> None:
-    assert covered_span([_scan("a", None, None, {})]) is None
-    assert covered_span([_scan("a", date(2026, 10, 1), date(2026, 10, 2), {})]) is None
-    assert covered_span([]) is None
-
-
-def test_daily_points_zero_fill_and_sum_across_subreddits() -> None:
-    scans = [
-        _scan("a", date(2026, 10, 1), date(2026, 10, 5), {"c1": {date(2026, 10, 2): 3}}),
-        _scan("b", date(2026, 10, 1), date(2026, 10, 5), {"c1": {date(2026, 10, 2): 1}}),
+def test_trailing_days_ends_on_last_day_oldest_first() -> None:
+    assert trailing_days(date(2026, 11, 9), 3) == [
+        date(2026, 11, 7),
+        date(2026, 11, 8),
+        date(2026, 11, 9),
     ]
-    span = covered_span(scans)
-    assert span is not None
-    points = daily_points(scans, "c1", span, release_dates=[date(2026, 10, 3)])
-    assert [(day, value) for day, value, _ in points] == [
-        (date(2026, 10, 2), 4.0),
-        (date(2026, 10, 3), 0.0),
-        (date(2026, 10, 4), 0.0),
-    ]
-    off_cycle = [flag for _, _, flag in points]
-    assert off_cycle[1] is False, "a release day is on-cycle"
+
+
+def test_trailing_days_never_starts_before_bluesky_existed() -> None:
+    days = trailing_days(date(2023, 1, 2), 10)
+    assert days == [FIRST_SEARCHABLE_DAY, date(2023, 1, 2)]
+    assert trailing_days(date(2022, 6, 1), 10) == []
+
+
+def test_days_to_fetch_skips_stored_days() -> None:
+    wanted = trailing_days(date(2026, 11, 9), 3)
+    assert days_to_fetch(wanted, {date(2026, 11, 8)}) == [date(2026, 11, 7), date(2026, 11, 9)]
 
 
 def test_discourse_shares_sum_to_one_and_skip_silent_franchises() -> None:

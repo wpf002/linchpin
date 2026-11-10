@@ -64,6 +64,7 @@ const LABELS: Record<string, string> = {
   AO3: "AO3",
   TRENDS: "Google Trends",
   REDDIT: "Reddit",
+  BLUESKY: "Bluesky",
   FANDOM: "Fandom",
 };
 
