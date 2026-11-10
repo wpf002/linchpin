@@ -26,7 +26,7 @@
     { "canonicalName": "Sherlock", "searchName": "Sherlock", "medium": "TV", "primarySubs": ["sherlock"] },
     { "canonicalName": "Lost", "searchName": "Lost", "medium": "TV", "primarySubs": ["lost"] },
     { "canonicalName": "Dexter", "searchName": "Dexter", "medium": "TV", "primarySubs": ["dexter"] },
-    { "canonicalName": "Shameless", "searchName": "Shameless (US)", "medium": "TV", "primarySubs": ["shameless"] },
+    { "canonicalName": "Shameless", "searchName": "Shameless (US)", "medium": "TV", "status": "ENDED", "primarySubs": ["shameless"] },
     { "canonicalName": "Suits", "searchName": "Suits", "medium": "TV", "primarySubs": ["suits"] },
     { "canonicalName": "The Mandalorian", "searchName": "The Mandalorian", "medium": "TV", "primarySubs": ["themandalorian"] },
     { "canonicalName": "Succession", "searchName": "Succession", "medium": "TV", "primarySubs": ["succession"] },

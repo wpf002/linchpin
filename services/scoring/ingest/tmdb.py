@@ -13,6 +13,9 @@ logger = logging.getLogger("linchpin.tmdb")
 
 BASE = "https://api.themoviedb.org/3"
 MIN_INTERVAL_SECONDS = 0.06
+#: TMDB files specials, previews and promos under season 0. They are not
+#: release-cycle episodes, and TVmaze leaves them out too.
+SPECIALS_SEASON = 0
 
 
 class TmdbNotConfigured(RuntimeError):
@@ -95,7 +98,7 @@ def fetch_tv_releases(
         releases: list[ReleaseRecord] = []
         for season in show.get("seasons", []):
             season_no = season.get("season_number")
-            if season_no is None:
+            if season_no is None or season_no == SPECIALS_SEASON:
                 continue
             detail = active.get_json(f"{BASE}/tv/{tmdb_id}/season/{season_no}", _params())
             if not detail or detail.get("__missing__"):

@@ -78,3 +78,38 @@ def test_describe_skips_tmdb_when_key_is_empty(monkeypatch: pytest.MonkeyPatch) 
 
     assert described.roster is None
     assert described.tmdb_id is None
+
+
+class _FakeTmdbClient:
+    """Serves canned TMDB payloads keyed by URL path suffix."""
+
+    def __init__(self, payloads: dict[str, dict]) -> None:
+        self._payloads = payloads
+        self.requested: list[str] = []
+
+    def get_json(self, url: str, params: dict) -> dict | None:
+        self.requested.append(url)
+        for suffix, payload in self._payloads.items():
+            if url.endswith(suffix):
+                return payload
+        return None
+
+    def close(self) -> None:
+        return None
+
+
+def test_fetch_tv_releases_skips_specials_season() -> None:
+    from ingest.tmdb import fetch_tv_releases
+
+    episode = {"name": "Pilot", "episode_number": 1, "air_date": "2011-01-09"}
+    special = {"name": "Preview", "episode_number": 1, "air_date": "2010-12-12"}
+    client = _FakeTmdbClient(
+        {
+            "/tv/7": {"seasons": [{"season_number": 0}, {"season_number": 1}]},
+            "/tv/7/season/0": {"episodes": [special]},
+            "/tv/7/season/1": {"episodes": [episode]},
+        }
+    )
+    releases = fetch_tv_releases(7, client=client)  # type: ignore[arg-type]
+    assert [(r.season_no, r.released_on.isoformat()) for r in releases] == [(1, "2011-01-09")]
+    assert not any(url.endswith("/season/0") for url in client.requested)

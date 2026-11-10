@@ -14,6 +14,8 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mo
 /** TVmaze data is CC BY-SA, which requires a visible credit link. */
 const TVMAZE_URL = "https://www.tvmaze.com";
 const WIKIMEDIA_URL = "https://wikimedia.org/api/rest_v1/";
+/** TMDB API terms require this exact notice wherever TMDB data appears. */
+const TMDB_URL = "https://www.themoviedb.org";
 
 /** Every page reads live scores through the header gate chip; nothing is static. */
 export const dynamic = "force-dynamic";
@@ -35,6 +37,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href={TVMAZE_URL} target="_blank" rel="noreferrer noopener" className="text-muted hover:text-ink">
               TVmaze
             </a>
+          </span>
+          <span>
+            Uses the{" "}
+            <a href={TMDB_URL} target="_blank" rel="noreferrer noopener" className="text-muted hover:text-ink">
+              TMDB
+            </a>{" "}
+            API but is not endorsed or certified by TMDB
           </span>
           <span>
             Page Views From{" "}

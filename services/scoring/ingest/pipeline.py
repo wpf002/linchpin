@@ -324,7 +324,8 @@ def _describe(corpus_franchise: CorpusFranchise) -> _Description:
         status = _STATUS_BY_TVMAZE.get(show.status, "ACTIVE")
         return _Description(roster, releases, show.genres, show.premiered, status, tmdb_id)
     first_release = min((row.released_on for row in releases), default=None)
-    return _Description(roster, releases, [], first_release, "ACTIVE", tmdb_id)
+    status = corpus_franchise.status or "ACTIVE"
+    return _Description(roster, releases, [], first_release, status, tmdb_id)
 
 
 def _tmdb_id_for(name: str) -> int | None:
