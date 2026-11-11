@@ -1,0 +1,32 @@
+2026-11-11 14:33:07,973 INFO validation.gate no usable estimate for The Vampire Diaries on 2015-05-14 (treated franchise has too few observations)
+2026-11-11 14:33:08,850 INFO validation.gate no usable estimate for The Crown on 2019-11-17 (treated franchise has too few observations)
+2026-11-11 14:33:08,854 INFO validation.gate no usable estimate for The Crown on 2019-11-17 (treated franchise has too few observations)
+2026-11-11 14:33:08,858 INFO validation.gate no usable estimate for The Crown on 2019-11-17 (treated franchise has too few observations)
+2026-11-11 14:33:09,025 INFO validation.gate no usable estimate for For All Mankind on 2021-04-23 (treated franchise has too few observations)
+2026-11-11 14:33:09,031 INFO validation.gate no usable estimate for For All Mankind on 2021-04-23 (treated franchise has too few observations)
+2026-11-11 14:33:09,211 INFO validation.gate no usable estimate for For All Mankind on 2022-08-12 (treated franchise has too few observations)
+2026-11-11 14:33:09,214 INFO validation.gate no usable estimate for Doctor Who on 2022-10-23 (controls have too few observations)
+2026-11-11 14:33:09,218 INFO validation.gate no usable estimate for The Crown on 2022-11-09 (treated franchise has too few observations)
+2026-11-11 14:33:09,222 INFO validation.gate no usable estimate for The Crown on 2022-11-09 (treated franchise has too few observations)
+2026-11-11 14:33:09,225 INFO validation.gate no usable estimate for The Crown on 2022-11-09 (treated franchise has too few observations)
+2026-11-11 14:33:09,229 INFO validation.gate no usable estimate for The Crown on 2022-11-09 (treated franchise has too few observations)
+2026-11-11 14:33:09,348 INFO validation.gate no usable estimate for Rick and Morty on 2023-10-15 (treated franchise has too few observations)
+2026-11-11 14:33:09,353 INFO validation.gate no usable estimate for Rick and Morty on 2023-10-15 (treated franchise has too few observations)
+2026-11-11 14:33:09,356 INFO validation.gate no usable estimate for Doctor Who on 2023-12-09 (controls have too few observations)
+2026-11-11 14:33:09,359 INFO validation.gate no usable estimate for The Boys on 2024-07-18 (treated franchise has too few observations)
+2026-11-11 14:33:09,367 INFO validation.gate no usable estimate for Doctor Who on 2025-05-31 (controls have too few observations)
+gate=FAIL
+events=273 verified=71 studied=81
+carry   rankIC=n/a (only 6 usable event pairs)
+billing rankIC=n/a (only 6 usable event pairs)
+median rosterComplete=0.714
+  stratum UNANNOUNCED: events=35 meanDiD=-0.289 rankIC=-0.251 [-0.583, 0.119] n=35
+  stratum ANNOUNCED: events=6 meanDiD=-0.131 rankIC=n/a (only 6 usable event pairs)
+  stratum ACTOR_DEPARTURE: events=14 meanDiD=-0.200 rankIC=-0.073 [-0.777, 0.587] n=14
+  stratum CHARACTER_DEATH: events=21 meanDiD=-0.348 rankIC=-0.311 [-0.677, 0.162] n=21
+  ANNOUNCED vs UNANNOUNCED: z=0.93 diverges=False
+blend verdict=INCONCLUSIVE wikiWeight=None train=3 heldOut=1 (training split has 3 events with both signals; needs 12)
+  FAIL minExitEvents: tested verified exit events 6 < 200
+  FAIL minRankIC: rank IC not computable: only 6 usable event pairs
+
+[exited with code 0]

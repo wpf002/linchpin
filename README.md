@@ -2,9 +2,9 @@
 
 Character-level attention concentration and franchise fragility scoring, built only on public signals. It answers one question: what happens to this franchise if the lead leaves?
 
-**Status:** Phase 2 gate is **FAIL** under `v0.1.0` and under the `v0.2.0` re-run. See [docs/PHASE2_RESULT.md](docs/PHASE2_RESULT.md) and [docs/PHASE3_RESULT.md](docs/PHASE3_RESULT.md). Scores in the UI are exploratory until the gate passes.
+**Status:** Killed on 2026-11-11. The gate failed under `v0.1.0`, `v0.2.0` and `v0.4.0`, and every computable rank IC was negative. See [docs/PHASE4_RESULT.md](docs/PHASE4_RESULT.md). Scores in the UI are exploratory.
 
-`MODEL_VERSION` is `v0.3.0`. It adds redirect-title counting for characters without their own Wikipedia article ([docs/SOURCES.md](docs/SOURCES.md)). `validate` hasn't run under `v0.3.0`. It needs 200 verified cast exits first, and 70 are verified.
+`MODEL_VERSION` is `v0.4.0`. It scores only characters whose wikiTitle is an article ([docs/SOURCES.md](docs/SOURCES.md)).
 
 ## Layout
 
