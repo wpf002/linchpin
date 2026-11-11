@@ -21,7 +21,7 @@ from urllib.parse import quote
 from pydantic import BaseModel, ConfigDict, Field
 
 from ingest.corpus import CORPUS_DIR, EXIT_EVENTS_FILE, ExitType, load_franchises
-from ingest.http import ThrottledClient
+from ingest.http import RetryableStatus, ThrottledClient
 from ingest.names import matches, normalise, tokens
 from ingest.resolve import API_URL
 from ingest.tvmaze import TvMazeEpisode, fetch_episodes, search_show
@@ -31,7 +31,9 @@ logger = logging.getLogger("linchpin.stage")
 
 CANDIDATES_FILE = CORPUS_DIR / "exit_candidates.json"
 WIKI_ARTICLE_BASE = "https://en.wikipedia.org/wiki/"
-WIKI_MIN_INTERVAL_SECONDS = 1.0
+#: 1.0s drew a 429 that outlasted every retry on 2026-11-11, 240 candidates in.
+WIKI_MIN_INTERVAL_SECONDS = 2.0
+RATE_LIMITED_REASON = "Wikipedia rate limit; rerun to retry"
 
 #: TVMaze titles like "Episode 6" carry no information to cross-check.
 _GENERIC_TITLE = re.compile(r"^(episode|chapter|part)\s+\w+$", re.IGNORECASE)
@@ -248,7 +250,7 @@ def stage(
             if is_duplicate(key, existing):
                 rejected.append(Rejected(candidate, "already in corpus"))
                 continue
-            sourced = _source(wiki, candidate, franchise.query_name)
+            sourced = source_or_reason(wiki, candidate, franchise.query_name)
             if isinstance(sourced, str):
                 rejected.append(Rejected(candidate, sourced))
                 continue
@@ -263,6 +265,17 @@ def stage(
             )
             existing.append(key)
     return staged, rejected
+
+
+def source_or_reason(
+    wiki: ThrottledClient, candidate: ExitCandidate, show: str
+) -> tuple[str, str] | str:
+    """_source, with a rate limit turned into a rejection so one 429 can't end the run."""
+    try:
+        return _source(wiki, candidate, show)
+    except RetryableStatus as error:
+        logger.warning("%s | %s: %s", candidate.franchise, candidate.character, error)
+        return RATE_LIMITED_REASON
 
 
 def _source(wiki: ThrottledClient, candidate: ExitCandidate, show: str) -> tuple[str, str] | str:

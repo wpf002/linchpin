@@ -2877,6 +2877,136 @@
       "sourceUrl": "https://en.wikipedia.org/wiki/List_of_Pretty_Little_Liars_characters",
       "verified": false,
       "evidence": "Garrett is arrested for Alison's murder, and it is assumed he killed Maya too."
+    },
+    {
+      "franchise": "Arrow",
+      "character": "Laurel Lance",
+      "person": "Katie Cassidy",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-04-06",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Laurel_Lance_%28Arrowverse%29",
+      "verified": false,
+      "evidence": "Laurel's death is avenged when Oliver kills Darhk."
+    },
+    {
+      "franchise": "Arrow",
+      "character": "Malcolm Merlyn",
+      "person": "John Barrowman",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2017-05-24",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Merlyn_%28DC_Comics%29",
+      "verified": false,
+      "evidence": "Merlyn, Deadshot, Monacle, and Phobia later attempt to kill the Shadow Thief during his trial, but are confronted and stopped by Manhunter."
+    },
+    {
+      "franchise": "Marvel's Agents of S.H.I.E.L.D.",
+      "character": "Phil Coulson",
+      "person": "Clark Gregg",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2018-05-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Agents_of_S.H.I.E.L.D.",
+      "verified": false,
+      "evidence": "They succeed in defeating a Gravitonium-powered Glenn Talbot, but Coulson dies due to his interactions with Ghost Rider in the previous season."
+    },
+    {
+      "franchise": "Chicago P.D.",
+      "character": "Detective Erin Lindsay",
+      "person": "Sophia Bush",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2017-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Erin_Lindsay",
+      "verified": false,
+      "evidence": "Portrayed by Sophia Bush, she was introduced as a detective in the Intelligence Unit of the Chicago Police Department."
+    },
+    {
+      "franchise": "Law & Order: Special Victims Unit",
+      "character": "Rafael Barba",
+      "person": "Raúl Esparza",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2018-02-07",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rafael_Barba",
+      "verified": false,
+      "evidence": "Barba leaves the DA's office midway through the nineteenth season, in the episode \"The Undiscovered Country.\" His regrets over having left his comatose father on life support lead him to disconnect the life support system for Drew Householder, an infant in a persistent vegetative state whose parents have been feuding about whether to end the child's life."
+    },
+    {
+      "franchise": "NCIS",
+      "character": "Special Agent Anthony \"Tony\" DiNozzo",
+      "person": "Michael Weatherly",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2016-05-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/NCIS_season_13",
+      "verified": false,
+      "evidence": "Michael Weatherly, who stars as Anthony DiNozzo on the show, departed the series in the season finale."
+    },
+    {
+      "franchise": "NCIS",
+      "character": "Special Agent Leroy Jethro Gibbs",
+      "person": "Mark Harmon",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2021-10-11",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Leroy_Jethro_Gibbs",
+      "verified": false,
+      "evidence": "Having found peace in Alaska for the first time since his family's death, Gibbs leaves NCIS in the 2021 episode \"Great Wide Open\" in search of adventure."
+    },
+    {
+      "franchise": "Once Upon a Time",
+      "character": "Emma Swan",
+      "person": "Jennifer Morrison",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2017-05-14",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emma_Swan",
+      "verified": false,
+      "evidence": "Pinocchio leaves Emma in the foster home, which brings Emma to live alone."
+    },
+    {
+      "franchise": "Orange Is the New Black",
+      "character": "Poussey Washington",
+      "person": "Samira Wiley",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2016-06-17",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Poussey_Washington",
+      "verified": false,
+      "evidence": "Inmates and staff appear shaken by Poussey's death; Norma comforts Brook by rocking and singing to her, and Brook later gets drunk off the remainder of Poussey's contraband alcohol."
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Michonne Hawthorne",
+      "person": "Danai Gurira",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2020-03-22",
+      "sourceUrl": "https://en.wikipedia.org/wiki/What_We_Become_%28The_Walking_Dead%29",
+      "verified": false,
+      "evidence": "The episode marks the departure of Danai Gurira as Michonne."
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Dolores Abernathy",
+      "person": "Evan Rachel Wood",
+      "exitType": "CHARACTER_DEATH",
+      "eventDate": "2020-05-03",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Dolores_Abernathy",
+      "verified": false,
+      "evidence": "The season 2 finale \"The Passenger\" reveals that Bernard Lowe killed the original Dolores host to stop her from destroying the Forge, a data vault housing the Sublime - a virtual reality for the hosts to inhabit."
+    },
+    {
+      "franchise": "Star Trek: Discovery",
+      "character": "Captain Christopher Pike",
+      "person": "Anson Mount",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2019-04-18",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Christopher_Pike_%28Star_Trek%29",
+      "verified": false,
+      "evidence": "Pike departs the show in the season finale \"Such Sweet Sorrow, Part 2\", first aired 18 April 2019, which shows him relinquishing command of the USS Discovery to Saru, who solves the crisis by taking the ship 930 years into the future."
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "Donna Noble",
+      "person": "Catherine Tate",
+      "exitType": "ACTOR_DEPARTURE",
+      "eventDate": "2023-12-09",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Donna_Noble",
+      "verified": false,
+      "evidence": "They are tormented by two shapeshifting creatures who impersonate them, and the Doctor almost leaves Donna to die aboard the exploding spacecraft after mistaking her for her doppelgänger."
     }
   ]
 }

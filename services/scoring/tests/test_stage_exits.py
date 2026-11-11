@@ -1,6 +1,14 @@
 from datetime import date
 
-from ingest.stage_exits import ExitCandidate, find_episode, find_evidence, is_duplicate
+from ingest.http import RetryableStatus
+from ingest.stage_exits import (
+    RATE_LIMITED_REASON,
+    ExitCandidate,
+    find_episode,
+    find_evidence,
+    is_duplicate,
+    source_or_reason,
+)
 from ingest.tvmaze import TvMazeEpisode
 
 EPISODES = [
@@ -61,3 +69,14 @@ def test_duplicate_detection_matches_roster_and_corpus_spellings() -> None:
     existing = [("Grey's Anatomy", "Mark Sloan", date(2012, 10, 4))]
     assert is_duplicate(("Grey's Anatomy", "Dr. Mark Sloan", date(2012, 10, 4)), existing)
     assert not is_duplicate(("Grey's Anatomy", "Dr. Mark Sloan", date(2012, 10, 5)), existing)
+
+
+class _RateLimitedWiki:
+    def get_json(self, *_args: object, **_kwargs: object) -> None:
+        raise RetryableStatus(429, "https://en.wikipedia.org/w/api.php")
+
+
+def test_rate_limit_rejects_one_candidate_instead_of_ending_the_run() -> None:
+    # 2026-11-11: a 429 that outlasted the retries crashed stage-exits 240 candidates in.
+    reason = source_or_reason(_RateLimitedWiki(), _candidate("The Bells", 8, 5), "Game of Thrones")  # type: ignore[arg-type]
+    assert reason == RATE_LIMITED_REASON

@@ -1926,6 +1926,220 @@
       "season": 2,
       "episode": 25,
       "episodeTitle": "UnmAsked"
+    },
+    {
+      "franchise": "Arrow",
+      "character": "Laurel Lance",
+      "person": "Katie Cassidy",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "Eleven-Fifty-Nine",
+      "season": 4,
+      "episode": 18
+    },
+    {
+      "franchise": "Arrow",
+      "character": "Malcolm Merlyn",
+      "person": "John Barrowman",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "Lian Yu",
+      "season": 5,
+      "episode": 23
+    },
+    {
+      "franchise": "Arrow",
+      "character": "Felicity Smoak",
+      "person": "Emily Bett Rickards",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "You Have Saved This City",
+      "season": 7,
+      "episode": 22
+    },
+    {
+      "franchise": "Supergirl",
+      "character": "Maggie Sawyer",
+      "person": "Floriana Lima",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Far From the Tree",
+      "season": 3,
+      "episode": 3
+    },
+    {
+      "franchise": "Supergirl",
+      "character": "Mon-El",
+      "person": "Chris Wood",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Battles Lost and Won",
+      "season": 3,
+      "episode": 23
+    },
+    {
+      "franchise": "Supergirl",
+      "character": "James \"Jimmy\" Olsen / Guardian",
+      "person": "Mehcad Brooks",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Tremors",
+      "season": 5,
+      "episode": 7
+    },
+    {
+      "franchise": "Marvel's Agents of S.H.I.E.L.D.",
+      "character": "Grant Ward",
+      "person": "Brett Dalton",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "Maveth",
+      "season": 3,
+      "episode": 10
+    },
+    {
+      "franchise": "Marvel's Agents of S.H.I.E.L.D.",
+      "character": "Lance Hunter",
+      "person": "Nick Blood",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Parting Shot",
+      "season": 3,
+      "episode": 13
+    },
+    {
+      "franchise": "Marvel's Agents of S.H.I.E.L.D.",
+      "character": "Holden Radcliffe",
+      "person": "John Hannah",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "World's End",
+      "season": 4,
+      "episode": 22
+    },
+    {
+      "franchise": "Marvel's Agents of S.H.I.E.L.D.",
+      "character": "Phil Coulson",
+      "person": "Clark Gregg",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "The End",
+      "season": 5,
+      "episode": 22
+    },
+    {
+      "franchise": "Marvel's Daredevil",
+      "character": "Elektra Natchios",
+      "person": "Elodie Yung",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "The Dark at the End of the Tunnel",
+      "season": 2,
+      "episode": 12
+    },
+    {
+      "franchise": "Chicago P.D.",
+      "character": "Detective Erin Lindsay",
+      "person": "Sophia Bush",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Fork in the Road",
+      "season": 4,
+      "episode": 23
+    },
+    {
+      "franchise": "Law & Order: Special Victims Unit",
+      "character": "Rafael Barba",
+      "person": "Raúl Esparza",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "The Undiscovered Country",
+      "season": 19,
+      "episode": 13
+    },
+    {
+      "franchise": "Law & Order: Special Victims Unit",
+      "character": "Amanda Rollins",
+      "person": "Kelli Giddish",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Blood Out",
+      "season": 24,
+      "episode": 9
+    },
+    {
+      "franchise": "NCIS",
+      "character": "Special Agent Anthony \"Tony\" DiNozzo",
+      "person": "Michael Weatherly",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Family First",
+      "season": 13,
+      "episode": 24
+    },
+    {
+      "franchise": "NCIS",
+      "character": "Special Agent Leroy Jethro Gibbs",
+      "person": "Mark Harmon",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Great Wide Open",
+      "season": 19,
+      "episode": 4
+    },
+    {
+      "franchise": "Once Upon a Time",
+      "character": "Emma Swan",
+      "person": "Jennifer Morrison",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "The Final Battle Part 2",
+      "season": 6,
+      "episode": 22
+    },
+    {
+      "franchise": "Once Upon a Time",
+      "character": "Prince Charming / David Nolan",
+      "person": "Josh Dallas",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "The Final Battle Part 2",
+      "season": 6,
+      "episode": 22
+    },
+    {
+      "franchise": "Orange Is the New Black",
+      "character": "Poussey Washington",
+      "person": "Samira Wiley",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "The Animals",
+      "season": 4,
+      "episode": 12
+    },
+    {
+      "franchise": "The Walking Dead",
+      "character": "Michonne Hawthorne",
+      "person": "Danai Gurira",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "What We Become",
+      "season": 10,
+      "episode": 13
+    },
+    {
+      "franchise": "The Boys",
+      "character": "Clara Risinger / Stormfront",
+      "person": "Aya Cash",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "What I Know",
+      "season": 2,
+      "episode": 8
+    },
+    {
+      "franchise": "Westworld",
+      "character": "Dolores Abernathy",
+      "person": "Evan Rachel Wood",
+      "exitType": "CHARACTER_DEATH",
+      "episodeTitle": "Crisis Theory",
+      "season": 3,
+      "episode": 8
+    },
+    {
+      "franchise": "Star Trek: Discovery",
+      "character": "Captain Christopher Pike",
+      "person": "Anson Mount",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "Such Sweet Sorrow, Part 2",
+      "season": 2,
+      "episode": 14
+    },
+    {
+      "franchise": "Doctor Who",
+      "character": "Donna Noble",
+      "person": "Catherine Tate",
+      "exitType": "ACTOR_DEPARTURE",
+      "episodeTitle": "The Giggle"
     }
   ]
 }
