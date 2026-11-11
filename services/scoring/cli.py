@@ -250,5 +250,22 @@ def audit_basis(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
     typer.echo(f"article={report.article} redirect={report.redirect} unchecked={report.unchecked}")
 
 
+@app.command("verify-queue")
+def verify_queue() -> None:
+    """List unverified exits the gate could test, with source and evidence, oldest first."""
+    from db import connection
+    from ingest.corpus import load_exit_events
+    from validation.verify_queue import build_queue, load_testable_keys
+
+    with connection() as conn:
+        queue = build_queue(load_exit_events(), load_testable_keys(conn))
+    for item in queue:
+        typer.echo(
+            f"{item.event_date}\t{item.franchise}\t{item.character}\t{item.exit_type}"
+            f"\t{item.source_url}\t{item.evidence or ''}"
+        )
+    typer.echo(f"queue={len(queue)}")
+
+
 if __name__ == "__main__":
     app()

@@ -42,6 +42,7 @@ Run from `services/scoring`:
 .venv/bin/python cli.py ingest-search # Google Trends interest for each exit event's pre-window
 .venv/bin/python cli.py ingest-bluesky # daily Bluesky post counts per character (--days 30 default); no key needed
 .venv/bin/python cli.py audit-basis   # mark each stored wikiTitle ARTICLE or REDIRECT; score reads ARTICLE only
+.venv/bin/python cli.py verify-queue  # unverified exits the gate could test, with source URL and evidence
 .venv/bin/python cli.py score         # carry, fragility, substitutability and creator scores, keyed by MODEL_VERSION
 .venv/bin/python cli.py validate      # event study, strata, blend test and kill criteria
 .venv/bin/python cli.py language-test # English-only vs summed Wikipedia editions; writes docs/results/language_test.json

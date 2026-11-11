@@ -314,13 +314,23 @@ def _median_roster_complete(conn: Connection) -> float | None:
     return float(row["median"])
 
 
+def headline_studies(studies: list[_Study]) -> list[_Study]:
+    """The studies the rank IC is computed on, and the ones minExitEvents counts.
+
+    Only a verified event enters: an unverified date can sit weeks off the exit.
+    Counting every verified event instead would let the gate pass on 200 exits
+    while the IC ran on the few that had an article-basis pre-window share.
+    """
+    return [study for study in studies if study.event.in_headline and study.event.verified]
+
+
 def _evaluate(
     events: list[EventRow], studies: list[_Study], median_roster: float | None
 ) -> ValidationResult:
     # A fall in attention is a negative DiD estimate, so the predicted direction
     # is "higher carry score -> more negative estimate". Sign-flip the outcome so
     # a positive rank IC means the model ranked correctly.
-    scored = [study for study in studies if study.event.in_headline]
+    scored = headline_studies(studies)
     carry_ic = rank_ic(
         [study.event.pre_carry or 0.0 for study in scored],
         [-study.estimate.estimate for study in scored],
@@ -336,11 +346,12 @@ def _evaluate(
     verified = [event for event in events if event.verified]
     failures: list[Failure] = []
 
-    if len(verified) < KILL_CRITERIA["minExitEvents"]:
+    if len(scored) < KILL_CRITERIA["minExitEvents"]:
         failures.append(
             Failure(
                 "minExitEvents",
-                f"verified exit events {len(verified)} < {int(KILL_CRITERIA['minExitEvents'])}",
+                f"tested verified exit events {len(scored)}"
+                f" < {int(KILL_CRITERIA['minExitEvents'])}",
             )
         )
     if median_roster is None:
