@@ -7,7 +7,7 @@ from datetime import date
 import pytest
 
 from ingest.bluesky import FIRST_SEARCHABLE_DAY, build_query, parse_hits
-from ingest.discourse import days_to_fetch, trailing_days
+from ingest.discourse import days_to_fetch, is_title_character, trailing_days
 from metrics.scoring import discourse_shares
 
 
@@ -53,3 +53,10 @@ def test_discourse_shares_sum_to_one_and_skip_silent_franchises() -> None:
     shares = discourse_shares({"c1": 3.0, "c2": 1.0})
     assert shares == {"c1": 0.75, "c2": 0.25}
     assert discourse_shares({"c1": 0.0, "c2": 0.0}) == {}
+
+
+def test_title_characters_are_detected_case_insensitively() -> None:
+    # Regression: "Angel" in Angel counted 61,153 posts, every mention of the show.
+    assert is_title_character("Angel", "Angel")
+    assert is_title_character("Ted Lasso ", "ted lasso")
+    assert not is_title_character("Fiona Gallagher", "Shameless")

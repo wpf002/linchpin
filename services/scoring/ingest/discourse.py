@@ -55,6 +55,12 @@ def trailing_days(last_day: date, days: int) -> list[date]:
     return [first_day + timedelta(days=offset) for offset in range(max(span, 0))]
 
 
+def is_title_character(character_name: str, franchise_name: str) -> bool:
+    """A character named like its franchise ("Angel" in Angel). The query collapses
+    to the franchise name alone, so every post about the show would count for them."""
+    return character_name.strip().casefold() == franchise_name.strip().casefold()
+
+
 def days_to_fetch(wanted: list[date], stored: Collection[date]) -> list[date]:
     return [day for day in wanted if day not in stored]
 
@@ -97,7 +103,11 @@ def _ingest_franchise(
     if franchise_id is None:
         report.skipped.append(f"{franchise.canonical_name}: not ingested")
         return
-    characters = _characters(conn, franchise_id)
+    characters = [
+        character
+        for character in _characters(conn, franchise_id)
+        if not is_title_character(character.name, franchise.canonical_name)
+    ]
     if not characters:
         report.skipped.append(f"{franchise.canonical_name}: no characters")
         return
