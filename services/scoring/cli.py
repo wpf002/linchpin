@@ -267,5 +267,32 @@ def verify_queue() -> None:
     typer.echo(f"queue={len(queue)}")
 
 
+@app.command("verify")
+def verify() -> None:
+    """Walk the verify queue: open each source page and answer y, n or q."""
+    import webbrowser
+
+    from db import connection
+    from ingest.corpus import load_exit_events
+    from validation.verify_queue import build_queue, load_testable_keys, mark_verified
+
+    with connection() as conn:
+        queue = build_queue(load_exit_events(), load_testable_keys(conn))
+    marked = 0
+    for position, item in enumerate(queue, start=1):
+        exit_label = "died" if item.exit_type == "CHARACTER_DEATH" else "left the show"
+        typer.echo(f"\n[{position}/{len(queue)}] {item.character} ({item.franchise})")
+        typer.echo(f"  Claim: {exit_label} in the episode aired {item.event_date:%B %-d, %Y}")
+        typer.echo(f"  Page:  {item.source_url}")
+        webbrowser.open(item.source_url)
+        answer = typer.prompt("  Does the page confirm it? [y/n/q]", default="n").strip().lower()
+        if answer == "q":
+            break
+        if answer == "y":
+            mark_verified(item)
+            marked += 1
+    typer.echo(f"\nverified={marked}")
+
+
 if __name__ == "__main__":
     app()

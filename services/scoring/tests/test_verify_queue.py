@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import json
 from datetime import date
+from pathlib import Path
 
 from ingest.corpus import CorpusExitEvent
-from validation.verify_queue import build_queue, coverable_event_dates
+from validation.verify_queue import QueueItem, build_queue, coverable_event_dates, mark_verified
 
 
 def _event(character: str, exit_type: str, *, verified: bool = False) -> CorpusExitEvent:
@@ -40,3 +42,23 @@ def test_queue_skips_verified_recast_and_untestable_events() -> None:
         ("Game of Thrones", name, day) for name in ("Lord Varys", "Sandor Clegane", "Bran Stark")
     }
     assert [item.character for item in build_queue(corpus, testable)] == ["Lord Varys"]
+
+
+def test_mark_verified_flips_only_the_matching_event(tmp_path: Path) -> None:
+    corpus = tmp_path / "exit_events.json"
+    rows = [
+        {
+            "franchise": "Game of Thrones",
+            "character": name,
+            "eventDate": "2019-05-12",
+            "verified": False,
+        }
+        for name in ("Lord Varys", "Sandor Clegane")
+    ]
+    corpus.write_text(json.dumps({"events": rows}), encoding="utf-8")
+    item = QueueItem(
+        "Game of Thrones", "Lord Varys", date(2019, 5, 12), "CHARACTER_DEATH", "", None
+    )
+    mark_verified(item, corpus)
+    saved = json.loads(corpus.read_text(encoding="utf-8"))["events"]
+    assert [row["verified"] for row in saved] == [True, False]

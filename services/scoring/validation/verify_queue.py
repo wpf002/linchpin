@@ -8,13 +8,15 @@ corpus but not to the rank IC sample.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import date, timedelta
+from pathlib import Path
 from typing import Final
 
 from psycopg import Connection
 
-from ingest.corpus import CorpusExitEvent
+from ingest.corpus import EXIT_EVENTS_FILE, CorpusExitEvent
 from ingest.pipeline import PAGEVIEW_EPOCH
 from metrics.constants import EVENT_WINDOWS, SCORED_WIKI_BASIS
 from validation.gate import HEADLINE_EXCLUDED_EXIT_TYPES
@@ -88,3 +90,19 @@ def load_testable_keys(conn: Connection) -> set[tuple[str, str, date]]:
             (earliest, latest, SCORED_WIKI_BASIS, SCORED_WIKI_BASIS, MIN_ARTICLE_PEERS),
         )
         return {(str(r["franchise"]), str(r["character"]), r["event_date"]) for r in cur.fetchall()}
+
+
+def mark_verified(item: QueueItem, target: Path = EXIT_EVENTS_FILE) -> None:
+    """Set verified=true on the one corpus event matching this queue item."""
+    payload = json.loads(target.read_text(encoding="utf-8"))
+    matches = [
+        row
+        for row in payload["events"]
+        if row["franchise"] == item.franchise
+        and row["character"] == item.character
+        and row["eventDate"] == item.event_date.isoformat()
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"expected one corpus event for {item}, found {len(matches)}")
+    matches[0]["verified"] = True
+    target.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
