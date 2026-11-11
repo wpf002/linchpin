@@ -240,7 +240,7 @@
         { "name": "Wonder Woman", "wikiTitle": "Wonder Woman", "creator": "William Moulton Marston", "billingOrder": 3 },
         { "name": "The Joker", "wikiTitle": "Joker (character)", "creator": "Bill Finger", "billingOrder": 4 },
         { "name": "Harley Quinn", "wikiTitle": "Harley Quinn", "creator": "Paul Dini", "billingOrder": 5 },
-        { "name": "The Flash", "wikiTitle": "Flash (Barry Allen)", "creator": "Robert Kanigher", "billingOrder": 6 },
+        { "name": "The Flash", "wikiTitle": "Barry Allen", "creator": "Robert Kanigher", "billingOrder": 6 },
         { "name": "Aquaman", "wikiTitle": "Aquaman", "creator": "Paul Norris", "billingOrder": 7 },
         { "name": "Green Lantern", "wikiTitle": "Green Lantern", "creator": "Martin Nodell", "billingOrder": 8 },
         { "name": "Nightwing", "wikiTitle": "Dick Grayson", "creator": "Bill Finger", "billingOrder": 9 },

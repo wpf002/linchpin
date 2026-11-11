@@ -15,7 +15,7 @@ from datetime import date, timedelta
 
 from psycopg import Connection
 
-from metrics.constants import EVENT_WINDOWS, SIGNAL_SOURCE_BY_SHARE
+from metrics.constants import EVENT_WINDOWS, SCORED_WIKI_BASIS, SIGNAL_SOURCE_BY_SHARE
 
 PRE_START = timedelta(days=abs(EVENT_WINDOWS["preStart"]))
 PRE_END = timedelta(days=abs(EVENT_WINDOWS["preEnd"]))
@@ -60,10 +60,17 @@ def franchise_daily_totals(
             JOIN "Character" c ON c.id = s."characterId"
             WHERE c."franchiseId" = ANY(%s)
               AND s.source = %s
+              AND c."wikiBasis" = %s
               AND s."measuredOn" BETWEEN %s AND %s
             GROUP BY c."franchiseId", s."measuredOn"
             """,
-            (list(franchise_ids), SIGNAL_SOURCE_BY_SHARE["wikiShare"], start, end),
+            (
+                list(franchise_ids),
+                SIGNAL_SOURCE_BY_SHARE["wikiShare"],
+                SCORED_WIKI_BASIS,
+                start,
+                end,
+            ),
         )
         rows = cur.fetchall()
 

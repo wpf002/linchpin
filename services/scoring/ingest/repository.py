@@ -127,6 +127,8 @@ def upsert_character(
     wiki_title: str | None,
     status: str = "ACTIVE",
 ) -> str:
+    if wiki_title is not None:
+        _drop_signals_from_another_title(conn, franchise_id, canonical_name, wiki_title)
     sql = """
         INSERT INTO "Character" (
             id, "franchiseId", "canonicalName", aliases, "wikiTitle", status
@@ -145,6 +147,34 @@ def upsert_character(
     return str(row["id"])
 
 
+def _drop_signals_from_another_title(
+    conn: Connection, franchise_id: str, canonical_name: str, wiki_title: str
+) -> None:
+    """Remove signals read through a title the character is about to lose.
+
+    Inserts skip days already stored, so without this a new title's pageviews
+    would sit beside the old title's under one character. The basis is reset
+    because it described the old title.
+    """
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(
+            'SELECT id, "wikiTitle" FROM "Character" '
+            'WHERE "franchiseId" = %s AND "canonicalName" = %s',
+            (franchise_id, canonical_name),
+        )
+        row = cur.fetchone()
+    if row is None or row["wikiTitle"] is None or row["wikiTitle"] == wiki_title:
+        return
+    removed = clear_wiki_link(conn, str(row["id"]))
+    logger.info(
+        "title changed for %s: %s -> %s, removed %d signal rows",
+        canonical_name,
+        row["wikiTitle"],
+        wiki_title,
+        removed,
+    )
+
+
 def clear_wiki_link(conn: Connection, character_id: str) -> int:
     """Drop a wrong article link and the signals read from that article.
 
@@ -158,7 +188,10 @@ def clear_wiki_link(conn: Connection, character_id: str) -> int:
             (character_id, list(WIKI_TITLE_SOURCES)),
         )
         removed = cur.rowcount
-        cur.execute('UPDATE "Character" SET "wikiTitle" = NULL WHERE id = %s', (character_id,))
+        cur.execute(
+            'UPDATE "Character" SET "wikiTitle" = NULL, "wikiBasis" = NULL WHERE id = %s',
+            (character_id,),
+        )
     return removed
 
 

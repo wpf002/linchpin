@@ -234,5 +234,21 @@ def _ic(result: object) -> str:
     return f"{coefficient:.3f}{bounds} n={pairs}"
 
 
+@app.command("audit-basis")
+def audit_basis(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
+    """Mark each stored Wikipedia title as an article or a redirect."""
+    from db import connection
+    from ingest.wiki_basis import open_client, refresh_wiki_basis
+
+    _configure_logging(verbose)
+    client = open_client()
+    try:
+        with connection() as conn:
+            report = refresh_wiki_basis(conn, client)
+    finally:
+        client.close()
+    typer.echo(f"article={report.article} redirect={report.redirect} unchecked={report.unchecked}")
+
+
 if __name__ == "__main__":
     app()

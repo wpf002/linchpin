@@ -36,6 +36,7 @@ from ingest.tvmaze import (
     fetch_episode_dates,
     search_show,
 )
+from ingest.wiki_basis import refresh_wiki_basis
 from ingest.wikimedia import fetch_pageviews
 from metrics.constants import EVENT_WINDOWS
 from metrics.windows import is_off_cycle
@@ -234,6 +235,7 @@ def _ingest_franchise(
             )
 
     repository.set_roster_complete(conn, franchise_id, outcome.roster_complete)
+    refresh_wiki_basis(conn, wiki_client, franchise_id=franchise_id)
     return outcome
 
 

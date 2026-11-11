@@ -19,7 +19,12 @@ from uuid import uuid4
 
 from psycopg import Connection
 
-from metrics.constants import KILL_CRITERIA, MODEL_VERSION, SIGNAL_SOURCE_BY_SHARE
+from metrics.constants import (
+    KILL_CRITERIA,
+    MODEL_VERSION,
+    SCORED_WIKI_BASIS,
+    SIGNAL_SOURCE_BY_SHARE,
+)
 
 #: A priori weights for how much of a franchise's persistence a role can claim.
 #: Set before any creator score existed. Change them only with a MODEL_VERSION bump.
@@ -146,9 +151,10 @@ def _franchise_persistence(
             JOIN "Character" c ON c.id = s."characterId"
             JOIN "Franchise" f ON f.id = c."franchiseId"
             WHERE s.source = %s AND s."measuredOn" BETWEEN %s AND %s
+              AND c."wikiBasis" = %s
             GROUP BY f.id, f.medium
             """,
-            (SIGNAL_SOURCE_BY_SHARE["wikiShare"], window_start, window_end),
+            (SIGNAL_SOURCE_BY_SHARE["wikiShare"], window_start, window_end, SCORED_WIKI_BASIS),
         )
         rows = cur.fetchall()
     by_medium: dict[str, dict[str, float]] = defaultdict(dict)

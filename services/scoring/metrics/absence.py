@@ -13,7 +13,7 @@ from typing import Final
 
 from psycopg import Connection
 
-from metrics.constants import EVENT_WINDOWS, SIGNAL_SOURCE_BY_SHARE
+from metrics.constants import EVENT_WINDOWS, SCORED_WIKI_BASIS, SIGNAL_SOURCE_BY_SHARE
 from metrics.substitutability import SubstitutabilityResult, substitutability
 
 #: Exits that remove the character from the story. A recast keeps the character
@@ -88,6 +88,7 @@ def _score_event(
             JOIN "Character" c ON c.id = s."characterId"
             WHERE c."franchiseId" = %s
               AND s.source = %s
+              AND c."wikiBasis" = %s
               AND (s."measuredOn" BETWEEN %s AND %s OR s."measuredOn" BETWEEN %s AND %s)
             GROUP BY s."measuredOn"
             """,
@@ -96,6 +97,7 @@ def _score_event(
                 character_id,
                 franchise_id,
                 SIGNAL_SOURCE_BY_SHARE["wikiShare"],
+                SCORED_WIKI_BASIS,
                 present[0],
                 present[-1],
                 absent[0],

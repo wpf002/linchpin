@@ -53,6 +53,13 @@ _REJECT_TITLE_PATTERNS = (
 
 _QUALIFIER = re.compile(r"\s*\(([^)]*)\)\s*$")
 
+#: Qualifiers that mark an article about a work. "Veronica Mars (character)" and
+#: "Angel (Buffy the Vampire Slayer)" share the franchise's name but are about a
+#: character, so a redirect landing there is a character article.
+_WORK_QUALIFIER = re.compile(
+    r"\b(series|franchise|film|miniseries|show|sitcom|novel|novels|book|comic|comics|anime|manga)$"
+)
+
 #: Normalised title of a franchise's character list. The subject is group 1 or 2.
 _CHARACTER_LIST = re.compile(r"^(?:list of (.+) characters|characters (?:of|in) (.+))$")
 
@@ -410,7 +417,9 @@ def _is_franchise_page(title: str, franchise_name: str) -> bool:
     words = base.split()
     while words and words[0] in _LEADING_ARTICLES:
         words = words[1:]
-    if " ".join(words) in _franchise_phrases(franchise_name):
+    qualifier = _QUALIFIER.search(title)
+    names_a_work = qualifier is None or _WORK_QUALIFIER.search(normalise(qualifier.group(1)))
+    if names_a_work and " ".join(words) in _franchise_phrases(franchise_name):
         return True
     listed = _CHARACTER_LIST.match(base)
     if listed is None:

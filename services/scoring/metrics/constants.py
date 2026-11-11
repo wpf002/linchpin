@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from typing import Final
 
-MODEL_VERSION: Final = "v0.3.0"
+MODEL_VERSION: Final = "v0.4.0"
+
+#: Pageview shares read only characters whose wikiTitle is an article. Redirect
+#: titles count a small, name-typing slice of readers. See ingest/wiki_basis.py.
+SCORED_WIKI_BASIS: Final = "ARTICLE"
 
 SIGNAL_WEIGHTS: Final[dict[str, float]] = {
     "wikiShare": 0.35,

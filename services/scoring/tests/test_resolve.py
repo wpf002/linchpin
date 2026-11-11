@@ -320,6 +320,45 @@ def test_redirect_to_a_character_of_another_work_is_rejected() -> None:
     assert verdict.title is None
 
 
+@pytest.mark.parametrize(
+    ("target", "character", "franchise", "asked"),
+    [
+        (
+            "Veronica Mars (character)",
+            "Veronica Mars",
+            "Veronica Mars",
+            "Veronica Mars (Veronica Mars)",
+        ),
+        ("Angel (Buffy the Vampire Slayer)", "Angel", "Angel", "Angel (Angel)"),
+    ],
+)
+def test_title_character_article_is_not_the_franchise_page(
+    target: str, character: str, franchise: str, asked: str
+) -> None:
+    # Both were stored as redirect titles, so their views were counted on a
+    # redirect that search engines skip. The article itself carries the traffic.
+    verdict = _accept(
+        redirected(target, f"{character} is a fictional character in the series {franchise}."),
+        character,
+        franchise,
+        None,
+        asked_title=asked,
+    )
+    assert verdict.title == target
+
+
+def test_redirect_into_a_qualified_series_article_keeps_the_redirect_title() -> None:
+    verdict = _accept(
+        redirected("Westworld (TV series)", "Westworld is an American science fiction series."),
+        "Charlotte Hale",
+        "Westworld",
+        "Tessa Thompson",
+        asked_title="Charlotte Hale",
+    )
+    assert verdict.title == "Charlotte Hale"
+    assert verdict.confidence == REDIRECT_TITLE_CONFIDENCE
+
+
 def test_parse_query_marks_only_redirected_titles() -> None:
     payload = {
         "query": {

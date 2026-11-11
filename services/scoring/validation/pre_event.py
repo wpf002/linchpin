@@ -13,7 +13,7 @@ from datetime import date, timedelta
 
 from psycopg import Connection
 
-from metrics.constants import EVENT_WINDOWS, SIGNAL_SOURCE_BY_SHARE
+from metrics.constants import EVENT_WINDOWS, SCORED_WIKI_BASIS, SIGNAL_SOURCE_BY_SHARE
 from validation.did import MIN_WINDOW_OBSERVATIONS
 
 #: A share needs someone to be a share of. One measured character is always 1.0.
@@ -47,6 +47,7 @@ def load_wiki_shares(conn: Connection, franchise_id: str, event_date: date) -> d
             JOIN "Character" c ON c.id = s."characterId"
             WHERE c."franchiseId" = %s
               AND s.source = %s
+              AND c."wikiBasis" = %s
               AND s."measuredOn" BETWEEN %s AND %s
             GROUP BY s."characterId"
             HAVING COUNT(*) >= %s
@@ -54,6 +55,7 @@ def load_wiki_shares(conn: Connection, franchise_id: str, event_date: date) -> d
             (
                 franchise_id,
                 SIGNAL_SOURCE_BY_SHARE["wikiShare"],
+                SCORED_WIKI_BASIS,
                 start,
                 end,
                 MIN_WINDOW_OBSERVATIONS,

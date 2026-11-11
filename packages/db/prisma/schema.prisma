@@ -41,6 +41,11 @@ enum RoleType {
   ATHLETE
 }
 
+enum WikiBasis {
+  ARTICLE
+  REDIRECT
+}
+
 enum SignalSource {
   WIKI
   AO3
@@ -115,6 +120,10 @@ model Character {
   canonicalName String
   aliases       String[]
   wikiTitle     String?
+  /// REDIRECT: wikiTitle redirects to a show page or list, so its views count
+  /// only readers who typed that name. Not comparable with ARTICLE, so it is
+  /// left out of pageview shares. Null until the basis check has run.
+  wikiBasis     WikiBasis?
   imageUrl      String?
   fandomPage    String?
   ao3Tag        String?

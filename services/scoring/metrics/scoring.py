@@ -23,7 +23,12 @@ from psycopg.rows import dict_row
 
 from db import connection
 from metrics.absence import NO_ABSENCE_WINDOW, load_substitutability
-from metrics.constants import MODEL_VERSION, SIGNAL_SOURCE_BY_SHARE, WIKI_ONLY_WEIGHTS
+from metrics.constants import (
+    MODEL_VERSION,
+    SCORED_WIKI_BASIS,
+    SIGNAL_SOURCE_BY_SHARE,
+    WIKI_ONLY_WEIGHTS,
+)
 from metrics.creator import run_creator_scoring
 from metrics.shares import (
     ZStats,
@@ -122,11 +127,15 @@ def _load_totals(
         FROM "Character" c
         JOIN "AttentionSignal" s ON s."characterId" = c.id
         WHERE s.source = %s AND s."measuredOn" BETWEEN %s AND %s
+          AND c."wikiBasis" = %s
         GROUP BY c."franchiseId", c.id, c."canonicalName"
     """
     grouped: dict[str, list[_CharacterTotals]] = defaultdict(list)
     with conn.cursor(row_factory=dict_row) as cur:
-        cur.execute(sql, (SIGNAL_SOURCE_BY_SHARE["wikiShare"], window_start, window_end))
+        cur.execute(
+            sql,
+            (SIGNAL_SOURCE_BY_SHARE["wikiShare"], window_start, window_end, SCORED_WIKI_BASIS),
+        )
         for row in cur.fetchall():
             if int(row["observations"]) < MIN_OBSERVATIONS:
                 continue
