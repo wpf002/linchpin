@@ -264,14 +264,43 @@ def resolve_character_article(
     return results.get(character_name, Resolution(None, 0.0, "no candidate article found"))
 
 
+_NICKNAME = re.compile(r"\s*[\"\u201c\u201d']([^\"\u201c\u201d']+)[\"\u201c\u201d']\s*")
+#: Catalogue prefixes that are not part of the article name ("Adult Misty Quigley").
+_NAME_PREFIX = re.compile(r"^(?:adult|young|teen|older|old|little|dr\.?|doctor)\s+", re.IGNORECASE)
+
+
+def name_variants(character_name: str) -> list[str]:
+    """Spellings an article might use for a catalogue name, the given name first.
+
+    'Kaywinnet Lee "Kaylee" Frye' also tries "Kaywinnet Lee Frye" and "Kaylee Frye";
+    "Emily Malek / Ofglen" tries each side; "Adult Misty Quigley" tries "Misty Quigley".
+    Every variant still has to pass _accept against the full catalogue name.
+    """
+    variants = [character_name]
+    for part in [character_name, *_ALIAS_SEPARATOR.split(character_name)]:
+        nickname = _NICKNAME.search(part)
+        if nickname is not None:
+            without = _NICKNAME.sub(" ", part).split()
+            variants.append(" ".join(without))
+            if without:
+                variants.append(f"{nickname.group(1).strip()} {without[-1]}")
+        variants.append(part)
+    variants += [_NAME_PREFIX.sub("", variant) for variant in list(variants)]
+    return list(dict.fromkeys(v.strip() for v in variants if v.strip()))
+
+
 def _candidate_titles(character_name: str, franchise_name: str) -> list[tuple[str, float]]:
     short = franchise_name.split(":")[0].strip()
     titles = [
-        (f"{character_name} ({franchise_name})", 1.0),
-        (f"{character_name} ({short})", 1.0),
-        (f"{character_name} ({franchise_name} character)", 1.0),
-        (f"{character_name} (character)", 0.95),
-        (character_name, 0.95),
+        title
+        for name in name_variants(character_name)
+        for title in (
+            (f"{name} ({franchise_name})", 1.0),
+            (f"{name} ({short})", 1.0),
+            (f"{name} ({franchise_name} character)", 1.0),
+            (f"{name} (character)", 0.95),
+            (name, 0.95),
+        )
     ]
     seen: set[str] = set()
     unique: list[tuple[str, float]] = []
@@ -506,7 +535,7 @@ def _resolve_by_search(
     found: dict[str, Resolution] = {}
     searched: dict[str, str] = {}
     for name, _actor in characters:
-        title = _search_title(f"{name} {franchise_name}", client)
+        title = _search_title(f"{name_variants(name)[-1]} {franchise_name}", client)
         if title is not None:
             searched[name] = title
 

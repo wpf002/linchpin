@@ -15,7 +15,6 @@ const FACE_SPAN_PX = 200;
 const FACE_MAX_VW = 56;
 /** Diameter when shares are withheld. Every face is the same size. */
 const UNSIZED_FACE_PX = 80;
-const NO_DATA_FACE_PX = 40;
 /** Narrowest column a name is given under a small face. */
 const NAME_MIN_WIDTH_PX = 104;
 /** Faces shown before the cast is expanded. Shares past this point are usually under one percent. */
@@ -42,9 +41,9 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
 
   if (!scored) return <UnsizedCast characters={[...characters].sort(byBilling)} />;
 
-  // Confidence 0 means no usable signal: the character is shown but never sized.
+  // Confidence 0 means no usable signal. Those characters are counted, not shown.
   const measured = characters.filter((character) => character.confidence > 0);
-  const unmeasured = characters.filter((character) => character.confidence === 0);
+  const unmeasuredCount = characters.length - measured.length;
   const visible = expanded ? measured : measured.slice(0, COLLAPSED_FACE_COUNT);
   const hasLowerConfidence = visible.some((character) => confidenceLevel(character.confidence) !== "high");
 
@@ -68,37 +67,18 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
         ) : (
           <span />
         )}
-        {hasLowerConfidence ? (
-          <span className="flex items-center gap-2 text-faint">
-            <span aria-hidden="true" className="size-3 rounded-full border border-dashed border-muted" />
-            Dashed Ring Means Lower Confidence
-          </span>
-        ) : null}
+        <span className="flex flex-wrap items-center gap-x-6 gap-y-2 text-faint">
+          {unmeasuredCount > 0 ? (
+            <span title="No Wikipedia page views on record, so not shown.">{unmeasuredCount} Untracked</span>
+          ) : null}
+          {hasLowerConfidence ? (
+            <span className="flex items-center gap-2">
+              <span aria-hidden="true" className="size-3 rounded-full border border-dashed border-muted" />
+              Dashed Ring Means Lower Confidence
+            </span>
+          ) : null}
+        </span>
       </div>
-      {unmeasured.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          <h3 className="text-sm text-muted" title="No Wikipedia page views on record, so no size.">
-            {unmeasured.length} With No Data
-          </h3>
-          <ul className="flex flex-wrap gap-x-4 gap-y-3">
-            {unmeasured.map((character) => (
-              <li key={character.id}>
-                <Link
-                  href={`/characters/${character.id}`}
-                  className="flex items-center gap-2 text-sm text-faint transition-colors duration-150 hover:text-ink"
-                >
-                  <Face
-                    name={character.canonicalName}
-                    imageUrl={character.imageUrl}
-                    style={{ width: NO_DATA_FACE_PX }}
-                  />
-                  {character.canonicalName}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -113,10 +93,7 @@ function SizedFace({ character }: { character: CharacterRow }) {
       className="flex flex-col items-center gap-3"
       style={{ width: `max(${NAME_MIN_WIDTH_PX}px, ${cappedWidth(diameter)})` }}
     >
-      <Link
-        href={`/characters/${character.id}`}
-        className="group flex w-full flex-col items-center gap-3 text-center"
-      >
+      <Link href={`/characters/${character.id}`} className="group flex w-full flex-col items-center gap-3 text-center">
         <span
           className={clsx(
             "flex rounded-full transition-opacity duration-150 group-hover:opacity-80",

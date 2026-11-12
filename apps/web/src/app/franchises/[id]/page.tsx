@@ -130,7 +130,6 @@ function ExitRow({ event }: { event: ExitEvent }) {
           ) : (
             <span className="font-medium text-ink">{name}</span>
           )}
-          {event.verified ? null : <span className="text-xs text-faint">Unverified</span>}
         </span>
         <span className="text-sm text-muted">
           {label(event.exitType)} · {formatDate(event.eventDate)}

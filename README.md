@@ -54,6 +54,10 @@ Run from `services/scoring`:
 
 `ingest --only "Name"` (repeatable) limits a run to named franchises. `--skip-signals` resolves rosters without fetching pageviews.
 
+Nightly refresh: `sh scripts/install-nightly.sh` installs a launchd job that runs `ingest` then `score` at 04:00 and posts a macOS notification with the result. Logs go to `data/logs/`. Run it now with `launchctl kickstart gui/$(id -u)/com.linchpin.nightly-refresh`.
+
+The app shows verified exits only. Run `verify` to add more.
+
 `ingest-search` stops at the first window Google Trends refuses. Fetched batches are cached, so the next run resumes there.
 
 Ingest is cached under `data/cache`. A cold run takes roughly an hour because every source is throttled. Scoring never rewrites raw signal rows. `audit-titles --write` is the only command that deletes them, and only for a character whose stored article failed the audit. See [docs/SOURCES.md](docs/SOURCES.md).

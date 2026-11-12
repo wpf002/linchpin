@@ -16,6 +16,7 @@ from ingest.resolve import (
     _Page,
     _parse_query,
     lead_names_character,
+    name_variants,
     title_names_character,
     verify_titles,
 )
@@ -370,3 +371,28 @@ def test_parse_query_marks_only_redirected_titles() -> None:
     pages = _parse_query(payload, ["Carolyn Martens", "killing_Eve"])
     assert pages["carolyn martens"].via_redirect is True
     assert pages["killing eve"].via_redirect is False
+
+
+@pytest.mark.parametrize(
+    ("catalogue_name", "expected"),
+    [
+        ('Kaywinnet Lee "Kaylee" Frye', {"Kaywinnet Lee Frye", "Kaylee Frye"}),
+        ("Adult Misty Quigley", {"Misty Quigley"}),
+        ("Emily Malek / Ofglen", {"Emily Malek", "Ofglen"}),
+        ('Dr. Eleanor "Ellie" Bartowski', {"Eleanor Bartowski", "Ellie Bartowski"}),
+    ],
+)
+def test_name_variants_cover_nicknames_prefixes_and_aliases(
+    catalogue_name: str, expected: set[str]
+) -> None:
+    variants = name_variants(catalogue_name)
+    assert variants[0] == catalogue_name
+    assert expected <= set(variants)
+
+
+def test_name_variants_leave_plain_names_alone() -> None:
+    assert name_variants("Molly Evans") == ["Molly Evans"]
+
+
+def test_nickname_article_title_names_the_catalogue_character() -> None:
+    assert title_names_character("Kaylee Frye", 'Kaywinnet Lee "Kaylee" Frye', "Firefly")

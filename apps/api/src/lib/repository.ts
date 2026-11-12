@@ -107,7 +107,7 @@ export async function listFranchises(
       SELECT COUNT(*) AS roster_size FROM "Character" c WHERE c."franchiseId" = f.id
     ) roster ON TRUE
     LEFT JOIN LATERAL (
-      SELECT COUNT(*) AS exit_event_count FROM "ExitEvent" e WHERE e."franchiseId" = f.id
+      SELECT COUNT(*) AS exit_event_count FROM "ExitEvent" e WHERE e."franchiseId" = f.id AND e.verified
     ) exits ON TRUE
     LEFT JOIN LATERAL (
       SELECT s.fragility, s.hhi, s."top1Share", s."top3Share", s."scoredOn"
@@ -207,12 +207,16 @@ function toFranchiseRow(record: ScreenerRecord): FranchiseRow {
   };
 }
 
+/** Only exits a person has checked against the source page reach the app. */
+const SHOWN_EXIT_FILTER = { verified: true } as const;
+
 export async function getFranchise(id: string): Promise<FranchiseDetail> {
   const franchise = await prisma.franchise.findUnique({
     where: { id },
     include: {
       releases: { orderBy: { releasedOn: "asc" } },
       exitEvents: {
+        where: SHOWN_EXIT_FILTER,
         orderBy: { eventDate: "desc" },
         include: {
           character: { select: { id: true, canonicalName: true, imageUrl: true } },
@@ -480,7 +484,7 @@ export async function listSignalRows(
 
 export async function listEventStudies(): Promise<EventStudyRow[]> {
   const studies = await prisma.eventStudy.findMany({
-    where: { modelVersion: MODEL_VERSION },
+    where: { modelVersion: MODEL_VERSION, exitEvent: SHOWN_EXIT_FILTER },
     include: {
       exitEvent: {
         include: {

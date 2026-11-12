@@ -62,14 +62,16 @@ export function castTracked(rosterComplete: number, rosterSize: number): string 
   return `Cast Tracked ${Math.round(rosterComplete * rosterSize)} of ${rosterSize}`;
 }
 
-/** A log-point estimate as "fell about 12%" or "rose about 4%". */
 /** At or above this ratio a rise reads as a multiple. "Rose about 6471%" is unreadable; "rose about 66x" isn't. */
 const MULTIPLE_FROM_RATIO = 3;
 
+/** A log-point estimate as "fell about 12%", "rose about 4%" or "rose about 66x". */
 export function changeInWords(logChange: number): string {
   const ratio = Math.exp(logChange);
-  if (ratio >= MULTIPLE_FROM_RATIO) return `rose about ${Math.round(ratio)}x`;
   const percent = Math.round(Math.abs(ratio - 1) * 100);
+  // Compared on the rounded percent so exp(log(3)) = 2.9999… still reads as a multiple.
+  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `rose about ${Math.round(ratio)}x`;
+  if (percent === 0) return "held flat";
   return `${logChange < 0 ? "fell" : "rose"} about ${percent}%`;
 }
 

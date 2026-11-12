@@ -76,11 +76,11 @@ export function ReleaseTimeline({
                 cx={position}
                 cy={12}
                 r={5}
-                fill={event.verified ? "var(--frag-load-bearing)" : "var(--surface)"}
+                fill="var(--frag-load-bearing)"
                 stroke="var(--frag-load-bearing)"
                 strokeWidth={1.5}
               >
-                <title>{`${event.characterName ?? event.personName ?? "Exit"} · ${label(event.exitType)} · ${formatDate(event.eventDate)}${event.verified ? "" : " · Unverified"}`}</title>
+                <title>{`${event.characterName ?? event.personName ?? "Exit"} · ${label(event.exitType)} · ${formatDate(event.eventDate)}`}</title>
               </circle>
             </g>
           );
