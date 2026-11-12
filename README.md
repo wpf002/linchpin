@@ -1,8 +1,8 @@
 # Linchpin
 
-Character-level attention concentration and franchise fragility scoring, built only on public signals. It answers one question: what happens to this franchise if the lead leaves?
+Measures how a TV franchise's audience attention splits across its cast, from public Wikipedia page views. It also records what happened to franchise attention after past cast exits. It doesn't forecast.
 
-**Status:** Killed on 2026-11-11. The gate failed under `v0.1.0`, `v0.2.0` and `v0.4.0`, and every computable rank IC was negative. See [docs/PHASE4_RESULT.md](docs/PHASE4_RESULT.md). Scores in the UI are exploratory.
+**Status:** Killed on 2026-11-11. The gate failed under `v0.1.0`, `v0.2.0` and `v0.4.0`, and every computable rank IC was negative. See [docs/PHASE4_RESULT.md](docs/PHASE4_RESULT.md). The prediction is gone from the UI. The app shows measured attention shares and observed post-exit changes only.
 
 `MODEL_VERSION` is `v0.4.0`. It scores only characters whose wikiTitle is an article ([docs/SOURCES.md](docs/SOURCES.md)).
 
@@ -73,12 +73,11 @@ Web runs on port 3000. Pass `--port` to `next dev` if it's taken.
 | --- | --- |
 | `GET /franchises` | Screener rows. Filter by medium and status; sort by fragility, HHI, lead share, roster size or name; cursor paging |
 | `GET /franchises/:id` | Franchise detail, roster, releases, exit events |
-| `GET /franchises/:id/simulate/:characterId` | Concentration figures with one character removed |
 | `GET /characters` | Characters across all scored franchises, sorted by carry, off-cycle carry or durability |
 | `GET /characters/:id`, `GET /characters/:id/signals` | Character detail and its raw signal rows |
 | `GET /creators` | Creators with project counts. Residuals are null below 3 completed projects |
 | `GET /search?q=` | Franchises, characters and creators matching a name |
-| `GET /validation`, `GET /validation/studies` | Gate status, kill criteria, event-study rows |
+| `GET /validation`, `GET /validation/studies` | Gate record and measured post-exit changes (the web Exits page) |
 | `GET /vantage/sector` | The scored universe as one document |
 
 The web app's `/api/export` route streams the filtered screener as CSV. Suppressed figures export as empty cells.

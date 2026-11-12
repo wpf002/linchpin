@@ -75,7 +75,7 @@ export function ScreenerTable({
               hint="Sum of squared attention shares. 1.0 means one character has it all."
             />
             <SortHeader column="rosterSize" label="Cast" current={query} params={params} align="right" />
-            <SortHeader column="fragility" label="Fragility" current={query} params={params} align="right" />
+            <SortHeader column="fragility" label="Lead Weight" current={query} params={params} align="right" />
           </tr>
         </thead>
         <tbody>

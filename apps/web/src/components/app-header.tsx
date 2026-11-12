@@ -1,22 +1,9 @@
 import Link from "next/link";
 import { MODEL_VERSION } from "@linchpin/shared";
-import { fetchValidation } from "@/lib/api";
-import { GateChip } from "./gate-chip";
 import { GlobalSearch } from "./global-search";
 import { NavLinks } from "./nav-links";
 
-async function loadGate() {
-  try {
-    const report = await fetchValidation();
-    return report.gate;
-  } catch (error) {
-    console.error("header could not load the validation gate", error);
-    return null;
-  }
-}
-
-export async function AppHeader() {
-  const gate = await loadGate();
+export function AppHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-bg/90 backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center gap-x-4 px-4 sm:px-8 md:gap-x-8">
@@ -28,7 +15,6 @@ export async function AppHeader() {
         <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-4">
           <GlobalSearch />
           <span className="hidden font-mono text-xs text-faint lg:inline">{MODEL_VERSION}</span>
-          <GateChip gate={gate} />
         </div>
       </div>
     </header>

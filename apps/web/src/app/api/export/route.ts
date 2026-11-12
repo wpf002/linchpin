@@ -12,7 +12,7 @@ const HEADER = [
   "Top 1 Share",
   "Top 3 Share",
   "HHI",
-  "Fragility",
+  "Lead Weight",
   "Cast Exits",
   "Model Version",
 ];

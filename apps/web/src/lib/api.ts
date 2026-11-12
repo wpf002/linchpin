@@ -1,16 +1,12 @@
 import "server-only";
 import {
   characterDetailSchema,
-  creatorsResponseSchema,
   eventStudiesResponseSchema,
-  exitSimulationSchema,
   franchiseDetailSchema,
   leadersResponseSchema,
   screenerResponseSchema,
   searchResponseSchema,
   signalRowsResponseSchema,
-  validationResponseSchema,
-  type CreatorsQuery,
   type FranchiseRow,
   type LeadersQuery,
   type ScreenerQuery,
@@ -112,20 +108,8 @@ export function fetchLeaders(query: Partial<LeadersQuery>) {
   return getJson(`/characters${toQueryString(query)}`, leadersResponseSchema);
 }
 
-export function fetchCreators(query: Partial<CreatorsQuery>) {
-  return getJson(`/creators${toQueryString(query)}`, creatorsResponseSchema);
-}
-
 export async function fetchFranchise(id: string) {
   return getJson(recordPath("franchises", id), franchiseDetailSchema);
-}
-
-export async function fetchSimulation(franchiseId: string, characterId: string) {
-  recordPath("characters", characterId);
-  return getJson(
-    recordPath("franchises", franchiseId, `/simulate/${encodeURIComponent(characterId)}`),
-    exitSimulationSchema,
-  );
 }
 
 export async function fetchCharacter(id: string) {
@@ -137,10 +121,6 @@ export async function fetchSignalRows(id: string, query: Partial<SignalRowsQuery
     recordPath("characters", id, `/signals${toQueryString(query)}`),
     signalRowsResponseSchema,
   );
-}
-
-export function fetchValidation() {
-  return getJson("/validation", validationResponseSchema);
 }
 
 export function fetchEventStudies() {

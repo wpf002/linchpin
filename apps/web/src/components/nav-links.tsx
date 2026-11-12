@@ -7,8 +7,7 @@ import { clsx } from "clsx";
 const LINKS = [
   { href: "/", label: "Franchises", matches: (path: string) => path === "/" || path.startsWith("/franchises") },
   { href: "/characters", label: "Characters", matches: (path: string) => path.startsWith("/characters") },
-  { href: "/creators", label: "Creators", matches: (path: string) => path.startsWith("/creators") },
-  { href: "/validation", label: "Validation", matches: (path: string) => path.startsWith("/validation") },
+  { href: "/exits", label: "Exits", matches: (path: string) => path.startsWith("/exits") },
 ] as const;
 
 export function NavLinks({ className }: { className?: string }) {

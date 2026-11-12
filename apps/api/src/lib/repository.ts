@@ -5,15 +5,11 @@ import {
   SIGNAL_SOURCE_BY_SHARE,
   SIGNAL_WEIGHTS,
   castFaceSchema,
-  hhi as computeHhi,
-  simulateRemoval,
-  topNShare,
 } from "@linchpin/shared";
 import type {
   CharacterDetail,
   CharacterRow,
   EventStudyRow,
-  ExitSimulation,
   FranchiseDetail,
   FranchiseRow,
   ScreenerQuery,
@@ -30,9 +26,6 @@ import { parseBlend, parseStrata } from "./validation-run.js";
 
 /** Signal history returned with a character. A year of daily points. */
 const SERIES_DAYS = 365;
-
-/** How many absorbers an exit simulation names. Beyond this the deltas are noise. */
-const MAX_ABSORBERS = 5;
 
 /** Cast faces returned with each franchise row. */
 const TOP_CAST_SIZE = 6;
@@ -456,81 +449,6 @@ function parseFailures(raw: unknown): ValidationReport["failures"] {
   }
   return parsed.data;
 }
-
-export async function simulateExit(
-  franchiseId: string,
-  characterId: string,
-): Promise<ExitSimulation> {
-  const roster = await listCharacters(franchiseId);
-  if (roster.length === 0) throw new NotFoundError("franchise");
-  const index = roster.findIndex((entry) => entry.id === characterId);
-  if (index < 0) throw new NotFoundError("character");
-
-  const scores = roster.map((entry) => entry.carryScore);
-  const before = { hhi: computeHhi(scores), top1Share: topNShare(scores, 1) };
-  const after = simulateRemoval(scores, index);
-
-  const remainingNames = roster.filter((_, position) => position !== index);
-  const sharesBefore = normalise(scores).filter((_, position) => position !== index);
-  const absorbers = remainingNames
-    .map((entry, position) => ({
-      characterId: entry.id,
-      canonicalName: entry.canonicalName,
-      delta: (after.remaining[position] ?? 0) - (sharesBefore[position] ?? 0),
-    }))
-    .sort((left, right) => right.delta - left.delta)
-    .slice(0, MAX_ABSORBERS);
-
-  return {
-    franchiseId,
-    characterId,
-    removedCarryScore: roster[index]?.carryScore ?? 0,
-    hhiBefore: before.hhi,
-    hhiAfter: after.hhi,
-    top1Before: before.top1Share,
-    top1After: after.top1Share,
-    absorbers,
-    projectedDecline: await projectDecline(roster[index]?.carryScore ?? 0),
-  };
-}
-
-function normalise(values: number[]): number[] {
-  const total = values.reduce((sum, value) => sum + Math.max(0, value), 0);
-  if (total <= 0) return values.map(() => 0);
-  return values.map((value) => Math.max(0, value) / total);
-}
-
-/** Minimum comparable events before a projection is offered at all. */
-const MIN_COMPARABLE_EVENTS = 12;
-
-/** Half-width of the carry-score band used to find comparable past exits. */
-const COMPARABLE_CARRY_BAND = 0.08;
-
-async function projectDecline(carryScore: number): Promise<ExitSimulation["projectedDecline"]> {
-  const studies = await prisma.eventStudy.findMany({
-    where: {
-      modelVersion: MODEL_VERSION,
-      announced: false,
-      preCarryScore: {
-        gte: carryScore - COMPARABLE_CARRY_BAND,
-        lte: carryScore + COMPARABLE_CARRY_BAND,
-      },
-    },
-    select: { didEstimate: true },
-  });
-  if (studies.length < MIN_COMPARABLE_EVENTS) return null;
-
-  const estimates = studies.map((study) => study.didEstimate).sort((a, b) => a - b);
-  const mean = estimates.reduce((sum, value) => sum + value, 0) / estimates.length;
-  return {
-    pointEstimate: mean,
-    lower: estimates[Math.floor(estimates.length * 0.025)] ?? mean,
-    upper: estimates[Math.min(estimates.length - 1, Math.floor(estimates.length * 0.975))] ?? mean,
-    comparableEvents: estimates.length,
-    basis: `Realised exits with pre-event carry score within ${COMPARABLE_CARRY_BAND} of this character.`,
-  };
-}
-
 
 export async function listSignalRows(
   characterId: string,

@@ -46,7 +46,7 @@ export default async function FranchisePage({ params }: Props) {
           {franchise.characters.length === 0 ? (
             <EmptyState title="No Characters With Data" />
           ) : (
-            <CastStage franchiseId={franchise.id} characters={franchise.characters} scored={scored} />
+            <CastStage characters={franchise.characters} scored={scored} />
           )}
         </Panel>
         <Panel
