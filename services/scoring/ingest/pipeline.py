@@ -34,6 +34,7 @@ from ingest.tvmaze import (
     TvMazeCastEntry,
     fetch_cast,
     fetch_episode_dates,
+    fetch_show,
     search_show,
 )
 from ingest.wiki_basis import refresh_wiki_basis
@@ -286,7 +287,11 @@ def _describe(corpus_franchise: CorpusFranchise) -> _Description:
             status=corpus_franchise.status or "ACTIVE",
         )
 
-    show = search_show(corpus_franchise.query_name)
+    show = (
+        fetch_show(corpus_franchise.tvmaze_id)
+        if corpus_franchise.tvmaze_id is not None
+        else search_show(corpus_franchise.query_name)
+    )
     tmdb_id = _tmdb_id_for(corpus_franchise.query_name)
 
     roster = []

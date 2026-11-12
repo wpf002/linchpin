@@ -292,7 +292,7 @@
       "verified": true
     },
     {
-      "franchise": "Doctor Who",
+      "franchise": "Doctor Who (2005)",
       "character": "The Doctor",
       "aliases": [
         "Tenth Doctor",
@@ -306,7 +306,7 @@
       "verified": true
     },
     {
-      "franchise": "Doctor Who",
+      "franchise": "Doctor Who (2005)",
       "character": "The Doctor",
       "aliases": [
         "Eleventh Doctor",
@@ -320,7 +320,7 @@
       "verified": true
     },
     {
-      "franchise": "Doctor Who",
+      "franchise": "Doctor Who (2005)",
       "character": "The Doctor",
       "aliases": [
         "Twelfth Doctor",
@@ -334,7 +334,7 @@
       "verified": true
     },
     {
-      "franchise": "Doctor Who",
+      "franchise": "Doctor Who (2005)",
       "character": "Amy Pond",
       "person": "Karen Gillan",
       "exitType": "ACTOR_DEPARTURE",
@@ -872,7 +872,7 @@
       "verified": true
     },
     {
-      "franchise": "Doctor Who",
+      "franchise": "Doctor Who (2005)",
       "character": "Bill Potts",
       "person": "Pearl Mackie",
       "exitType": "ACTOR_DEPARTURE",

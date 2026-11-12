@@ -113,3 +113,32 @@ def test_fetch_tv_releases_skips_specials_season() -> None:
     releases = fetch_tv_releases(7, client=client)  # type: ignore[arg-type]
     assert [(r.season_no, r.released_on.isoformat()) for r in releases] == [(1, "2011-01-09")]
     assert not any(url.endswith("/season/0") for url in client.requested)
+
+
+def test_describe_uses_pinned_tvmaze_id_instead_of_name_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression: "Doctor Who" by name finds the 2023 series, so the 2005 entry pins id 210."""
+    franchise = CorpusFranchise.model_validate(
+        {
+            "canonicalName": "Doctor Who (2005)",
+            "searchName": "Doctor Who",
+            "tvmazeId": 210,
+            "medium": "TV",
+        }
+    )
+    fetched_ids: list[int] = []
+
+    def fake_fetch_show(show_id: int) -> None:
+        fetched_ids.append(show_id)
+
+    def fail_search(_name: str) -> None:
+        raise AssertionError("name search must not run when tvmazeId is set")
+
+    monkeypatch.setattr(pipeline, "fetch_show", fake_fetch_show)
+    monkeypatch.setattr(pipeline, "search_show", fail_search)
+    monkeypatch.setattr(pipeline, "_tmdb_id_for", lambda _name: None)
+
+    pipeline._describe(franchise)
+
+    assert fetched_ids == [210]

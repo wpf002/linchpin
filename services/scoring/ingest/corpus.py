@@ -48,6 +48,8 @@ class CorpusFranchise(BaseModel):
 
     canonical_name: str = Field(alias="canonicalName")
     search_name: str | None = Field(default=None, alias="searchName")
+    #: Pins the TVMaze series when the name search returns another one ("Doctor Who" finds 2023).
+    tvmaze_id: int | None = Field(default=None, alias="tvmazeId")
     medium: Medium
     primary_subs: list[str] = Field(default_factory=list, alias="primarySubs")
     genres: list[str] = Field(default_factory=list)

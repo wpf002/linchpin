@@ -85,18 +85,37 @@ def search_show(name: str, *, client: ThrottledClient | None = None) -> TvMazeSh
         if not payload or payload.get("__missing__"):
             logger.info("TVMaze has no show matching %r", name)
             return None
-        return TvMazeShow(
-            tvmaze_id=int(payload["id"]),
-            name=str(payload.get("name", name)),
-            premiered=_parse_date(payload.get("premiered")),
-            ended=_parse_date(payload.get("ended")),
-            status=str(payload.get("status", "Unknown")),
-            genres=[str(genre) for genre in payload.get("genres", [])],
-            image_url=image_url_of(payload),
-        )
+        return _show_from(payload, name)
     finally:
         if owned:
             active.close()
+
+
+def fetch_show(show_id: int, *, client: ThrottledClient | None = None) -> TvMazeShow | None:
+    """One show by TVMaze id, for franchises whose name search lands on the wrong series."""
+    owned = client is None
+    active = client or open_client()
+    try:
+        payload = active.get_json(f"{BASE}/shows/{show_id}")
+        if not payload or payload.get("__missing__"):
+            logger.info("TVMaze has no show with id %d", show_id)
+            return None
+        return _show_from(payload, str(show_id))
+    finally:
+        if owned:
+            active.close()
+
+
+def _show_from(payload: dict, fallback_name: str) -> TvMazeShow:
+    return TvMazeShow(
+        tvmaze_id=int(payload["id"]),
+        name=str(payload.get("name", fallback_name)),
+        premiered=_parse_date(payload.get("premiered")),
+        ended=_parse_date(payload.get("ended")),
+        status=str(payload.get("status", "Unknown")),
+        genres=[str(genre) for genre in payload.get("genres", [])],
+        image_url=image_url_of(payload),
+    )
 
 
 def fetch_cast(show_id: int, *, client: ThrottledClient | None = None) -> list[TvMazeCastEntry]:

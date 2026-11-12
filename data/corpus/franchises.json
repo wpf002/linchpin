@@ -13,6 +13,7 @@
     { "canonicalName": "Stranger Things", "searchName": "Stranger Things", "medium": "TV", "primarySubs": ["strangerthings"] },
     { "canonicalName": "The Big Bang Theory", "searchName": "The Big Bang Theory", "medium": "TV", "primarySubs": ["bigbangtheory"] },
     { "canonicalName": "Doctor Who", "searchName": "Doctor Who", "medium": "TV", "primarySubs": ["doctorwho", "gallifrey"] },
+    { "canonicalName": "Doctor Who (2005)", "searchName": "Doctor Who", "tvmazeId": 210, "medium": "TV", "primarySubs": ["doctorwho", "gallifrey"] },
     { "canonicalName": "Buffy the Vampire Slayer", "searchName": "Buffy the Vampire Slayer", "medium": "TV", "primarySubs": ["buffy"] },
     { "canonicalName": "Star Trek: The Next Generation", "searchName": "Star Trek: The Next Generation", "medium": "TV", "primarySubs": ["startrek"] },
     { "canonicalName": "The X-Files", "searchName": "The X-Files", "medium": "TV", "primarySubs": ["xfiles"] },
