@@ -68,7 +68,7 @@ export function ScreenerTable({
             />
             <SortHeader
               column="hhi"
-              label="HHI"
+              label="Concentration"
               current={query}
               params={params}
               align="right"

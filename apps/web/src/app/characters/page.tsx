@@ -71,7 +71,7 @@ function CharacterTile({ row, rank, sort }: { row: LeaderRow; rank: number; sort
         {sort === "durabilityRatio" && row.durabilityRatio !== null ? (
           <span className="text-xs text-faint">{stayingPower(row.durabilityRatio)}</span>
         ) : null}
-        {level === "high" ? null : <span className="text-xs text-blocked">{CONFIDENCE_LABEL[level]}</span>}
+        {level === "high" ? null : <span className="text-xs text-muted">{CONFIDENCE_LABEL[level]}</span>}
       </div>
     </li>
   );

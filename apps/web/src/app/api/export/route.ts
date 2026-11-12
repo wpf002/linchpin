@@ -11,7 +11,7 @@ const HEADER = [
   "Lead",
   "Top 1 Share",
   "Top 3 Share",
-  "HHI",
+  "Concentration",
   "Lead Weight",
   "Cast Exits",
   "Model Version",

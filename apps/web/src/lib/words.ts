@@ -63,8 +63,13 @@ export function castTracked(rosterComplete: number, rosterSize: number): string 
 }
 
 /** A log-point estimate as "fell about 12%" or "rose about 4%". */
+/** At or above this ratio a rise reads as a multiple. "Rose about 6471%" is unreadable; "rose about 66x" isn't. */
+const MULTIPLE_FROM_RATIO = 3;
+
 export function changeInWords(logChange: number): string {
-  const percent = Math.round(Math.abs(Math.exp(logChange) - 1) * 100);
+  const ratio = Math.exp(logChange);
+  if (ratio >= MULTIPLE_FROM_RATIO) return `rose about ${Math.round(ratio)}x`;
+  const percent = Math.round(Math.abs(ratio - 1) * 100);
   return `${logChange < 0 ? "fell" : "rose"} about ${percent}%`;
 }
 

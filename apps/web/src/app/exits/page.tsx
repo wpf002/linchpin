@@ -58,9 +58,9 @@ export default async function ExitsPage() {
   return (
     <>
       <PageTitle eyebrow={`${formatCount(studies.length)} Measured`} title="Exits" />
-      <div className="flex flex-col gap-16">
+      <div className="grid items-start gap-16 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel
-          title="Share Before vs Change After"
+          title="Share vs Change"
           hint="Each dot is one exit. Change is franchise attention after the exit compared with similar shows over the same days."
           action={
             <span className="flex items-center gap-4 text-sm text-muted">
@@ -77,7 +77,7 @@ export default async function ExitsPage() {
         </Panel>
         {studies.length > 0 ? (
           <Panel title="All Exits" action={<span className="num text-sm text-muted">{formatCount(studies.length)}</span>}>
-            <ul className="max-h-[640px] overflow-y-auto">
+            <ul className="max-h-[480px] overflow-y-auto lg:max-h-[640px]">
               {studies.map((row) => (
                 <StudyItem key={row.exitEventId} row={row} />
               ))}

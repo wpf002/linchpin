@@ -3,8 +3,8 @@
 /*
  * Linchpin tokens. Dark is the default: analysts keep this open beside other
  * terminals. Light overrides token values only; components never branch on theme.
- * Brass is the single accent (actions, active state). The fragility scale runs
- * cool to hot and never shares a hue with the accent.
+ * Brass is the single accent (actions, active state). The lead-weight band scale
+ * runs cool to hot and never shares a hue with the accent.
  */
 :root {
   --bg: #0a0b0d;
@@ -27,9 +27,6 @@
   --frag-concentrated: #dd7a43;
   --frag-load-bearing: #e0483a;
 
-  --pass: #4fa58f;
-  --fail: #e0483a;
-  --blocked: #a29f97;
 
   --chart-line: #e8e6e1;
   --chart-grid: #1d2025;
@@ -60,9 +57,6 @@
     --frag-concentrated: #a94e17;
     --frag-load-bearing: #b8291d;
 
-    --pass: #2c7a68;
-    --fail: #b8291d;
-    --blocked: #57544e;
 
     --chart-line: #16171a;
     --chart-grid: #e6e2d9;
@@ -86,9 +80,6 @@
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
-  --color-pass: var(--pass);
-  --color-fail: var(--fail);
-  --color-blocked: var(--blocked);
 
   --font-display: var(--font-instrument-serif), Georgia, serif;
   --font-sans: var(--font-archivo), ui-sans-serif, sans-serif;
