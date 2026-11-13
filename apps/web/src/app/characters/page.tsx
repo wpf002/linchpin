@@ -9,7 +9,6 @@ import { EmptyState } from "@/components/panel";
 import { QueryForm } from "@/components/query-form";
 import { RingFace } from "@/components/ring-face";
 import { fetchLeaders } from "@/lib/api";
-import { formatPercent } from "@/lib/format";
 import { flattenSearchParams, type RawSearchParams } from "@/lib/search-params";
 import { CONFIDENCE_LABEL, confidenceLevel, stayingPower } from "@/lib/words";
 
@@ -34,13 +33,11 @@ function ringShare(row: LeaderRow, sort: Sort): number {
   return sort === "offCycleCarry" ? (row.offCycleCarry ?? 0) : row.carryScore;
 }
 
-function ringHint(row: LeaderRow, sort: Sort): string {
-  const figure = sort === "offCycleCarry" ? "Off-Season " : "";
-  const confidence = CONFIDENCE_LABEL[confidenceLevel(row.confidence)];
-  return `${row.canonicalName} · ${figure}${formatPercent(ringShare(row, sort), 0)} · ${confidence}`;
+function ringHint(row: LeaderRow): string {
+  return `${row.canonicalName} · ${CONFIDENCE_LABEL[confidenceLevel(row.confidence)]}`;
 }
 
-function CharacterTile({ row, rank, sort }: { row: LeaderRow; rank: number; sort: Sort }) {
+function CharacterTile({ row, sort }: { row: LeaderRow; sort: Sort }) {
   const level = confidenceLevel(row.confidence);
   return (
     <li className="flex min-w-0 flex-col items-center gap-3 text-center">
@@ -50,7 +47,7 @@ function CharacterTile({ row, rank, sort }: { row: LeaderRow; rank: number; sort
             name={row.canonicalName}
             imageUrl={row.imageUrl}
             share={ringShare(row, sort)}
-            title={ringHint(row, sort)}
+            title={ringHint(row)}
             className="w-full"
           />
         </Link>
@@ -64,7 +61,6 @@ function CharacterTile({ row, rank, sort }: { row: LeaderRow; rank: number; sort
       </div>
       <div className="flex w-full min-w-0 flex-col">
         <Link href={`/characters/${row.id}`} className="font-display text-lg leading-tight text-ink [overflow-wrap:anywhere] hover:text-accent-strong">
-          <span className="num mr-2 text-sm text-faint">{rank}</span>
           {row.canonicalName}
         </Link>
         <span className="truncate text-sm text-muted">{row.portrayedBy ?? row.franchise.canonicalName}</span>
@@ -109,8 +105,8 @@ export default async function CharactersPage({ searchParams }: { searchParams: P
         <EmptyState title="No Matches" />
       ) : (
         <ol className="grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-[repeat(auto-fill,minmax(168px,1fr))] sm:gap-x-6">
-          {page.rows.map((row, index) => (
-            <CharacterTile key={row.id} row={row} rank={query.cursor + index + 1} sort={query.sort} />
+          {page.rows.map((row) => (
+            <CharacterTile key={row.id} row={row} sort={query.sort} />
           ))}
         </ol>
       )}

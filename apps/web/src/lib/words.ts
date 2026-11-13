@@ -31,26 +31,26 @@ export const BAND_HINT: Record<FragilityBandId, string> = {
   ensemble: "No clear lead.",
 };
 
-export function castTracked(rosterComplete: number, rosterSize: number): string {
-  return `Cast Tracked ${Math.round(rosterComplete * rosterSize)} of ${rosterSize}`;
-}
+/** Changes smaller than this fraction of views read as no change. */
+const FLAT_BELOW = 0.05;
+/** Changes at least this large (a rise to 2x, or a fall to half) read as big. */
+const BIG_FROM_RATIO = 2;
 
-/** At or above this ratio a rise reads as a multiple. "+6471%" is unreadable; "+66x" isn't. */
-const MULTIPLE_FROM_RATIO = 3;
-
-/** A log-point estimate as "−12%", "+4%" or "+66x". */
+/** A log-point estimate in words, with no figure. */
 export function changeInWords(logChange: number): string {
   const ratio = Math.exp(logChange);
-  const percent = Math.round(Math.abs(ratio - 1) * 100);
-  // Compared on the rounded percent so exp(log(3)) = 2.9999… still reads as a multiple.
-  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `+${Math.round(ratio)}x`;
-  if (percent === 0) return "0%";
-  return `${logChange < 0 ? "−" : "+"}${percent}%`;
+  if (Math.abs(ratio - 1) < FLAT_BELOW) return "No Change";
+  const big = Math.abs(logChange) >= Math.log(BIG_FROM_RATIO);
+  if (logChange > 0) return big ? "Views Way Up" : "Views Up";
+  return big ? "Views Way Down" : "Views Down";
 }
 
 /** Rank is 1-based by attention share. */
+const MAIN_CAST_THROUGH = 3;
+
 export function rankLabel(rank: number): string {
-  return rank === 1 ? "Lead" : `No. ${rank}`;
+  if (rank === 1) return "Lead";
+  return rank <= MAIN_CAST_THROUGH ? "Main Cast" : "Supporting";
 }
 
 /** Durability is share between releases over share around releases. This band counts as holding level. */
@@ -58,6 +58,6 @@ const HOLDS_ABOVE = 1.1;
 const FADES_BELOW = 0.9;
 
 export function stayingPower(durabilityRatio: number): string {
-  if (durabilityRatio >= HOLDS_ABOVE) return "Up Off-Season";
-  return durabilityRatio < FADES_BELOW ? "Down Off-Season" : "Steady Off-Season";
+  if (durabilityRatio >= HOLDS_ABOVE) return "Grows Off-Season";
+  return durabilityRatio < FADES_BELOW ? "Fades Off-Season" : "Holds Off-Season";
 }

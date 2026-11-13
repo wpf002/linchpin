@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EVENT_WINDOWS, ROSTER_COMPLETE_DISPLAY_FLOOR, type CharacterDetail } from "@linchpin/shared";
+import { ROSTER_COMPLETE_DISPLAY_FLOOR, type CharacterDetail } from "@linchpin/shared";
 import { AttentionChart } from "@/components/attention-chart";
 import { Poster } from "@/components/face";
-import { Numbers } from "@/components/numbers";
 import { EmptyState, Panel } from "@/components/panel";
 import { RingFace } from "@/components/ring-face";
-import { SignalAudit } from "@/components/signal-audit";
-import { Stat } from "@/components/stat";
 import { fetchCharacter } from "@/lib/api";
-import { formatDate, formatNumber, formatPercent, label } from "@/lib/format";
+import { label } from "@/lib/format";
 import { orNotFound } from "@/lib/load";
 import {
   CONFIDENCE_LABEL,
@@ -38,7 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CharacterPage({ params }: Props) {
   const character = await load((await params).id);
-  const offCycleDays = character.series.filter((point) => point.isOffCycle).length;
 
   return (
     <>
@@ -53,15 +49,18 @@ export default async function CharacterPage({ params }: Props) {
                 className="inline-block size-2.5"
                 style={{ background: "var(--chart-off-cycle)", outline: "1px solid var(--border)" }}
               />
-              Off-Season · {offCycleDays} Days
+              Off-Season
             </span>
           }
         >
           {character.series.length === 0 ? <EmptyState title="No Data" /> : <AttentionChart series={character.series} />}
         </Panel>
-        <Numbers>
-          <CharacterNumbers character={character} />
-        </Numbers>
+        <Link
+          href={`/characters/${character.id}/signals`}
+          className="self-start text-sm text-accent hover:text-accent-strong"
+        >
+          Raw Data
+        </Link>
       </div>
     </>
   );
@@ -76,7 +75,6 @@ function Hero({ character }: { character: CharacterDetail }) {
         name={character.canonicalName}
         imageUrl={character.imageUrl}
         share={showShare ? character.carryScore : null}
-        title={showShare ? `${character.canonicalName} · ${formatPercent(character.carryScore, 0)}` : undefined}
         className="w-40 sm:w-full"
       />
       <div className="flex min-w-0 flex-col gap-4">
@@ -117,7 +115,7 @@ function Standing({ character, showShare }: { character: CharacterDetail; showSh
   if (!showShare) {
     return (
       <p className="text-muted" title="No Wikipedia page views.">
-        No Attention Data
+        No Views
       </p>
     );
   }
@@ -130,73 +128,9 @@ function Standing({ character, showShare }: { character: CharacterDetail; showSh
         </Link>
       </p>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
-        <span title={`Confidence ${formatPercent(character.confidence, 0)}`}>
-          {CONFIDENCE_LABEL[confidenceLevel(character.confidence)]}
-        </span>
-        {character.durabilityRatio === null ? null : (
-          <span title={`Share ${EVENT_WINDOWS.offCycleGapDays}+ days from a release vs. near one.`}>
-            {stayingPower(character.durabilityRatio)}
-          </span>
-        )}
+        <span>{CONFIDENCE_LABEL[confidenceLevel(character.confidence)]}</span>
+        {character.durabilityRatio === null ? null : <span>{stayingPower(character.durabilityRatio)}</span>}
       </p>
-    </>
-  );
-}
-
-/** Exact figures and their sources. Shares stay out below the coverage floor; dates and raw rows don't. */
-function CharacterNumbers({ character }: { character: CharacterDetail }) {
-  const showShare = hasShare(character);
-  return (
-    <>
-      <dl className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-        {showShare ? <ShareStats character={character} /> : null}
-        {character.billingOrder === null ? null : <Stat label="Billed" value={character.billingOrder} />}
-        {character.lastSeenAt === null ? null : (
-          <Stat
-            label="Last Seen"
-            value={formatDate(character.lastSeenAt)}
-            detail={character.firstSeenAt === null ? undefined : `First Seen ${formatDate(character.firstSeenAt)}`}
-          />
-        )}
-      </dl>
-      {showShare ? <SignalAudit characterId={character.id} attribution={character.attribution} /> : null}
-      <Link href={`/characters/${character.id}/signals`} className="self-start text-sm text-accent hover:text-accent-strong">
-        Raw Data
-      </Link>
-    </>
-  );
-}
-
-function ShareStats({ character }: { character: CharacterDetail }) {
-  return (
-    <>
-      <Stat
-        label="Share"
-        value={formatPercent(character.carryScore)}
-        detail={`Confidence ${formatPercent(character.confidence, 0)}`}
-        hint="Share of the franchise total."
-      />
-      {character.offCycleCarry === null ? null : (
-        <Stat
-          label="Off-Season Share"
-          value={formatPercent(character.offCycleCarry)}
-          hint={`Share ${EVENT_WINDOWS.offCycleGapDays}+ days from a release.`}
-        />
-      )}
-      {character.durabilityRatio === null ? null : (
-        <Stat
-          label="Off-Season Ratio"
-          value={formatNumber(character.durabilityRatio, 2)}
-          hint="Off-season share ÷ release share."
-        />
-      )}
-      {character.substitutability === null ? null : (
-        <Stat
-          label="Cast Gain After Exit"
-          value={formatPercent(character.substitutability)}
-          hint="Share the rest of the cast gained after the exit."
-        />
-      )}
     </>
   );
 }

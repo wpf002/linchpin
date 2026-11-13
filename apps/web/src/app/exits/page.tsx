@@ -6,19 +6,10 @@ import { Face } from "@/components/face";
 import { PageTitle } from "@/components/page-title";
 import { EmptyState, Panel } from "@/components/panel";
 import { fetchEventStudies } from "@/lib/api";
-import { formatCount, formatDate, formatNumber, formatPercent } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 import { changeInWords } from "@/lib/words";
 
 export const metadata: Metadata = { title: "Exits" };
-
-function studyHint(row: EventStudyRow): string {
-  const parts = [
-    row.preCarryScore === null ? null : `Share Before ${formatPercent(row.preCarryScore)}`,
-    row.baselineRank === null ? null : `Billed ${row.baselineRank}`,
-    `Std Error ${formatNumber(row.stdError, 3)}`,
-  ];
-  return parts.filter((part) => part !== null).join(" · ");
-}
 
 function StudyItem({ row }: { row: EventStudyRow }) {
   const franchiseLink = (
@@ -45,9 +36,7 @@ function StudyItem({ row }: { row: EventStudyRow }) {
           {formatDate(row.eventDate)}
         </span>
       </div>
-      <span className="text-sm text-ink" title={studyHint(row)}>
-        <span className="text-muted">Change</span> {changeInWords(row.didEstimate)}
-      </span>
+      <span className="text-sm text-ink">{changeInWords(row.didEstimate)}</span>
     </li>
   );
 }
@@ -57,11 +46,11 @@ export default async function ExitsPage() {
   const studies = await fetchEventStudies();
   return (
     <>
-      <PageTitle eyebrow={`${formatCount(studies.length)} Scored`} title="Exits" />
+      <PageTitle title="Exits" />
       <div className="grid items-start gap-16 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel
           title="Before and After"
-          hint="One dot per exit. Change vs. similar shows, same days."
+          hint="Views after each exit, vs. similar shows."
           action={
             <span className="flex items-center gap-4 text-sm text-muted">
               <span className="flex items-center gap-2">
@@ -76,7 +65,7 @@ export default async function ExitsPage() {
           {studies.length === 0 ? <EmptyState title="No Exits" /> : <EventScatter rows={studies} />}
         </Panel>
         {studies.length > 0 ? (
-          <Panel title="All Exits" action={<span className="num text-sm text-muted">{formatCount(studies.length)}</span>}>
+          <Panel title="All Exits">
             <ul className="max-h-[480px] overflow-y-auto lg:max-h-[640px]">
               {studies.map((row) => (
                 <StudyItem key={row.exitEventId} row={row} />

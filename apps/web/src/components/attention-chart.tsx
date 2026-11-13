@@ -2,12 +2,12 @@
 
 import { useState, type PointerEvent } from "react";
 import type { CharacterDetail } from "@linchpin/shared";
-import { formatCompact, formatCount, formatDate } from "@/lib/format";
+import { formatCount, formatDate } from "@/lib/format";
 import { useMeasuredWidth } from "@/lib/use-measured-width";
 
 const FALLBACK_WIDTH = 960;
 const HEIGHT = 260;
-const PAD = { top: 28, right: 16, bottom: 28, left: 48 } as const;
+const PAD = { top: 28, right: 16, bottom: 28, left: 16 } as const;
 const GRID_LINES = 4;
 const MS_PER_DAY = 86_400_000;
 
@@ -95,12 +95,7 @@ export function AttentionChart({ series }: { series: Point[] }) {
           />
         ))}
         {grid.map((value) => (
-          <g key={value}>
-            <line x1={PAD.left} x2={width - PAD.right} y1={y(value)} y2={y(value)} stroke="var(--chart-grid)" />
-            <text x={PAD.left - 8} y={y(value) + 4} textAnchor="end" fontSize={12} fill="var(--text-faint)" className="num">
-              {formatCompact(value)}
-            </text>
-          </g>
+          <line key={value} x1={PAD.left} x2={width - PAD.right} y1={y(value)} y2={y(value)} stroke="var(--chart-grid)" />
         ))}
         <path d={area} fill="var(--chart-line)" opacity={0.08} />
         <path d={path} fill="none" stroke="var(--chart-line)" strokeWidth={1.25} strokeLinejoin="round" />
@@ -116,11 +111,11 @@ export function AttentionChart({ series }: { series: Point[] }) {
             <circle cx={x(toTime(hovered.measuredOn))} cy={y(hovered.rawValue)} r={4} fill="var(--accent)" />
           </g>
         ) : null}
-        <text x={width - PAD.right} y={14} textAnchor="end" fontSize={12} fill="var(--text-muted)" className="num">
-          {hovered
-            ? `${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Off-Season" : ""}`
-            : `Peak ${formatCount(peak)} Views`}
-        </text>
+        {hovered ? (
+          <text x={width - PAD.right} y={14} textAnchor="end" fontSize={12} fill="var(--text-muted)" className="num">
+            {`${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Off-Season" : ""}`}
+          </text>
+        ) : null}
         <text x={PAD.left} y={HEIGHT - 6} fontSize={12} fill="var(--text-faint)">
           {formatDate(first.measuredOn)}
         </text>

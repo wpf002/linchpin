@@ -17,12 +17,6 @@ export function formatSigned(value: number | null | undefined, digits = 2): stri
   return `${sign}${Math.abs(value).toFixed(digits)}`;
 }
 
-/** A log-point DiD estimate read as a proportional change in attention. */
-export function formatLogChange(value: number | null | undefined): string {
-  if (value === null || value === undefined) return EM_DASH;
-  return formatSigned((Math.exp(value) - 1) * 100, 1) + "%";
-}
-
 export function formatCount(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }

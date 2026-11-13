@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { FranchiseRow } from "@linchpin/shared";
 import { Face } from "./face";
-import { formatPercent } from "@/lib/format";
 
 /** Leads shown. Past this the faces are all near the minimum size and say nothing. */
 const LEAD_COUNT = 28;
@@ -48,7 +47,7 @@ export function LeadWall({ rows }: { rows: FranchiseRow[] }) {
             <Face
               name={`${lead.characterName}, ${lead.franchiseName}`}
               imageUrl={lead.imageUrl}
-              title={`${lead.characterName} · ${lead.franchiseName} · ${formatPercent(lead.share, 0)}`}
+              title={`${lead.characterName} · ${lead.franchiseName}`}
               className="min-w-10"
               style={{ width: `calc(var(--lead-unit) * ${lead.share.toFixed(3)})` }}
             />

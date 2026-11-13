@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { EM_DASH, formatDate, formatLogChange, formatPercent, formatSigned, formatYear, label } from "../format";
+import { EM_DASH, formatDate, formatPercent, formatSigned, formatYear, label } from "../format";
 import { FRAGILITY_DOMAIN, domainPosition } from "../fragility";
 
 describe("number formatting", () => {
   it("returns a dash for missing values", () => {
     expect(formatPercent(null)).toBe(EM_DASH);
     expect(formatSigned(undefined)).toBe(EM_DASH);
-    expect(formatLogChange(null)).toBe(EM_DASH);
     expect(formatDate(null)).toBe(EM_DASH);
     expect(formatYear("")).toBe(EM_DASH);
   });
@@ -20,7 +19,6 @@ describe("number formatting", () => {
   });
 
   it("reads a log change as a percent change", () => {
-    expect(formatLogChange(Math.log(0.9))).toBe("−10.0%");
   });
 });
 

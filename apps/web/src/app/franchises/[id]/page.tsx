@@ -3,23 +3,13 @@ import Link from "next/link";
 import type { FranchiseDetail } from "@linchpin/shared";
 import { CastStage } from "@/components/cast-stage";
 import { Face, Poster } from "@/components/face";
-import { Numbers } from "@/components/numbers";
 import { EmptyState, Panel } from "@/components/panel";
 import { ReleaseTimeline } from "@/components/release-timeline";
-import { Stat } from "@/components/stat";
 import { fetchFranchise } from "@/lib/api";
 import { orNotFound } from "@/lib/load";
-import { formatDate, formatNumber, formatPercent, formatSigned, formatYear, label } from "@/lib/format";
-import { BAND_TOKEN, COVERAGE_HINT, bandOf } from "@/lib/fragility";
-import {
-  BAND_HINT,
-  CONFIDENCE_LABEL,
-  NOT_ENOUGH_CAST,
-  NOT_ENOUGH_CAST_HINT,
-  castTracked,
-  changeInWords,
-  confidenceLevel,
-} from "@/lib/words";
+import { formatDate, formatYear, label } from "@/lib/format";
+import { BAND_TOKEN, bandOf } from "@/lib/fragility";
+import { BAND_HINT, NOT_ENOUGH_CAST, NOT_ENOUGH_CAST_HINT, changeInWords } from "@/lib/words";
 
 type Props = { params: Promise<{ id: string }> };
 type ExitEvent = FranchiseDetail["exitEvents"][number];
@@ -41,17 +31,14 @@ export default async function FranchisePage({ params }: Props) {
     <>
       <Hero franchise={franchise} />
       <div className="flex flex-col gap-16">
-        <Panel title="Cast" action={<span className="num text-sm text-muted">{franchise.characters.length}</span>}>
+        <Panel title="Cast">
           {franchise.characters.length === 0 ? (
             <EmptyState title="No Characters With Data" />
           ) : (
             <CastStage characters={franchise.characters} scored={scored} />
           )}
         </Panel>
-        <Panel
-          title="Releases and Exits"
-          action={<span className="num text-sm text-muted">{franchise.releases.length}</span>}
-        >
+        <Panel title="Releases and Exits">
           {franchise.releases.length + franchise.exitEvents.length === 0 ? (
             <EmptyState title="No Releases" />
           ) : (
@@ -59,7 +46,7 @@ export default async function FranchisePage({ params }: Props) {
           )}
         </Panel>
         {franchise.exitEvents.length > 0 ? (
-          <Panel title="Cast Exits" action={<span className="num text-sm text-muted">{franchise.exitEvents.length}</span>}>
+          <Panel title="Cast Exits">
             <ul>
               {franchise.exitEvents.map((event) => (
                 <ExitRow key={event.id} event={event} />
@@ -67,9 +54,6 @@ export default async function FranchisePage({ params }: Props) {
             </ul>
           </Panel>
         ) : null}
-        <Numbers>
-          <FranchiseNumbers franchise={franchise} />
-        </Numbers>
       </div>
     </>
   );
@@ -108,7 +92,7 @@ function Hero({ franchise }: { franchise: FranchiseDetail }) {
                 </span>
                 {measuredNames[1] ? (
                   <span>
-                    <span className="text-muted">No. 2</span> {measuredNames[1]}
+                    <span className="text-muted">Next</span> {measuredNames[1]}
                   </span>
                 ) : null}
               </p>
@@ -116,7 +100,7 @@ function Hero({ franchise }: { franchise: FranchiseDetail }) {
           </>
         ) : (
           <p className="text-muted" title={NOT_ENOUGH_CAST_HINT}>
-            {NOT_ENOUGH_CAST} · {castTracked(franchise.rosterComplete, franchise.rosterSize)}
+            {NOT_ENOUGH_CAST}
           </p>
         )}
       </div>
@@ -144,16 +128,7 @@ function ExitRow({ event }: { event: ExitEvent }) {
         </span>
       </div>
       {event.didEstimate === null ? null : (
-        <span
-          className="text-sm text-ink"
-          title={
-            event.preCarryScore === null
-              ? undefined
-              : `Share Before ${formatPercent(event.preCarryScore, 0)}`
-          }
-        >
-          <span className="text-muted">Change</span> {changeInWords(event.didEstimate)}
-        </span>
+        <span className="text-sm text-ink">{changeInWords(event.didEstimate)}</span>
       )}
       <a
         href={event.sourceUrl}
@@ -164,72 +139,5 @@ function ExitRow({ event }: { event: ExitEvent }) {
         Source
       </a>
     </li>
-  );
-}
-
-/** Exact figures. Below the coverage floor only the coverage itself is shown; shares are withheld. */
-function FranchiseNumbers({ franchise }: { franchise: FranchiseDetail }) {
-  const coverage = (
-    <Stat
-      label="Cast Tracked"
-      value={formatPercent(franchise.rosterComplete, 0)}
-      detail={`${franchise.rosterSize} Characters`}
-      hint={COVERAGE_HINT}
-    />
-  );
-  if (franchise.fragility === null) return <dl>{coverage}</dl>;
-  const measured = franchise.characters.filter((character) => character.confidence > 0);
-  return (
-    <>
-      <dl className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-        <Stat
-          label="Lead Weight"
-          value={formatSigned(franchise.fragility, 2)}
-          hint="Lead z-score vs. the cast."
-        />
-        <Stat label="Lead Share" value={formatPercent(franchise.top1Share, 0)} />
-        <Stat label="Top 3" value={formatPercent(franchise.top3Share, 0)} />
-        <Stat
-          label="Concentration"
-          value={formatNumber(franchise.hhi, 3)}
-          hint="Sum of squared shares. 1.0 = one character."
-        />
-        {coverage}
-      </dl>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[480px]">
-          <thead className="border-b border-ink text-left text-sm text-muted">
-            <tr>
-              <th className="px-3 py-3 font-medium">Character</th>
-              <th className="px-3 py-3 font-medium">Played By</th>
-              <th className="px-3 py-3 text-right font-medium">Share</th>
-              <th className="px-3 py-3 text-right font-medium">Confidence</th>
-            </tr>
-          </thead>
-          <tbody>
-            {measured.map((character) => (
-              <tr key={character.id} className="border-b border-line last:border-b-0">
-                <td className="px-3 py-3">
-                  <Link href={`/characters/${character.id}`} className="text-ink hover:text-accent-strong">
-                    {character.canonicalName}
-                  </Link>
-                </td>
-                <td className="px-3 py-3 text-muted">{character.portrayedBy ?? ""}</td>
-                <td className="num px-3 py-3 text-right text-ink">{formatPercent(character.carryScore)}</td>
-                <td className="px-3 py-3 text-right text-sm text-muted">
-                  {CONFIDENCE_LABEL[confidenceLevel(character.confidence)].replace(" Confidence", "")}{" "}
-                  <span className="num">{formatPercent(character.confidence, 0)}</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {franchise.scoredOn ? (
-        <p className="text-xs text-faint">
-          Scored {formatDate(franchise.scoredOn)} · <span className="font-mono">{franchise.modelVersion}</span>
-        </p>
-      ) : null}
-    </>
   );
 }

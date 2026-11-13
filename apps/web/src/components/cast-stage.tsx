@@ -5,7 +5,6 @@ import { useState } from "react";
 import type { CharacterRow } from "@linchpin/shared";
 import { clsx } from "clsx";
 import { Face } from "./face";
-import { formatPercent } from "@/lib/format";
 import { CONFIDENCE_LABEL, NOT_ENOUGH_CAST_HINT, confidenceLevel } from "@/lib/words";
 
 /** Face diameter in pixels: a floor plus a part that grows with sqrt(share), so area tracks share. */
@@ -43,7 +42,6 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
 
   // Confidence 0 means no usable signal. Those characters are counted, not shown.
   const measured = characters.filter((character) => character.confidence > 0);
-  const unmeasuredCount = characters.length - measured.length;
   const visible = expanded ? measured : measured.slice(0, COLLAPSED_FACE_COUNT);
   const hasLowerConfidence = visible.some((character) => confidenceLevel(character.confidence) !== "high");
 
@@ -62,19 +60,16 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
             aria-expanded={expanded}
             className="text-accent transition-colors duration-150 hover:text-accent-strong"
           >
-            {expanded ? "Show Fewer" : `Show All ${measured.length}`}
+            {expanded ? "Show Fewer" : "Show All"}
           </button>
         ) : (
           <span />
         )}
         <span className="flex flex-wrap items-center gap-x-6 gap-y-2 text-faint">
-          {unmeasuredCount > 0 ? (
-            <span title="No Wikipedia page views.">{unmeasuredCount} No Views</span>
-          ) : null}
           {hasLowerConfidence ? (
             <span className="flex items-center gap-2">
               <span aria-hidden="true" className="size-3 rounded-full border border-dashed border-muted" />
-              Dashed Ring Means Lower Confidence
+              Lower Confidence
             </span>
           ) : null}
         </span>
@@ -87,7 +82,7 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
 function SizedFace({ character }: { character: CharacterRow }) {
   const diameter = faceDiameter(character.carryScore);
   const level = confidenceLevel(character.confidence);
-  const hint = `${character.canonicalName} · ${formatPercent(character.carryScore, 0)} · ${CONFIDENCE_LABEL[level]}`;
+  const hint = `${character.canonicalName} · ${CONFIDENCE_LABEL[level]}`;
   return (
     <li
       className="flex flex-col items-center gap-3"
@@ -107,7 +102,6 @@ function SizedFace({ character }: { character: CharacterRow }) {
           <span className="max-w-full truncate text-sm font-medium text-ink transition-colors duration-150 group-hover:text-accent-strong">
             {character.canonicalName}
           </span>
-          <span className="num max-w-full truncate text-xs text-muted">{formatPercent(character.carryScore, 0)}</span>
           <span className="max-w-full truncate text-xs text-faint">{character.portrayedBy ?? "Uncredited"}</span>
         </span>
       </Link>

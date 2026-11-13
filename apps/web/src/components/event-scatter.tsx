@@ -1,13 +1,17 @@
 "use client";
 
 import type { EventStudyRow } from "@linchpin/shared";
-import { formatLogChange, formatPercent } from "@/lib/format";
+import { changeInWords } from "@/lib/words";
 import { useMeasuredWidth } from "@/lib/use-measured-width";
 
 const FALLBACK_WIDTH = 640;
 const HEIGHT = 320;
 const PAD = { top: 24, right: 16, bottom: 40, left: 64 } as const;
-const X_TICKS = [0, 0.25, 0.5, 0.75, 1] as const;
+/** Only the ends of the share axis are labelled, in words. */
+const X_END_LABELS = [
+  { at: 0, text: "Low" },
+  { at: 1, text: "High" },
+] as const;
 const Y_GRID = 5;
 const MIN_EXTENT = 0.5;
 /**
@@ -24,8 +28,7 @@ function describe(row: Point): string {
   const parts = [
     row.characterName ?? "Unmatched",
     row.franchiseName,
-    `Share ${formatPercent(row.preCarryScore)}`,
-    formatLogChange(row.didEstimate),
+    changeInWords(row.didEstimate),
   ];
   if (row.announced) parts.push("Announced");
   return parts.join(" · ");
@@ -53,17 +56,18 @@ export function EventScatter({ rows }: { rows: EventStudyRow[] }) {
     <div ref={ref} className="w-full overflow-hidden contain-inline-size">
       <svg width={width} height={HEIGHT} role="img" aria-label="Share before exit against change after exit">
         {yTicks.map((tick) => (
-          <g key={tick}>
-            <line x1={PAD.left} x2={width - PAD.right} y1={y(tick)} y2={y(tick)} stroke="var(--chart-grid)" />
-            <text x={PAD.left - 8} y={y(tick) + 4} textAnchor="end" fontSize={12} fill="var(--text-faint)" className="num">
-              {formatLogChange(tick)}
-            </text>
-          </g>
+          <line key={tick} x1={PAD.left} x2={width - PAD.right} y1={y(tick)} y2={y(tick)} stroke="var(--chart-grid)" />
         ))}
+        <text x={PAD.left - 8} y={y(extent) + 4} textAnchor="end" fontSize={12} fill="var(--text-faint)">
+          Up
+        </text>
+        <text x={PAD.left - 8} y={y(-extent) + 4} textAnchor="end" fontSize={12} fill="var(--text-faint)">
+          Down
+        </text>
         <line x1={PAD.left} x2={width - PAD.right} y1={y(0)} y2={y(0)} stroke="var(--border-strong)" />
-        {X_TICKS.map((tick) => (
-          <text key={tick} x={x(tick)} y={HEIGHT - 20} textAnchor="middle" fontSize={12} fill="var(--text-faint)" className="num">
-            {formatPercent(tick, 0)}
+        {X_END_LABELS.map((tick) => (
+          <text key={tick.at} x={x(tick.at)} y={HEIGHT - 20} textAnchor="middle" fontSize={12} fill="var(--text-faint)">
+            {tick.text}
           </text>
         ))}
         <text x={width - PAD.right} y={HEIGHT - 4} textAnchor="end" fontSize={12} fill="var(--text-muted)">

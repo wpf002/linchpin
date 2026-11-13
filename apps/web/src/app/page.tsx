@@ -80,7 +80,6 @@ function PosterView({ rows }: { rows: FranchiseRow[] }) {
             key={band.id}
             title={band.label}
             hint={BAND_HINT[band.id]}
-            action={<span className="num text-sm text-muted">{members.length}</span>}
           >
             <div className={TILE_GRID}>
               {[...members].sort(byLeadHeavy).map((row) => (
@@ -94,7 +93,6 @@ function PosterView({ rows }: { rows: FranchiseRow[] }) {
         <Panel
           title={NOT_ENOUGH_CAST}
           hint={NOT_ENOUGH_CAST_HINT}
-          action={<span className="num text-sm text-muted">{unscored.length}</span>}
         >
           <div className={COMPACT_TILE_GRID}>
             {unscored.map((row) => (

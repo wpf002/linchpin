@@ -2,8 +2,7 @@ import Link from "next/link";
 import type { CastFace, FranchiseRow } from "@linchpin/shared";
 import { clsx } from "clsx";
 import { Face, Poster } from "./face";
-import { formatPercent } from "@/lib/format";
-import { NOT_ENOUGH_CAST_HINT, castTracked } from "@/lib/words";
+import { NOT_ENOUGH_CAST } from "@/lib/words";
 
 /** Faces on a tile. Five fit the tile width at any split of shares. */
 const TILE_FACE_COUNT = 5;
@@ -16,10 +15,6 @@ const FACE_OVERLAP = 7;
 
 function faceDiameter(share: number | null): number {
   return share === null ? UNSIZED_FACE : FACE_BASE + FACE_SHARE_SPAN * Math.sqrt(share);
-}
-
-function faceTitle(member: CastFace): string {
-  return member.share === null ? member.canonicalName : `${member.canonicalName} · ${formatPercent(member.share, 0)}`;
 }
 
 /** A poster with the top cast along its bottom edge. Above the coverage floor, face size is share of attention. */
@@ -40,7 +35,7 @@ export function ShowTile({ row, compact = false }: { row: FranchiseRow; compact?
               key={member.id}
               name={member.canonicalName}
               imageUrl={member.imageUrl}
-              title={faceTitle(member)}
+              title={member.canonicalName}
               className="ring-2 ring-bg"
               style={{
                 width: `${faceDiameter(member.share)}cqw`,
@@ -62,9 +57,7 @@ export function ShowTile({ row, compact = false }: { row: FranchiseRow; compact?
       {scored ? (
         <span className="mt-1 truncate text-sm text-muted">{row.topCharacter?.canonicalName}</span>
       ) : (
-        <span className="mt-1 text-xs text-faint" title={NOT_ENOUGH_CAST_HINT}>
-          {castTracked(row.rosterComplete, row.rosterSize)}
-        </span>
+        <span className="mt-1 text-xs text-faint">{NOT_ENOUGH_CAST}</span>
       )}
     </Link>
   );

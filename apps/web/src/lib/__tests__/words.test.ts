@@ -1,26 +1,21 @@
 import { describe, expect, it } from "vitest";
-import {
-  castTracked,
-  changeInWords,
-  confidenceLevel,
-  rankLabel,
-  stayingPower,
-} from "../words";
+import { changeInWords, confidenceLevel, rankLabel, stayingPower } from "../words";
 
 describe("changeInWords", () => {
-  it("reads falls and small rises as percents", () => {
-    expect(changeInWords(Math.log(0.88))).toBe("−12%");
-    expect(changeInWords(Math.log(1.04))).toBe("+4%");
+  it("reads small moves as up or down", () => {
+    expect(changeInWords(Math.log(0.88))).toBe("Views Down");
+    expect(changeInWords(Math.log(1.2))).toBe("Views Up");
   });
 
-  it("reads large rises as multiples", () => {
-    expect(changeInWords(Math.log(66))).toBe("+66x");
-    expect(changeInWords(Math.log(3))).toBe("+3x");
+  it("reads a doubling or halving as way up or down", () => {
+    expect(changeInWords(Math.log(66))).toBe("Views Way Up");
+    expect(changeInWords(Math.log(2))).toBe("Views Way Up");
+    expect(changeInWords(Math.log(0.5))).toBe("Views Way Down");
   });
 
-  it("calls a change that rounds to zero 0%", () => {
-    expect(changeInWords(-0.001)).toBe("0%");
-    expect(changeInWords(0)).toBe("0%");
+  it("calls a move under 5% no change", () => {
+    expect(changeInWords(Math.log(1.04))).toBe("No Change");
+    expect(changeInWords(0)).toBe("No Change");
   });
 });
 
@@ -33,23 +28,18 @@ describe("confidenceLevel", () => {
   });
 });
 
-describe("castTracked", () => {
-  it("rounds the tracked count", () => {
-    expect(castTracked(0.5, 9)).toBe("Cast Tracked 5 of 9");
-  });
-});
-
 describe("rankLabel", () => {
-  it("calls rank 1 the lead", () => {
+  it("names the lead, main cast and supporting cast", () => {
     expect(rankLabel(1)).toBe("Lead");
-    expect(rankLabel(3)).toBe("No. 3");
+    expect(rankLabel(3)).toBe("Main Cast");
+    expect(rankLabel(4)).toBe("Supporting");
   });
 });
 
 describe("stayingPower", () => {
   it("bands the ratio", () => {
-    expect(stayingPower(1.2)).toBe("Up Off-Season");
-    expect(stayingPower(1)).toBe("Steady Off-Season");
-    expect(stayingPower(0.8)).toBe("Down Off-Season");
+    expect(stayingPower(1.2)).toBe("Grows Off-Season");
+    expect(stayingPower(1)).toBe("Holds Off-Season");
+    expect(stayingPower(0.8)).toBe("Fades Off-Season");
   });
 });
