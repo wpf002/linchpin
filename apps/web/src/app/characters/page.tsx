@@ -18,9 +18,9 @@ export const metadata: Metadata = { title: "Characters" };
 type Sort = LeadersQuery["sort"];
 
 const SORT_TABS: { sort: Sort; label: string }[] = [
-  { sort: "carryScore", label: "Biggest Share" },
-  { sort: "offCycleCarry", label: "Between Releases" },
-  { sort: "durabilityRatio", label: "Staying Power" },
+  { sort: "carryScore", label: "Share" },
+  { sort: "offCycleCarry", label: "Off-Season Share" },
+  { sort: "durabilityRatio", label: "Off-Season Ratio" },
 ];
 
 /** A sort tab keeps the search term and starts again from the first page, largest first. */
@@ -35,7 +35,7 @@ function ringShare(row: LeaderRow, sort: Sort): number {
 }
 
 function ringHint(row: LeaderRow, sort: Sort): string {
-  const figure = sort === "offCycleCarry" ? "Between Releases " : "";
+  const figure = sort === "offCycleCarry" ? "Off-Season " : "";
   const confidence = CONFIDENCE_LABEL[confidenceLevel(row.confidence)];
   return `${row.canonicalName} · ${figure}${formatPercent(ringShare(row, sort), 0)} · ${confidence}`;
 }

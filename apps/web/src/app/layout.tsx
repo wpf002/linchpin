@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: { default: "Linchpin", template: "%s · Linchpin" },
-  description: "Attention share for every character in a franchise, from Wikipedia page views.",
+  description: "Character share of each franchise, from Wikipedia page views.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

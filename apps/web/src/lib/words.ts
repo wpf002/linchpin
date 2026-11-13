@@ -35,17 +35,17 @@ export function castTracked(rosterComplete: number, rosterSize: number): string 
   return `Cast Tracked ${Math.round(rosterComplete * rosterSize)} of ${rosterSize}`;
 }
 
-/** At or above this ratio a rise reads as a multiple. "Up 6471%" is unreadable; "Up 66x" isn't. */
+/** At or above this ratio a rise reads as a multiple. "+6471%" is unreadable; "+66x" isn't. */
 const MULTIPLE_FROM_RATIO = 3;
 
-/** A log-point estimate as "Down 12%", "Up 4%" or "Up 66x". */
+/** A log-point estimate as "−12%", "+4%" or "+66x". */
 export function changeInWords(logChange: number): string {
   const ratio = Math.exp(logChange);
   const percent = Math.round(Math.abs(ratio - 1) * 100);
   // Compared on the rounded percent so exp(log(3)) = 2.9999… still reads as a multiple.
-  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `Up ${Math.round(ratio)}x`;
-  if (percent === 0) return "Flat";
-  return `${logChange < 0 ? "Down" : "Up"} ${percent}%`;
+  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `+${Math.round(ratio)}x`;
+  if (percent === 0) return "0%";
+  return `${logChange < 0 ? "−" : "+"}${percent}%`;
 }
 
 /** Rank is 1-based by attention share. */
@@ -58,14 +58,6 @@ const HOLDS_ABOVE = 1.1;
 const FADES_BELOW = 0.9;
 
 export function stayingPower(durabilityRatio: number): string {
-  if (durabilityRatio >= HOLDS_ABOVE) return "Grows Between Releases";
-  return durabilityRatio < FADES_BELOW ? "Fades Between Releases" : "Holds Between Releases";
-}
-
-/** Residuals inside this band, in share points, read as matching billing. */
-const BILLING_MATCH_BAND = 0.02;
-
-export function versusBilling(residual: number): string {
-  if (residual > BILLING_MATCH_BAND) return "Outdraws Billing";
-  return residual < -BILLING_MATCH_BAND ? "Trails Billing" : "Matches Billing";
+  if (durabilityRatio >= HOLDS_ABOVE) return "Up Off-Season";
+  return durabilityRatio < FADES_BELOW ? "Down Off-Season" : "Steady Off-Season";
 }

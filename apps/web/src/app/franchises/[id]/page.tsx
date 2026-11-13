@@ -152,7 +152,7 @@ function ExitRow({ event }: { event: ExitEvent }) {
               : `Share Before ${formatPercent(event.preCarryScore, 0)}`
           }
         >
-          Attention {changeInWords(event.didEstimate)}
+          <span className="text-muted">Change</span> {changeInWords(event.didEstimate)}
         </span>
       )}
       <a
@@ -185,7 +185,7 @@ function FranchiseNumbers({ franchise }: { franchise: FranchiseDetail }) {
         <Stat
           label="Lead Weight"
           value={formatSigned(franchise.fragility, 2)}
-          hint="Lead weight relative to the cast."
+          hint="Lead z-score vs. the cast."
         />
         <Stat label="Lead Share" value={formatPercent(franchise.top1Share, 0)} />
         <Stat label="Top 3" value={formatPercent(franchise.top3Share, 0)} />

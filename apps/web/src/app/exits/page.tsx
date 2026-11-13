@@ -46,7 +46,7 @@ function StudyItem({ row }: { row: EventStudyRow }) {
         </span>
       </div>
       <span className="text-sm text-ink" title={studyHint(row)}>
-        Attention {changeInWords(row.didEstimate)}
+        <span className="text-muted">Change</span> {changeInWords(row.didEstimate)}
       </span>
     </li>
   );
@@ -57,10 +57,10 @@ export default async function ExitsPage() {
   const studies = await fetchEventStudies();
   return (
     <>
-      <PageTitle eyebrow={`${formatCount(studies.length)} Measured`} title="Exits" />
+      <PageTitle eyebrow={`${formatCount(studies.length)} Scored`} title="Exits" />
       <div className="grid items-start gap-16 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel
-          title="Share vs Change"
+          title="Before and After"
           hint="One dot per exit. Change vs. similar shows, same days."
           action={
             <span className="flex items-center gap-4 text-sm text-muted">
@@ -73,7 +73,7 @@ export default async function ExitsPage() {
             </span>
           }
         >
-          {studies.length === 0 ? <EmptyState title="No Exits Measured" /> : <EventScatter rows={studies} />}
+          {studies.length === 0 ? <EmptyState title="No Exits" /> : <EventScatter rows={studies} />}
         </Panel>
         {studies.length > 0 ? (
           <Panel title="All Exits" action={<span className="num text-sm text-muted">{formatCount(studies.length)}</span>}>

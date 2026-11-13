@@ -45,15 +45,15 @@ export default async function CharacterPage({ params }: Props) {
       <Hero character={character} />
       <div className="flex flex-col gap-16">
         <Panel
-          title="Attention"
-          hint="Daily Wikipedia page views."
+          title="Page Views"
+          hint="Daily, from Wikipedia."
           action={
             <span className="flex items-center gap-2 text-sm text-muted">
               <span
                 className="inline-block size-2.5"
                 style={{ background: "var(--chart-off-cycle)", outline: "1px solid var(--border)" }}
               />
-              Between Releases · {offCycleDays} Days
+              Off-Season · {offCycleDays} Days
             </span>
           }
         >
@@ -171,28 +171,28 @@ function ShareStats({ character }: { character: CharacterDetail }) {
   return (
     <>
       <Stat
-        label="Attention Share"
+        label="Share"
         value={formatPercent(character.carryScore)}
         detail={`Confidence ${formatPercent(character.confidence, 0)}`}
-        hint="Share of franchise attention."
+        hint="Share of the franchise total."
       />
       {character.offCycleCarry === null ? null : (
         <Stat
-          label="Between Releases"
+          label="Off-Season Share"
           value={formatPercent(character.offCycleCarry)}
           hint={`Share ${EVENT_WINDOWS.offCycleGapDays}+ days from a release.`}
         />
       )}
       {character.durabilityRatio === null ? null : (
         <Stat
-          label="Durability"
+          label="Off-Season Ratio"
           value={formatNumber(character.durabilityRatio, 2)}
-          hint="Between-release share ÷ release share. Above 1 holds."
+          hint="Off-season share ÷ release share."
         />
       )}
       {character.substitutability === null ? null : (
         <Stat
-          label="Absorbed After Exit"
+          label="Cast Gain After Exit"
           value={formatPercent(character.substitutability)}
           hint="Share the rest of the cast gained after the exit."
         />

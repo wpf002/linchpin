@@ -11,7 +11,7 @@ export function SignalAudit({ characterId, attribution }: { characterId: string;
         <thead className="border-b border-ink text-left text-sm text-muted">
           <tr>
             <th className="px-3 py-3 font-medium">Source</th>
-            <th className="px-3 py-3 text-right font-medium" title="Attention share from this source.">
+            <th className="px-3 py-3 text-right font-medium" title="Share from this source.">
               Share
             </th>
             <th className="px-3 py-3 text-right font-medium" title="Source weight in the score.">

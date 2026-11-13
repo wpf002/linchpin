@@ -5,23 +5,22 @@ import {
   confidenceLevel,
   rankLabel,
   stayingPower,
-  versusBilling,
 } from "../words";
 
 describe("changeInWords", () => {
   it("reads falls and small rises as percents", () => {
-    expect(changeInWords(Math.log(0.88))).toBe("Down 12%");
-    expect(changeInWords(Math.log(1.04))).toBe("Up 4%");
+    expect(changeInWords(Math.log(0.88))).toBe("−12%");
+    expect(changeInWords(Math.log(1.04))).toBe("+4%");
   });
 
   it("reads large rises as multiples", () => {
-    expect(changeInWords(Math.log(66))).toBe("Up 66x");
-    expect(changeInWords(Math.log(3))).toBe("Up 3x");
+    expect(changeInWords(Math.log(66))).toBe("+66x");
+    expect(changeInWords(Math.log(3))).toBe("+3x");
   });
 
-  it("calls a change that rounds to zero flat", () => {
-    expect(changeInWords(-0.001)).toBe("Flat");
-    expect(changeInWords(0)).toBe("Flat");
+  it("calls a change that rounds to zero 0%", () => {
+    expect(changeInWords(-0.001)).toBe("0%");
+    expect(changeInWords(0)).toBe("0%");
   });
 });
 
@@ -47,13 +46,10 @@ describe("rankLabel", () => {
   });
 });
 
-describe("stayingPower and versusBilling", () => {
-  it("bands the ratio and residual", () => {
-    expect(stayingPower(1.2)).toBe("Grows Between Releases");
-    expect(stayingPower(1)).toBe("Holds Between Releases");
-    expect(stayingPower(0.8)).toBe("Fades Between Releases");
-    expect(versusBilling(0.05)).toBe("Outdraws Billing");
-    expect(versusBilling(0)).toBe("Matches Billing");
-    expect(versusBilling(-0.05)).toBe("Trails Billing");
+describe("stayingPower", () => {
+  it("bands the ratio", () => {
+    expect(stayingPower(1.2)).toBe("Up Off-Season");
+    expect(stayingPower(1)).toBe("Steady Off-Season");
+    expect(stayingPower(0.8)).toBe("Down Off-Season");
   });
 });

@@ -82,7 +82,7 @@ export default async function SignalRowsPage({ params, searchParams }: Props) {
                   <td className="px-3 py-2 text-muted">{formatDate(row.measuredOn)}</td>
                   <td className="px-3 py-2 text-muted">{label(row.source)}</td>
                   <td className="px-3 py-2 text-right text-ink">{formatCount(row.rawValue)}</td>
-                  <td className="px-3 py-2 text-muted">{row.isOffCycle ? "Between Releases" : "Release"}</td>
+                  <td className="px-3 py-2 text-muted">{row.isOffCycle ? "Off-Season" : "Release"}</td>
                   <td className="px-3 py-2 text-right text-muted">{formatPercent(row.confidence, 0)}</td>
                 </tr>
               ))}

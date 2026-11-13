@@ -80,7 +80,7 @@ export function AttentionChart({ series }: { series: Point[] }) {
         width={width}
         height={HEIGHT}
         role="img"
-        aria-label="Daily attention series"
+        aria-label="Daily page views"
         onPointerMove={track}
         onPointerLeave={() => setHoverIndex(null)}
       >
@@ -118,7 +118,7 @@ export function AttentionChart({ series }: { series: Point[] }) {
         ) : null}
         <text x={width - PAD.right} y={14} textAnchor="end" fontSize={12} fill="var(--text-muted)" className="num">
           {hovered
-            ? `${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Between Releases" : ""}`
+            ? `${formatDate(hovered.measuredOn)} · ${formatCount(hovered.rawValue)} Views${hovered.isOffCycle ? " · Off-Season" : ""}`
             : `Peak ${formatCount(peak)} Views`}
         </text>
         <text x={PAD.left} y={HEIGHT - 6} fontSize={12} fill="var(--text-faint)">

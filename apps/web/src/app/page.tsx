@@ -68,7 +68,7 @@ function PosterView({ rows }: { rows: FranchiseRow[] }) {
   return (
     <div className="flex flex-col gap-16">
       {groups.size > 0 ? (
-        <Panel title="Biggest Leads" hint="Face width = lead share.">
+        <Panel title="Top Leads" hint="Face width = lead share.">
           <LeadWall rows={rows} />
         </Panel>
       ) : null}

@@ -69,7 +69,7 @@ export function CastStage({ characters, scored }: { characters: CharacterRow[]; 
         )}
         <span className="flex flex-wrap items-center gap-x-6 gap-y-2 text-faint">
           {unmeasuredCount > 0 ? (
-            <span title="No Wikipedia page views.">{unmeasuredCount} Untracked</span>
+            <span title="No Wikipedia page views.">{unmeasuredCount} No Views</span>
           ) : null}
           {hasLowerConfidence ? (
             <span className="flex items-center gap-2">
