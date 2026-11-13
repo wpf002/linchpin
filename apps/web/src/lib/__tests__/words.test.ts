@@ -12,18 +12,18 @@ import {
 
 describe("changeInWords", () => {
   it("reads falls and small rises as percents", () => {
-    expect(changeInWords(Math.log(0.88))).toBe("fell about 12%");
-    expect(changeInWords(Math.log(1.04))).toBe("rose about 4%");
+    expect(changeInWords(Math.log(0.88))).toBe("Down 12%");
+    expect(changeInWords(Math.log(1.04))).toBe("Up 4%");
   });
 
   it("reads large rises as multiples", () => {
-    expect(changeInWords(Math.log(66))).toBe("rose about 66x");
-    expect(changeInWords(Math.log(3))).toBe("rose about 3x");
+    expect(changeInWords(Math.log(66))).toBe("Up 66x");
+    expect(changeInWords(Math.log(3))).toBe("Up 3x");
   });
 
   it("calls a change that rounds to zero flat", () => {
-    expect(changeInWords(-0.001)).toBe("held flat");
-    expect(changeInWords(0)).toBe("held flat");
+    expect(changeInWords(-0.001)).toBe("Flat");
+    expect(changeInWords(0)).toBe("Flat");
   });
 });
 
@@ -47,8 +47,8 @@ describe("confidenceLevel", () => {
 
 describe("castSentence", () => {
   it("names the lead for each band", () => {
-    expect(castSentence("load-bearing", ["Walter White"])).toBe("Walter White is the show.");
-    expect(castSentence("balanced", ["Ann", "Ben"])).toBe("Ann leads, with Ben close behind.");
+    expect(castSentence("load-bearing", ["Walter White"])).toBe("Walter White gets nearly all the attention.");
+    expect(castSentence("balanced", ["Ann", "Ben"])).toBe("Ann leads, and Ben is a close second.");
     expect(castSentence("ensemble", ["Ann"])).toBe("Ann leads.");
   });
 
@@ -65,9 +65,9 @@ describe("castTracked", () => {
 
 describe("characterSentence", () => {
   it("states share and rank", () => {
-    expect(characterSentence(0.5, "Firefly", 1)).toBe("Draws about half of the attention on Firefly. Leads the cast.");
+    expect(characterSentence(0.5, "Firefly", 1)).toBe("Leads Firefly, with about half of the attention.");
     expect(characterSentence(0.1, "Firefly", 3)).toBe(
-      "Draws about a tenth of the attention on Firefly. Number 3 in the cast.",
+      "No. 3 on Firefly, with about a tenth of the attention.",
     );
   });
 });

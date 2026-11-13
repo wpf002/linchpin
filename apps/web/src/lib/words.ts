@@ -44,7 +44,7 @@ export const CONFIDENCE_LABEL: Record<ConfidenceLevel, string> = {
 export const BAND_HINT: Record<FragilityBandId, string> = {
   "load-bearing": "One character draws nearly all the attention.",
   concentrated: "One character draws far more attention than anyone else.",
-  balanced: "A clear lead with strong support.",
+  balanced: "One lead, with others close behind.",
   ensemble: "Attention is spread across the cast.",
 };
 
@@ -52,33 +52,33 @@ export const BAND_HINT: Record<FragilityBandId, string> = {
 export function castSentence(band: FragilityBandId, names: string[]): string {
   const [lead, second] = names;
   if (!lead) return "";
-  if (band === "load-bearing") return `${lead} is the show.`;
-  if (band === "concentrated") return `${lead} is well ahead of everyone else.`;
-  if (band === "balanced") return second ? `${lead} leads, with ${second} close behind.` : `${lead} leads.`;
-  return second ? `No one character carries it. ${lead} and ${second} are the biggest draws.` : `${lead} leads.`;
+  if (band === "load-bearing") return `${lead} gets nearly all the attention.`;
+  if (band === "concentrated") return `${lead} gets far more attention than the rest of the cast.`;
+  if (band === "balanced") return second ? `${lead} leads, and ${second} is a close second.` : `${lead} leads.`;
+  return second ? `${lead} and ${second} get the most attention, with no clear lead.` : `${lead} leads.`;
 }
 
 export function castTracked(rosterComplete: number, rosterSize: number): string {
   return `Cast Tracked ${Math.round(rosterComplete * rosterSize)} of ${rosterSize}`;
 }
 
-/** At or above this ratio a rise reads as a multiple. "Rose about 6471%" is unreadable; "rose about 66x" isn't. */
+/** At or above this ratio a rise reads as a multiple. "Up 6471%" is unreadable; "Up 66x" isn't. */
 const MULTIPLE_FROM_RATIO = 3;
 
-/** A log-point estimate as "fell about 12%", "rose about 4%" or "rose about 66x". */
+/** A log-point estimate as "Down 12%", "Up 4%" or "Up 66x". */
 export function changeInWords(logChange: number): string {
   const ratio = Math.exp(logChange);
   const percent = Math.round(Math.abs(ratio - 1) * 100);
   // Compared on the rounded percent so exp(log(3)) = 2.9999… still reads as a multiple.
-  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `rose about ${Math.round(ratio)}x`;
-  if (percent === 0) return "held flat";
-  return `${logChange < 0 ? "fell" : "rose"} about ${percent}%`;
+  if (logChange > 0 && percent >= (MULTIPLE_FROM_RATIO - 1) * 100) return `Up ${Math.round(ratio)}x`;
+  if (percent === 0) return "Flat";
+  return `${logChange < 0 ? "Down" : "Up"} ${percent}%`;
 }
 
 /** One line on a character's place in the cast. Rank is 1-based by attention share. */
 export function characterSentence(share: number, franchiseName: string, rank: number): string {
-  const place = rank === 1 ? "Leads the cast." : `Number ${rank} in the cast.`;
-  return `Draws ${shareInWords(share)} of the attention on ${franchiseName}. ${place}`;
+  const place = rank === 1 ? `Leads ${franchiseName}` : `No. ${rank} on ${franchiseName}`;
+  return `${place}, with ${shareInWords(share)} of the attention.`;
 }
 
 /** Durability is share between releases over share around releases. This band counts as holding level. */
