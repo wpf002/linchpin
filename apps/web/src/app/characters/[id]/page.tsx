@@ -15,8 +15,8 @@ import {
   CONFIDENCE_LABEL,
   NOT_ENOUGH_CAST,
   NOT_ENOUGH_CAST_HINT,
-  characterSentence,
   confidenceLevel,
+  rankLabel,
   stayingPower,
 } from "@/lib/words";
 
@@ -116,22 +116,25 @@ function Standing({ character, showShare }: { character: CharacterDetail; showSh
   }
   if (!showShare) {
     return (
-      <p className="text-muted" title="No Wikipedia page views on record.">
+      <p className="text-muted" title="No Wikipedia page views.">
         No Attention Data
       </p>
     );
   }
   return (
     <>
-      <p className="max-w-xl font-display text-lg leading-tight text-ink">
-        {characterSentence(character.carryScore, character.franchise.canonicalName, character.rankInFranchise)}
+      <p className="font-display text-lg leading-tight text-ink">
+        {rankLabel(character.rankInFranchise)} ·{" "}
+        <Link href={`/franchises/${character.franchise.id}`} className="hover:text-accent-strong">
+          {character.franchise.canonicalName}
+        </Link>
       </p>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
         <span title={`Confidence ${formatPercent(character.confidence, 0)}`}>
           {CONFIDENCE_LABEL[confidenceLevel(character.confidence)]}
         </span>
         {character.durabilityRatio === null ? null : (
-          <span title="Compares attention on days far from a release with days around one.">
+          <span title={`Share ${EVENT_WINDOWS.offCycleGapDays}+ days from a release vs. near one.`}>
             {stayingPower(character.durabilityRatio)}
           </span>
         )}
@@ -171,27 +174,27 @@ function ShareStats({ character }: { character: CharacterDetail }) {
         label="Attention Share"
         value={formatPercent(character.carryScore)}
         detail={`Confidence ${formatPercent(character.confidence, 0)}`}
-        hint="Share of the franchise's attention."
+        hint="Share of franchise attention."
       />
       {character.offCycleCarry === null ? null : (
         <Stat
           label="Between Releases"
           value={formatPercent(character.offCycleCarry)}
-          hint={`Share on days at least ${EVENT_WINDOWS.offCycleGapDays} days from a release.`}
+          hint={`Share ${EVENT_WINDOWS.offCycleGapDays}+ days from a release.`}
         />
       )}
       {character.durabilityRatio === null ? null : (
         <Stat
           label="Durability"
           value={formatNumber(character.durabilityRatio, 2)}
-          hint="Share between releases divided by share around releases. Above 1 means interest holds."
+          hint="Between-release share ÷ release share. Above 1 holds."
         />
       )}
       {character.substitutability === null ? null : (
         <Stat
           label="Absorbed After Exit"
           value={formatPercent(character.substitutability)}
-          hint="How much of this character's attention the rest of the cast picked up after they left."
+          hint="Share the rest of the cast gained after the exit."
         />
       )}
     </>

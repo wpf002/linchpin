@@ -64,7 +64,7 @@ export function ScreenerTable({
               label="Lead Share / Top 3"
               current={query}
               params={params}
-              hint="Share of attention on the lead, then on the top three."
+              hint="Lead share / top 3 share."
             />
             <SortHeader
               column="hhi"
@@ -72,7 +72,7 @@ export function ScreenerTable({
               current={query}
               params={params}
               align="right"
-              hint="Sum of squared attention shares. 1.0 means one character has it all."
+              hint="Sum of squared shares. 1.0 = one character."
             />
             <SortHeader column="rosterSize" label="Cast" current={query} params={params} align="right" />
             <SortHeader column="fragility" label="Lead Weight" current={query} params={params} align="right" />

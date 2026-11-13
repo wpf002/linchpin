@@ -16,7 +16,6 @@ import {
   CONFIDENCE_LABEL,
   NOT_ENOUGH_CAST,
   NOT_ENOUGH_CAST_HINT,
-  castSentence,
   castTracked,
   changeInWords,
   confidenceLevel,
@@ -102,9 +101,18 @@ function Hero({ franchise }: { franchise: FranchiseDetail }) {
             <p className="font-medium" style={{ color: BAND_TOKEN[band.id] }} title={BAND_HINT[band.id]}>
               {band.label}
             </p>
-            <p className="max-w-xl font-display text-lg leading-tight text-ink">
-              {castSentence(band.id, measuredNames)}
-            </p>
+            {measuredNames[0] ? (
+              <p className="flex flex-wrap gap-x-4 font-display text-lg leading-tight text-ink">
+                <span>
+                  <span className="text-muted">Lead</span> {measuredNames[0]}
+                </span>
+                {measuredNames[1] ? (
+                  <span>
+                    <span className="text-muted">No. 2</span> {measuredNames[1]}
+                  </span>
+                ) : null}
+              </p>
+            ) : null}
           </>
         ) : (
           <p className="text-muted" title={NOT_ENOUGH_CAST_HINT}>
@@ -141,7 +149,7 @@ function ExitRow({ event }: { event: ExitEvent }) {
           title={
             event.preCarryScore === null
               ? undefined
-              : `Held ${formatPercent(event.preCarryScore, 0)} of the attention before leaving.`
+              : `Share Before ${formatPercent(event.preCarryScore, 0)}`
           }
         >
           Attention {changeInWords(event.didEstimate)}
@@ -177,14 +185,14 @@ function FranchiseNumbers({ franchise }: { franchise: FranchiseDetail }) {
         <Stat
           label="Lead Weight"
           value={formatSigned(franchise.fragility, 2)}
-          hint="Higher means more of the attention sits with one character."
+          hint="Lead weight relative to the cast."
         />
         <Stat label="Lead Share" value={formatPercent(franchise.top1Share, 0)} />
         <Stat label="Top 3" value={formatPercent(franchise.top3Share, 0)} />
         <Stat
           label="Concentration"
           value={formatNumber(franchise.hhi, 3)}
-          hint="Sum of squared attention shares. 1.0 means one character has it all."
+          hint="Sum of squared shares. 1.0 = one character."
         />
         {coverage}
       </dl>

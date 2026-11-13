@@ -61,7 +61,7 @@ export default async function ExitsPage() {
       <div className="grid items-start gap-16 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel
           title="Share vs Change"
-          hint="Each dot is one exit. Change is franchise attention after the exit compared with similar shows over the same days."
+          hint="One dot per exit. Change vs. similar shows, same days."
           action={
             <span className="flex items-center gap-4 text-sm text-muted">
               <span className="flex items-center gap-2">

@@ -9,7 +9,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
   return (
     <div className="flex flex-col items-center gap-4 py-24 text-center">
       <h1 className="font-display text-display text-ink">API Unavailable</h1>
-      <p className="text-sm text-muted">{error.digest ? `Reference ${error.digest}` : "The scoring API did not respond."}</p>
+      <p className="text-sm text-muted">{error.digest ? `Reference ${error.digest}` : "API Not Responding"}</p>
       <button
         type="button"
         onClick={reset}

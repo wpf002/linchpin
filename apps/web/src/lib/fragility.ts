@@ -4,10 +4,10 @@ import { formatPercent } from "./format";
 const COVERAGE_FLOOR = formatPercent(ROSTER_COMPLETE_DISPLAY_FLOOR, 0);
 
 /** Tooltip wherever a score is withheld for low cast coverage. */
-export const NO_SCORE_HINT = `Needs ${COVERAGE_FLOOR} of the cast on Wikipedia.`;
+export const NO_SCORE_HINT = `Under ${COVERAGE_FLOOR} of cast on Wikipedia.`;
 
 /** Tooltip on the coverage figure itself. */
-export const COVERAGE_HINT = `Share of the cast with a Wikipedia page. Scores need ${COVERAGE_FLOOR}.`;
+export const COVERAGE_HINT = `Cast with a Wikipedia page. ${COVERAGE_FLOOR} needed to score.`;
 
 /** CSS custom property per band, defined in globals.css. */
 export const BAND_TOKEN: Record<FragilityBandId, string> = {

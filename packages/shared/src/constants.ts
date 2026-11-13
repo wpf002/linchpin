@@ -60,8 +60,8 @@ export const ROSTER_COMPLETE_DISPLAY_FLOOR = KILL_CRITERIA.minRosterCompleteness
 export const FRAGILITY_BANDS = [
   { id: "ensemble", label: "Ensemble", min: Number.NEGATIVE_INFINITY, max: -0.5 },
   { id: "balanced", label: "Balanced", min: -0.5, max: 0.4 },
-  { id: "concentrated", label: "Star-Led", min: 0.4, max: 1.2 },
-  { id: "load-bearing", label: "One-Person Show", min: 1.2, max: Number.POSITIVE_INFINITY },
+  { id: "concentrated", label: "Lead-Heavy", min: 0.4, max: 1.2 },
+  { id: "load-bearing", label: "Single Lead", min: 1.2, max: Number.POSITIVE_INFINITY },
 ] as const;
 
 export type FragilityBandId = (typeof FRAGILITY_BANDS)[number]["id"];
