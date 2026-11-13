@@ -995,7 +995,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-05-19",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Iron_Throne_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "As Jon grieves, Drogon arrives and discovers that Daenerys has been murdered; an anguished Drogon ultimately melts the Iron Throne before carrying her body away to the east."
     },
     {
@@ -1015,7 +1015,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-05-12",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "VanDerWerff stated that Cersei and Jaime's deaths were not given much thought by the writers and were instead simply something to check off a list."
     },
     {
@@ -1025,7 +1025,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-05-12",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "As Cersei and Qyburn attempt to escape, Sandor arrives and kills the Queensguard in order to fight his brother, Gregor."
     },
     {
@@ -1035,7 +1035,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-05-12",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Bells_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "Filming for Varys's death scene lasted seven months as rain kept postponing the shoot."
     },
     {
@@ -1045,7 +1045,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-05-05",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Last_of_the_Starks",
-      "verified": false,
+      "verified": true,
       "evidence": "Cersei refuses and has Gregor Clegane behead Missandei, horrifying and enraging Grey Worm and Daenerys."
     },
     {
@@ -1055,7 +1055,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-04-28",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Long_Night_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "Feeling resolved, Theon charges the Night King, who easily kills him with his own spear."
     },
     {
@@ -1065,7 +1065,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-04-28",
       "sourceUrl": "https://en.wikipedia.org/wiki/The_Long_Night_%28Game_of_Thrones%29",
-      "verified": false,
+      "verified": true,
       "evidence": "Jorah, meanwhile, dies from his wounds in the arms of a sobbing Daenerys."
     },
     {
@@ -1075,7 +1075,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2022-07-11",
       "sourceUrl": "https://en.wikipedia.org/wiki/Point_and_Shoot_%28Better_Call_Saul%29",
-      "verified": false,
+      "verified": true,
       "evidence": "He reaches the handgun he previously hid, then fires several shots at Lalo."
     },
     {
@@ -1134,8 +1134,8 @@
       "person": "Christian Serratos",
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2022-11-20",
-      "sourceUrl": "https://en.wikipedia.org/wiki/Rosita_Espinosa",
-      "verified": false,
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rest_in_Peace_(The_Walking_Dead)",
+      "verified": true,
       "evidence": "This also kills Rosita's unborn child."
     },
     {
@@ -1145,7 +1145,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2018-04-15",
       "sourceUrl": "https://en.wikipedia.org/wiki/Wrath_%28The_Walking_Dead%29",
-      "verified": false,
+      "verified": true,
       "evidence": "This episode features the departure of Morgan Jones, portrayed by Lennie James, as the character was about to be incorporated into the show's companion series, Fear the Walking Dead, where he became a regular character starting with its fourth season, which premiered immediately after the episode's broadcast."
     },
     {
@@ -1155,7 +1155,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2018-11-04",
       "sourceUrl": "https://en.wikipedia.org/wiki/What_Comes_After_%28The_Walking_Dead%29",
-      "verified": false,
+      "verified": true,
       "evidence": "It was also the last appearance for Lauren Cohan (Maggie Greene) in the season, due to other acting commitments."
     },
     {
@@ -1175,7 +1175,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2016-05-19",
       "sourceUrl": "https://en.wikipedia.org/wiki/Family_Affair_%28Grey%27s_Anatomy%29",
-      "verified": false,
+      "verified": true,
       "evidence": "She explained that Callie's exit wasn't part of the original plan, stating, “This one was different because it wasn’t a big planned thing."
     },
     {
@@ -1185,7 +1185,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2021-05-20",
       "sourceUrl": "https://en.wikipedia.org/wiki/Grey%27s_Anatomy_season_17",
-      "verified": false,
+      "verified": true,
       "evidence": "Jackson Avery, would be departing as a series regular following the fifteenth episode, \"Tradition\"."
     },
     {
@@ -1235,7 +1235,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2020-11-19",
       "sourceUrl": "https://en.wikipedia.org/wiki/Carry_On_%28Supernatural%29",
-      "verified": false,
+      "verified": true,
       "evidence": "After saying goodbye, Dean dies in Sam's arms."
     },
     {
@@ -2275,7 +2275,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2023-04-13",
       "sourceUrl": "https://en.wikipedia.org/wiki/Grey%27s_Anatomy_season_19",
-      "verified": false,
+      "verified": true,
       "evidence": "Maggie Pierce, would be departing as a series regular following the fifteenth episode of the season, \"Mama Who Bore Me\", which aired on April 13, 2023."
     },
     {
@@ -2725,7 +2725,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2019-07-26",
       "sourceUrl": "https://en.wikipedia.org/wiki/You_Found_Me_%28The_Boys_episode%29",
-      "verified": false,
+      "verified": true,
       "evidence": "When Homelander kills Stillwell with his laser eyes, make-up artists used special effects make-up around Elisabeth Shue's eyes while her skull and burns were re-created through Computer-generated imagery (CGI)."
     },
     {
@@ -2735,7 +2735,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2022-07-08",
       "sourceUrl": "https://en.wikipedia.org/wiki/Black_Noir",
-      "verified": false,
+      "verified": true,
       "evidence": "Upon returning to Vought, Homelander kills Noir for withholding his knowledge of Soldier Boy being Homelander's biological father."
     },
     {
@@ -2885,7 +2885,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2016-04-06",
       "sourceUrl": "https://en.wikipedia.org/wiki/Laurel_Lance_%28Arrowverse%29",
-      "verified": false,
+      "verified": true,
       "evidence": "Laurel's death is avenged when Oliver kills Darhk."
     },
     {
@@ -2905,7 +2905,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2018-05-18",
       "sourceUrl": "https://en.wikipedia.org/wiki/Agents_of_S.H.I.E.L.D.",
-      "verified": false,
+      "verified": true,
       "evidence": "They succeed in defeating a Gravitonium-powered Glenn Talbot, but Coulson dies due to his interactions with Ghost Rider in the previous season."
     },
     {
@@ -2914,8 +2914,8 @@
       "person": "Sophia Bush",
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2017-05-17",
-      "sourceUrl": "https://en.wikipedia.org/wiki/Erin_Lindsay",
-      "verified": false,
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chicago_P.D._season_4",
+      "verified": true,
       "evidence": "Portrayed by Sophia Bush, she was introduced as a detective in the Intelligence Unit of the Chicago Police Department."
     },
     {
@@ -2925,7 +2925,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2018-02-07",
       "sourceUrl": "https://en.wikipedia.org/wiki/Rafael_Barba",
-      "verified": false,
+      "verified": true,
       "evidence": "Barba leaves the DA's office midway through the nineteenth season, in the episode \"The Undiscovered Country.\" His regrets over having left his comatose father on life support lead him to disconnect the life support system for Drew Householder, an infant in a persistent vegetative state whose parents have been feuding about whether to end the child's life."
     },
     {
@@ -2935,7 +2935,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2016-05-17",
       "sourceUrl": "https://en.wikipedia.org/wiki/NCIS_season_13",
-      "verified": false,
+      "verified": true,
       "evidence": "Michael Weatherly, who stars as Anthony DiNozzo on the show, departed the series in the season finale."
     },
     {
@@ -2945,7 +2945,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2021-10-11",
       "sourceUrl": "https://en.wikipedia.org/wiki/Leroy_Jethro_Gibbs",
-      "verified": false,
+      "verified": true,
       "evidence": "Having found peace in Alaska for the first time since his family's death, Gibbs leaves NCIS in the 2021 episode \"Great Wide Open\" in search of adventure."
     },
     {
@@ -2954,8 +2954,8 @@
       "person": "Jennifer Morrison",
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2017-05-14",
-      "sourceUrl": "https://en.wikipedia.org/wiki/Emma_Swan",
-      "verified": false,
+      "sourceUrl": "https://en.wikipedia.org/wiki/The_Final_Battle_(Once_Upon_a_Time)",
+      "verified": true,
       "evidence": "Pinocchio leaves Emma in the foster home, which brings Emma to live alone."
     },
     {
@@ -2965,7 +2965,7 @@
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2016-06-17",
       "sourceUrl": "https://en.wikipedia.org/wiki/Poussey_Washington",
-      "verified": false,
+      "verified": true,
       "evidence": "Inmates and staff appear shaken by Poussey's death; Norma comforts Brook by rocking and singing to her, and Brook later gets drunk off the remainder of Poussey's contraband alcohol."
     },
     {
@@ -2975,7 +2975,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2020-03-22",
       "sourceUrl": "https://en.wikipedia.org/wiki/What_We_Become_%28The_Walking_Dead%29",
-      "verified": false,
+      "verified": true,
       "evidence": "The episode marks the departure of Danai Gurira as Michonne."
     },
     {
@@ -2984,8 +2984,8 @@
       "person": "Evan Rachel Wood",
       "exitType": "CHARACTER_DEATH",
       "eventDate": "2020-05-03",
-      "sourceUrl": "https://en.wikipedia.org/wiki/Dolores_Abernathy",
-      "verified": false,
+      "sourceUrl": "https://en.wikipedia.org/wiki/Crisis_Theory_(Westworld)",
+      "verified": true,
       "evidence": "The season 2 finale \"The Passenger\" reveals that Bernard Lowe killed the original Dolores host to stop her from destroying the Forge, a data vault housing the Sublime - a virtual reality for the hosts to inhabit."
     },
     {
@@ -2995,7 +2995,7 @@
       "exitType": "ACTOR_DEPARTURE",
       "eventDate": "2019-04-18",
       "sourceUrl": "https://en.wikipedia.org/wiki/Christopher_Pike_%28Star_Trek%29",
-      "verified": false,
+      "verified": true,
       "evidence": "Pike departs the show in the season finale \"Such Sweet Sorrow, Part 2\", first aired 18 April 2019, which shows him relinquishing command of the USS Discovery to Saru, who solves the crisis by taking the ship 930 years into the future."
     },
     {

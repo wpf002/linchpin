@@ -265,8 +265,29 @@ def resolve_character_article(
 
 
 _NICKNAME = re.compile(r"\s*[\"\u201c\u201d']([^\"\u201c\u201d']+)[\"\u201c\u201d']\s*")
-#: Catalogue prefixes that are not part of the article name ("Adult Misty Quigley").
-_NAME_PREFIX = re.compile(r"^(?:adult|young|teen|older|old|little|dr\.?|doctor)\s+", re.IGNORECASE)
+#: Catalogue prefixes that are not part of the article name: ages ("Adult Misty
+#: Quigley") and ranks or honorifics ("Captain Kelly Severide", "FBI Special Agent ...").
+_NAME_PREFIX = re.compile(
+    r"^(?:adult|young|teen|older|old|little|dr\.?|doctor|mr\.?|mrs\.?|ms\.?|miss|sir|lord|lady"
+    r"|professor|prof\.?|detective|det\.?|officer|captain|capt\.?|lieutenant|lt\.?|sergeant|sgt\.?"
+    r"|deputy|dep\.?|sheriff|chief|commander|comm\.?|commissioner|major|colonel|col\.?|general"
+    r"|agent|special|fbi|cia|nsa|mi-?\d|dci|di|ds|dc|paramedic|firefighter|nurse|judge|father"
+    r"|sister|brother|uncle|aunt|grandpa|grandma)\s+",
+    re.IGNORECASE,
+)
+
+#: "FBI Special Agent Dana Scully" stacks three prefixes.
+_MAX_PREFIXES = 4
+
+
+def _strip_prefixes(name: str) -> str:
+    for _ in range(_MAX_PREFIXES):
+        stripped = _NAME_PREFIX.sub("", name)
+        # Never strip down to one word: "Sister Jude" stays "Sister Jude", not "Jude".
+        if stripped == name or len(stripped.split()) < 2:
+            return name
+        name = stripped
+    return name
 
 
 def name_variants(character_name: str) -> list[str]:
@@ -285,7 +306,7 @@ def name_variants(character_name: str) -> list[str]:
             if without:
                 variants.append(f"{nickname.group(1).strip()} {without[-1]}")
         variants.append(part)
-    variants += [_NAME_PREFIX.sub("", variant) for variant in list(variants)]
+    variants += [_strip_prefixes(variant) for variant in list(variants)]
     return list(dict.fromkeys(v.strip() for v in variants if v.strip()))
 
 

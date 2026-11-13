@@ -380,6 +380,9 @@ def test_parse_query_marks_only_redirected_titles() -> None:
         ("Adult Misty Quigley", {"Misty Quigley"}),
         ("Emily Malek / Ofglen", {"Emily Malek", "Ofglen"}),
         ('Dr. Eleanor "Ellie" Bartowski', {"Eleanor Bartowski", "Ellie Bartowski"}),
+        ("Captain Kelly Severide", {"Kelly Severide"}),
+        ("FBI Special Agent Dana Scully", {"Dana Scully"}),
+        ("Dep. Comm. William A. Rawls", {"William A. Rawls"}),
     ],
 )
 def test_name_variants_cover_nicknames_prefixes_and_aliases(
@@ -396,3 +399,7 @@ def test_name_variants_leave_plain_names_alone() -> None:
 
 def test_nickname_article_title_names_the_catalogue_character() -> None:
     assert title_names_character("Kaylee Frye", 'Kaywinnet Lee "Kaylee" Frye', "Firefly")
+
+
+def test_name_variants_never_strip_to_one_word() -> None:
+    assert name_variants("Sister Jude") == ["Sister Jude"]
